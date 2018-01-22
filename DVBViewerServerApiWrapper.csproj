@@ -52,7 +52,9 @@
     <Compile Include="Model\UriParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Readme.md" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="ApiXml\recordings.xml" />
     <Content Include="ApiXml\recordingsAll.xml" />
