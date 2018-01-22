@@ -18,24 +18,26 @@ namespace DVBViewerServerApiWrapper
     /// </summary>
     public class DVBViewerServerApi
     {
-        private string user;
-        private string password;
-        private int port = 8089;
         private string ipAddress;
 
-        #region Properties
+        /// <summary>
+        /// aktive Instanz
+        /// </summary>
+        private static DVBViewerServerApi currentInstance;
+
+        #region Public Properties
         /// <summary>
         /// Benutzername des Service
         /// </summary>
-        public string User { get => user; set => user = value; }
+        public string User { get; set; }
         /// <summary>
         /// Password für den Service
         /// </summary>
-        public string Password { get => password; set => password = value; }
+        public string Password { get; set; }
         /// <summary>
         /// Port zum Service: Default 8089
         /// </summary>
-        public int Port { get => port; set => port = value; }
+        public int Port { get; set; } = 8089;
         /// <summary>
         /// IpAdresse zum Service, falls bereits ein Hostname gesetzt wurde, wird die IpAdresse nicht benötigt
         /// </summary>
@@ -44,12 +46,6 @@ namespace DVBViewerServerApiWrapper
         /// Hostname des Service, falls bereits eine IpAdresse gesetzt wurde, wird der Hostname nicht benötigt
         /// </summary>
         public string Hostname { get => ipAddress; set => ipAddress = value; }
-
-        /// <summary>
-        /// aktive Instanz
-        /// </summary>
-        private static DVBViewerServerApi currentInstance;
-
         /// <summary>
         /// Gibt die DVBViewer Clienten (PC-Name) zurück, welche seit dem letzten Start des Servers verbunden waren.
         /// </summary>
@@ -67,7 +63,6 @@ namespace DVBViewerServerApiWrapper
                 }
             }
         }
-
         /// <summary>
         /// Der aktuelle Serverstatus
         /// </summary>
@@ -85,7 +80,6 @@ namespace DVBViewerServerApiWrapper
                 }
             }
         }
-
         /// <summary>
         /// Gibt alle Aufnahmen vom Service zurück
         /// </summary>
@@ -103,7 +97,6 @@ namespace DVBViewerServerApiWrapper
                 }
             }
         }
-
         /// <summary>
         /// Gibt alle Aufnahmen vom Service zurück. Es fehlen darin Dateinamen und die lange Beschreibung.
         /// </summary>
@@ -121,7 +114,6 @@ namespace DVBViewerServerApiWrapper
                 }
             }
         }
-
         /// <summary>
         /// Eine Liste mit Aufnahmen welche irgendwann aufgenommen wurden. Diese müssen nicht mehr als Datei existieren. Es existieren auch keine Verweise auf Dateinamen.
         /// Dies wird verwendet um bereits aufgenommene Aufnahmen zu erkennen.
@@ -147,7 +139,7 @@ namespace DVBViewerServerApiWrapper
             currentInstance = this;
         }
 
-        #region Getter
+        #region Public Getter
         /// <summary>
         /// Gibt die aktive Instanz dieser Klasse zurück.
         /// </summary>
@@ -200,7 +192,7 @@ namespace DVBViewerServerApiWrapper
         }
         #endregion
 
-        #region PrivateMethodes
+        #region Private Methodes
         /// <summary>
         /// Generiert aus den Daten eine URL zum Verbinden zum Service
         /// </summary>
@@ -218,7 +210,7 @@ namespace DVBViewerServerApiWrapper
             //view-source:http://hostname:port/api/getconfigfile.html?file=*.*
             //view-source:http://hostname:port/api/getconfigfile.html?file=config/service.xml
 
-            if (string.IsNullOrEmpty(ipAddress) || port == 0)
+            if (string.IsNullOrEmpty(ipAddress) || Port == 0)
             {
                 throw new MissingFieldException("Hostname oder Port wurden nicht gesetzt.");
             }
@@ -231,16 +223,16 @@ namespace DVBViewerServerApiWrapper
                     //Wird nicht benötigt: Credentials werden beim Abrufen gesetzt
                     //UserName = user,
                     //Password = password,
-                    Port = port,
+                    Port = Port,
                     Scheme = "http",
                     Path = $"/api/{page.ToLower()}.html"
                 };
 
                 //URL um die Parameter erweitern, falls vorhanden
-                if (uriParameters != null)
+                if (uriParameters?.Count > 0)
                 {
                     var uriQuery = "";
-                    bool first = true;
+                    var first = true;
                     foreach (var item in uriParameters)
                     {
                         if (!first)
@@ -248,10 +240,9 @@ namespace DVBViewerServerApiWrapper
                             uriQuery += "&";
                         }
                         uriQuery += $"{item.Key}={Uri.EscapeDataString(item.Value)}";
-                        if (first) first = false;
+                        first = false;
                     }
                     ub.Query = uriQuery;
-                    Debug.WriteLine(ub.Query);
                 }
 
                 return ub.Uri;
@@ -273,7 +264,8 @@ namespace DVBViewerServerApiWrapper
         /// </summary>
         /// <param name="page">Die Seite welche geladen werden soll.</param>
         /// <param name="uriParameters"></param>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException">Es wurde keine Seite angegeben oder die Seite ist null</exception>
+        /// <exception cref="NullReferenceException">Benutzername und Password zum Service wurden nicht angegeben oder sind leer.</exception>
         public async Task<XDocument> GetDataAsync(string page = "status2", List<UriParameter> uriParameters = null)
         {
             if (string.IsNullOrEmpty(page))
@@ -281,9 +273,9 @@ namespace DVBViewerServerApiWrapper
                 throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein.");
             }
 
-            if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(User) || string.IsNullOrEmpty(Password))
             {
-                throw new ArgumentNullException($"{nameof(User)} oder {nameof(Password)}", "Benutzer oder Password wurde nicht gesetzt.");
+                throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt.");
             }
 
             try
@@ -298,7 +290,7 @@ namespace DVBViewerServerApiWrapper
                 //Falls ein Proxy im System ist, kann das helfen. So lange im IE ein Proxy eingetragen wurde.
                 webRequest.Proxy = WebRequest.DefaultWebProxy;
                 //AuthType
-                webRequest.Credentials = new NetworkCredential(user, password);
+                webRequest.Credentials = new NetworkCredential(User, Password);
                 webRequest.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
                 //Abfragemethode
                 webRequest.Method = WebRequestMethods.Http.Get;

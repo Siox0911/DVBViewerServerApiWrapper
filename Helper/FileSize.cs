@@ -31,9 +31,11 @@ namespace DVBViewerServerApiWrapper.Helper
         /// <returns></returns>
         public static FileSize GetFileSize(Int64 Bytes)
         {
-            var t = new FileSize();
-            t.ByteSize = Bytes;
-            t.Weight = "Byte";
+            var t = new FileSize
+            {
+                ByteSize = Bytes,
+                Weight = "Byte"
+            };
             var nBytes = (double)Bytes;
             if ((Bytes / 1024) > 1)
             {

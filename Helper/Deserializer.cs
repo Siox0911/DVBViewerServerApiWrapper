@@ -21,16 +21,9 @@ namespace DVBViewerServerApiWrapper.Helper
         {
             try
             {
-                if (others != null)
-                {
-                    var res = new XmlSerializer(typeof(T), others);
-                    return (T)res.Deserialize(xDocument.CreateReader());
-                }
-                else
-                {
-                    var res = new XmlSerializer(typeof(T));
-                    return (T)res.Deserialize(xDocument.CreateReader());
-                }
+                XmlSerializer res = others == null ? new XmlSerializer(typeof(T)) : new XmlSerializer(typeof(T), others);
+
+                return (T)res.Deserialize(xDocument.CreateReader());
             }
             catch (Exception)
             {
