@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using DVBViewerServerApiWrapper.Helper;
 
 namespace DVBViewerServerApiWrapper.Model
 {
@@ -101,8 +102,7 @@ namespace DVBViewerServerApiWrapper.Model
 
         internal static Serverstatus CreateServerstatus(XDocument xDocument)
         {
-            var t = new XmlSerializer(typeof(Serverstatus), new Type[] { typeof(RecordingFolder) });
-            return (Serverstatus)t.Deserialize(xDocument.CreateReader());
+            return Deserializer.Deserialize<Serverstatus>(xDocument, new Type[] { typeof(RecordingFolder) });
         }
     }
 }

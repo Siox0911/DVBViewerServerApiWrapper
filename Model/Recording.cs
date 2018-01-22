@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using DVBViewerServerApiWrapper.Helper;
 
 namespace DVBViewerServerApiWrapper.Model
 {
@@ -49,8 +50,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// <returns></returns>
         internal static Recording CreateRecording(XDocument xDocument)
         {
-            var t = new XmlSerializer(typeof(Recording), new Type[] { typeof(Record) });
-            return (Recording)t.Deserialize(xDocument.CreateReader());
+            return Deserializer.Deserialize<Recording>(xDocument, new Type[] { typeof(Record) });
         }
 
         /// <summary>
@@ -134,25 +134,12 @@ namespace DVBViewerServerApiWrapper.Model
         /// <returns></returns>
         internal static Recording GetRecordings(string partOfName)
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
+            var result = GetRecordings();
+            if (result != null)
             {
-                var xmldata = dvbApi.GetDataAsync("recordings",
-                new List<UriParameter> {
-                    new UriParameter("utf8", "1"),
-                    new UriParameter("images", "1")
-                }).Result;
-
-                if (xmldata != null)
-                {
-                    var result = CreateRecording(xmldata);
-                    result.Records = (from f in result.Records where f.Title.IndexOf(partOfName, StringComparison.OrdinalIgnoreCase) != -1 select f).ToList();
-
-                    return result;
-                }
+                result.Records = (from f in result.Records where f.Title.IndexOf(partOfName, StringComparison.OrdinalIgnoreCase) != -1 select f).ToList();
             }
-            return null;
-
+            return result;
         }
 
         /// <summary>
@@ -162,24 +149,12 @@ namespace DVBViewerServerApiWrapper.Model
         /// <returns></returns>
         internal static Recording GetRecordingsByDesc(string partOfDesc)
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
+            var result = GetRecordings();
+            if(result != null)
             {
-                var xmldata = dvbApi.GetDataAsync("recordings",
-                new List<UriParameter> {
-                    new UriParameter("utf8", "1"),
-                    new UriParameter("images", "1")
-                }).Result;
-
-                if (xmldata != null)
-                {
-                    var result = CreateRecording(xmldata);
-                    result.Records = (from f in result.Records where f.Description.IndexOf(partOfDesc, StringComparison.OrdinalIgnoreCase) != -1 select f).ToList();
-
-                    return result;
-                }
+                result.Records = (from f in result.Records where f.Description.IndexOf(partOfDesc, StringComparison.OrdinalIgnoreCase) != -1 select f).ToList();
             }
-            return null;
+            return result;
         }
     }
 }

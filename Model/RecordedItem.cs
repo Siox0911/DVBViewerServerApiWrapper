@@ -44,5 +44,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         [XmlElement(ElementName = "INFO")]
         public string Info { get; set; }
+
+        internal RecordedItem() { }
     }
 }

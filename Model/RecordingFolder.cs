@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DVBViewerServerApiWrapper.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,6 +37,8 @@ namespace DVBViewerServerApiWrapper.Model
         /// Die Größe des freien Speichers als formatiertes Objekt.
         /// </summary>
         public FileSize FreeF { get { return FileSize.GetFileSize(Free); } }
+
+        internal RecordingFolder() { }
     }
 
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DVBViewerServerApiWrapper.Model
+namespace DVBViewerServerApiWrapper.Helper
 {
     /// <summary>
     /// Klasse welche einen Parameter einer Uri darstellt.

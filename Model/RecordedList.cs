@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using DVBViewerServerApiWrapper.Helper;
 
 namespace DVBViewerServerApiWrapper.Model
 {
@@ -26,8 +27,7 @@ namespace DVBViewerServerApiWrapper.Model
 
         internal static RecordedList CreateRecordedList(XDocument xDocument)
         {
-            var t = new XmlSerializer(typeof(RecordedList), new Type[] { typeof(RecordedItem) });
-            return (RecordedList)t.Deserialize(xDocument.CreateReader());
+            return Deserializer.Deserialize<RecordedList>(xDocument, new Type[] { typeof(RecordedItem) });
         }
 
         /// <summary>

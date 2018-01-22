@@ -76,6 +76,7 @@ namespace DVBViewerServerApiWrapper.Model
         [XmlElement(ElementName = "image")]
         public string Image { get; set; }
 
+        internal Record() { }
 
     }
 }

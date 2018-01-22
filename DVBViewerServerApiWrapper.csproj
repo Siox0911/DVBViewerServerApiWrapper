@@ -41,15 +41,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DVBViewerServerApi.cs" />
+    <Compile Include="Helper\Deserializer.cs" />
+    <Compile Include="Model\DVBViewerClients.cs" />
     <Compile Include="Model\ETypes.cs" />
-    <Compile Include="Model\FileSize.cs" />
+    <Compile Include="Helper\FileSize.cs" />
     <Compile Include="Model\Record.cs" />
     <Compile Include="Model\RecordedItem.cs" />
     <Compile Include="Model\RecordedList.cs" />
     <Compile Include="Model\Recording.cs" />
     <Compile Include="Model\RecordingFolder.cs" />
     <Compile Include="Model\Serverstatus.cs" />
-    <Compile Include="Model\UriParameter.cs" />
+    <Compile Include="Helper\UriParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

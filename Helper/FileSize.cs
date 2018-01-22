@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DVBViewerServerApiWrapper.Model
+namespace DVBViewerServerApiWrapper.Helper
 {
     /// <summary>
     /// Stellt eine Dateigröße bereit

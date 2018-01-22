@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using DVBViewerServerApiWrapper.Model;
+using DVBViewerServerApiWrapper.Helper;
+using System.Diagnostics;
 
 namespace DVBViewerServerApiWrapper
 {
@@ -47,6 +49,24 @@ namespace DVBViewerServerApiWrapper
         /// aktive Instanz
         /// </summary>
         private static DVBViewerServerApi currentInstance;
+
+        /// <summary>
+        /// Gibt die DVBViewer Clienten (PC-Name) zurück, welche seit dem letzten Start des Servers verbunden waren.
+        /// </summary>
+        public DVBViewerClients DVBViewerClients
+        {
+            get
+            {
+                try
+                {
+                    return DVBViewerClients.GetDvbViewerClients();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+        }
 
         /// <summary>
         /// Der aktuelle Serverstatus
@@ -108,7 +128,17 @@ namespace DVBViewerServerApiWrapper
         /// </summary>
         public RecordedList RecordedList
         {
-            get { return RecordedList.GetRecordedList(); }
+            get
+            {
+                try
+                {
+                    return RecordedList.GetRecordedList();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
         }
         #endregion
 
@@ -213,17 +243,15 @@ namespace DVBViewerServerApiWrapper
                     bool first = true;
                     foreach (var item in uriParameters)
                     {
-                        if (first)
+                        if (!first)
                         {
-                            uriQuery += $"{item.Key}={item.Value}";
-                            first = false;
+                            uriQuery += "&";
                         }
-                        else
-                        {
-                            uriQuery += $"&{item.Key}={item.Value}";
-                        }
+                        uriQuery += $"{item.Key}={Uri.EscapeDataString(item.Value)}";
+                        if (first) first = false;
                     }
                     ub.Query = uriQuery;
+                    Debug.WriteLine(ub.Query);
                 }
 
                 return ub.Uri;
