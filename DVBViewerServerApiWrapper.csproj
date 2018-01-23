@@ -58,6 +58,7 @@
     <None Include="Readme.md" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ApiXml\files.txt" />
     <Content Include="ApiXml\recordings.xml" />
     <Content Include="ApiXml\recordingsAll.xml" />
     <Content Include="ApiXml\SqlRecordedList.xml" />

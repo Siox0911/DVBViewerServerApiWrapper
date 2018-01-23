@@ -204,11 +204,6 @@ namespace DVBViewerServerApiWrapper
         /// <exception cref="MissingFieldException"><seealso cref="Hostname"/> oder <seealso cref="Port"/> wurden nicht gesetzt.</exception>
         private Uri CreateUri(string page, List<UriParameter> uriParameters)
         {
-            //view-source:http://hostname:port/api/recordings.html?utf8=1
-            //view-source:http://hostname:port/api/getconfigfile.html?file=config%5C*.*
-            //view-source:http://hostname:port/api/getconfigfile.html?file=config%5Csvchardware.xml
-            //view-source:http://hostname:port/api/getconfigfile.html?file=*.*
-            //view-source:http://hostname:port/api/getconfigfile.html?file=config/service.xml
 
             if (string.IsNullOrEmpty(ipAddress) || Port == 0)
             {
