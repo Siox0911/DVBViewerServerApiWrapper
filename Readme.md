@@ -8,10 +8,14 @@ It is developed using DVBViewer's MediaServer.
 
 www.dvbviewer.com
 
-### Current state
+### Current state (Aktueller Status)
 
-Work to fetch the data from the service api.
-- parse the service API into .Net objects
+Retrieve data
+- parse the service API into .Net objects (readonly)
+
+
+Daten abrufen
+- umwandeln der Daten von der Service API in .Net Objekte (nur lesen)
 
 Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready, 
 <img src="images/ToDo_Current_256.png" width="22"/> Work, 
@@ -20,8 +24,8 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
 
 <br/><img src="images/ToDo_Ready_256.png" width="22"/> status2.html
 <br/><img src="images/ToDo_Current_256.png" width="22"/> dvbcommand.html
-<br/><img src="images/ToDo_Current_256.png" width="22"/> getconfigfile.html
-<br/><img src="images/ToDo_Current_256.png" width="22"/> recordings.html
+<br/><img src="images/ToDo_Current_256.png" width="22"/> recordings.html - Add eventID to uri
+<br/><img src="images/ToDo_Add_256.png" width="22"/> getconfigfile.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> version.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> setting.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> getchannelsxml.html
@@ -46,8 +50,8 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
             var dvbServ = new DVBViewerServerApi
             {
                 IpAddress = "Name-of-PC or IpAddress",
-                Password = "password set for guest or admin",
-                User = "admin",
+                Password = "password for guest or admin",
+                User = "username for guest or admin",
                 Port = 8089
             };
 

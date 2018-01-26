@@ -10,7 +10,7 @@ namespace DVBViewerServerApiWrapper.Helper
     /// Klasse welche einen Parameter einer Uri darstellt.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class UriParameter
+    public struct UriParameter
     {
         /// <summary>
         /// Schlüssel, wie sec, id, def, logo, rtsp etc.

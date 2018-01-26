@@ -12,7 +12,7 @@ namespace DVBViewerServerApiWrapper.Model
     /// Eine Aufnahme aus dem Pool aller existierender Aufnahmen.
     /// </summary>
     [XmlRoot(ElementName = "recording")]
-    public class Record
+    public class RecordingItem
     {
         /// <summary>
         /// Die ID der Aufnahme
@@ -40,6 +40,11 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         [XmlAttribute(AttributeName = "duration")]
         public long Duration { get; set; }
+        /// <summary>
+        /// Die EventID der Aufnahme (EPG)
+        /// </summary>
+        [XmlAttribute(AttributeName = "eventid")]
+        public int EventID { get; set; }
         /// <summary>
         /// Der Aufnahmekanal als Text
         /// </summary>
@@ -76,7 +81,7 @@ namespace DVBViewerServerApiWrapper.Model
         [XmlElement(ElementName = "image")]
         public string Image { get; set; }
 
-        internal Record() { }
+        internal RecordingItem() { }
 
     }
 }

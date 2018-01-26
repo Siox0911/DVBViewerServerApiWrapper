@@ -42,10 +42,11 @@
   <ItemGroup>
     <Compile Include="DVBViewerServerApi.cs" />
     <Compile Include="Helper\Deserializer.cs" />
+    <Compile Include="Helper\SUriParams.cs" />
     <Compile Include="Model\DVBViewerClients.cs" />
     <Compile Include="Model\ETypes.cs" />
     <Compile Include="Helper\FileSize.cs" />
-    <Compile Include="Model\Record.cs" />
+    <Compile Include="Model\RecordingItem.cs" />
     <Compile Include="Model\RecordedItem.cs" />
     <Compile Include="Model\RecordedList.cs" />
     <Compile Include="Model\Recording.cs" />
