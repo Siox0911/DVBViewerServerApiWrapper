@@ -8,6 +8,34 @@ It is developed using DVBViewer's MediaServer.
 
 www.dvbviewer.com
 
+### Current state
+
+Work to fetch the data from the service api.
+- parse the service API into .Net objects
+
+Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready, 
+<img src="images/ToDo_Current_256.png" width="22"/> Work, 
+<img src="images/ToDo_Add_256.png" width="22"/> ToDo, 
+<img src="images/ToDo_Abort_256.png" width="22"/> Abort, Canceled
+
+<br/><img src="images/ToDo_Ready_256.png" width="22"/> status2.html
+<br/><img src="images/ToDo_Current_256.png" width="22"/> dvbcommand.html
+<br/><img src="images/ToDo_Current_256.png" width="22"/> getconfigfile.html
+<br/><img src="images/ToDo_Current_256.png" width="22"/> recordings.html
+<br/><img src="images/ToDo_Add_256.png" width="22"/> version.html
+<br/><img src="images/ToDo_Add_256.png" width="22"/> setting.html
+<br/><img src="images/ToDo_Add_256.png" width="22"/> getchannelsxml.html
+<br/><img src="images/ToDo_Add_256.png" width="22"/> mediafiles.html
+<br/><img src="images/ToDo_Add_256.png" width="22"/> recdelete.html
+<br/><img src="images/ToDo_Add_256.png" width="22"/> epg.html
+<br/><img src="images/ToDo_Add_256.png" width="22"/> epgclear.html
+<br/><img src="images/ToDo_Add_256.png" width="22"/> timerlist.html
+<br/><img src="images/ToDo_Add_256.png" width="22"/> timeradd.html
+<br/><img src="images/ToDo_Add_256.png" width="22"/> timeredit.html
+<br/><img src="images/ToDo_Add_256.png" width="22"/> timerdelete.html
+<br/><img src="images/ToDo_Add_256.png" width="22"/> tasks.html
+<br/><img src="images/ToDo_Current_256.png" width="22"/><img src="images/ToDo_Abort_256.png" width="22"/> sql.html - some changes in a newer media server version
+
 ### Using the lib
 
 ```C#
