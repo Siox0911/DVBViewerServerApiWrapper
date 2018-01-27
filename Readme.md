@@ -100,7 +100,6 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
                 var clients = dvbServ.DVBViewerClients;
                 Console.WriteLine($"Number of clients connected to MediaServer since start: {clients.Items.Count}");
 
-                //clients.Clients[0].PlayVideo(@"\\192.168.2.101\Dokus\Mathematik\S02\Mathematik zum Anfassen S02E01 - Wie hat alles angefangen.mpg");
                 var videofiles = dvbServ.VideoFileList;
                 Console.WriteLine($"Number of videofiles in MediaServer since last database update: {videofiles.Items.Count}");
 
