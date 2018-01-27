@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using DVBViewerServerApiWrapper.Helper;
 
 namespace DVBViewerServerApiWrapper.Model
 {
@@ -78,8 +74,8 @@ namespace DVBViewerServerApiWrapper.Model
         /// <summary>
         /// Der Status des EPGs
         /// </summary>
-        [XmlElement(ElementName = "epgupdate", Type = typeof(ETypes.EPGUpdate))]
-        public ETypes.EPGUpdate EPGUpdate { get; set; }
+        [XmlElement(ElementName = "epgupdate", Type = typeof(Enums.EPGUpdate))]
+        public Enums.EPGUpdate EPGUpdate { get; set; }
         /// <summary>
         /// Die Rechte welche vom Service gewährt wurden
         /// </summary>
@@ -102,7 +98,7 @@ namespace DVBViewerServerApiWrapper.Model
 
         internal static Serverstatus CreateServerstatus(XDocument xDocument)
         {
-            return Deserializer.Deserialize<Serverstatus>(xDocument, new Type[] { typeof(RecordingFolder) });
+            return Helper.Deserializer.Deserialize<Serverstatus>(xDocument, new Type[] { typeof(RecordingFolder) });
         }
     }
 }

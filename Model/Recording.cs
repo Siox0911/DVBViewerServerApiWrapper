@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using DVBViewerServerApiWrapper.Helper;
 
 namespace DVBViewerServerApiWrapper.Model
 {
@@ -50,7 +49,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// <returns></returns>
         internal static Recording CreateRecording(XDocument xDocument)
         {
-            return Deserializer.Deserialize<Recording>(xDocument, new Type[] { typeof(RecordingItem) });
+            return Helper.Deserializer.Deserialize<Recording>(xDocument, new Type[] { typeof(RecordingItem) });
         }
 
         /// <summary>
@@ -64,10 +63,10 @@ namespace DVBViewerServerApiWrapper.Model
             if (dvbApi != null)
             {
                 var xmldata = dvbApi.GetDataAsync("recordings",
-                new List<UriParameter> {
-                    SUriParams.Utf81,
-                    SUriParams.EventID1,
-                    SUriParams.Images1
+                new List<Helper.UriParameter> {
+                    Helper.UriParam.Utf81,
+                    Helper.UriParam.EventID1,
+                    Helper.UriParam.Images1
                 }).Result;
 
                 if (xmldata != null)
@@ -88,12 +87,12 @@ namespace DVBViewerServerApiWrapper.Model
             if (dvbApi != null)
             {
                 var xmldata = dvbApi.GetDataAsync("recordings",
-                        new List<UriParameter> {
-                            SUriParams.Utf81 ,
-                            SUriParams.Images1,
-                            SUriParams.NoDesc1,
-                            SUriParams.NoFileName1,
-                            SUriParams.EventID1
+                        new List<Helper.UriParameter> {
+                            Helper.UriParam.Utf81 ,
+                            Helper.UriParam.Images1,
+                            Helper.UriParam.NoDesc1,
+                            Helper.UriParam.NoFileName1,
+                            Helper.UriParam.EventID1
                         }).Result;
 
                 if (xmldata != null)
@@ -115,11 +114,11 @@ namespace DVBViewerServerApiWrapper.Model
             if (dvbApi != null)
             {
                 var xmldata = dvbApi.GetDataAsync("recordings",
-                new List<UriParameter> {
-                    SUriParams.Utf81,
-                    SUriParams.Images1,
-                    SUriParams.EventID1,
-                    new UriParameter("id", recordID.ToString())
+                new List<Helper.UriParameter> {
+                    Helper.UriParam.Utf81,
+                    Helper.UriParam.Images1,
+                    Helper.UriParam.EventID1,
+                    new Helper.UriParameter("id", recordID.ToString())
                 }).Result;
 
                 if (xmldata != null)

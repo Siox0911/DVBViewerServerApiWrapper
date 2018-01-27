@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using DVBViewerServerApiWrapper.Helper;
 
 namespace DVBViewerServerApiWrapper.Model
 {
@@ -27,7 +26,7 @@ namespace DVBViewerServerApiWrapper.Model
 
         internal static RecordedList CreateRecordedList(XDocument xDocument)
         {
-            return Deserializer.Deserialize<RecordedList>(xDocument, new Type[] { typeof(RecordedItem) });
+            return Helper.Deserializer.Deserialize<RecordedList>(xDocument, new Type[] { typeof(RecordedItem) });
         }
 
         /// <summary>
@@ -40,9 +39,9 @@ namespace DVBViewerServerApiWrapper.Model
             if (dvbApi != null)
             {
                 var xmldata = dvbApi.GetDataAsync("sql",
-                    new List<UriParameter> {
-                    SUriParams.Rec1,
-                    SUriParams.Query("Select * from recordedlist")
+                    new List<Helper.UriParameter> {
+                    Helper.UriParam.Rec1,
+                    Helper.UriParam.Query("Select * from recordedlist")
                     }).Result;
 
                 if (xmldata != null)

@@ -132,6 +132,44 @@ namespace DVBViewerServerApiWrapper
                 }
             }
         }
+
+        /// <summary>
+        /// Gibt eine Liste mit allen Videos zurück, welche im Service bekannt sind
+        /// </summary>
+        public VideoFileList VideoFileList
+        {
+            get
+            {
+                try
+                {
+                    return VideoFileList.GetMediaFileList();
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gibt die aktuelle Media Server Version zurück.
+        /// </summary>
+        public Model.Version ServerVersion
+        {
+            get
+            {
+                try
+                {
+                    return Model.Version.GetVersion();
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+        }
         #endregion
 
         public DVBViewerServerApi()
@@ -158,7 +196,14 @@ namespace DVBViewerServerApiWrapper
         {
             if (recordID > 0)
             {
-                return Recording.GetRecording(recordID);
+                try
+                {
+                    return Recording.GetRecording(recordID);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
             }
             return null;
         }
@@ -172,7 +217,14 @@ namespace DVBViewerServerApiWrapper
         {
             if (!string.IsNullOrEmpty(partOfName))
             {
-                return Recording.GetRecordings(partOfName);
+                try
+                {
+                    return Recording.GetRecordings(partOfName);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
             }
             return null;
         }
@@ -186,7 +238,14 @@ namespace DVBViewerServerApiWrapper
         {
             if (!string.IsNullOrEmpty(partOfDescription))
             {
-                return Recording.GetRecordingsByDesc(partOfDescription);
+                try
+                {
+                    return Recording.GetRecordingsByDesc(partOfDescription);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
             }
             return null;
         }
@@ -300,6 +359,50 @@ namespace DVBViewerServerApiWrapper
                 }
 
                 return xmlData;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Sendet Daten asynchron zum Server und gibt einen Code über den Erfolg zurück.
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="uriParameters"></param>
+        /// <returns></returns>
+        public async Task<HttpStatusCode> SendDataAsync(string page = "dvbcommand", List<UriParameter> uriParameters = null)
+        {
+            if (string.IsNullOrEmpty(page))
+            {
+                throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein.");
+            }
+
+            if (string.IsNullOrEmpty(User) || string.IsNullOrEmpty(Password))
+            {
+                throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt.");
+            }
+
+            try
+            {
+                //Uri
+                var uri = CreateUri(page, uriParameters);
+
+                var webRequest = WebRequest.Create(uri);
+                //Falls ein Proxy im System ist, kann das helfen. So lange im IE ein Proxy eingetragen wurde.
+                webRequest.Proxy = WebRequest.DefaultWebProxy;
+                //AuthType
+                webRequest.Credentials = new NetworkCredential(User, Password);
+                webRequest.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
+                //Abfragemethode
+                webRequest.Method = WebRequestMethods.Http.Get;
+
+                //Abfrage durchführen
+                var response =(HttpWebResponse) await webRequest.GetResponseAsync().ConfigureAwait(false);
+                var status = response.StatusCode;
+                response.Close();
+                return status;
             }
             catch (Exception)
             {

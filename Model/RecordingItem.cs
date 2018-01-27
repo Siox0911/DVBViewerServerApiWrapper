@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -82,6 +83,16 @@ namespace DVBViewerServerApiWrapper.Model
         public string Image { get; set; }
 
         internal RecordingItem() { }
+
+        /// <summary>
+        /// Spiel diese Aufnahme auf einem Clienten (DVBViewer) ab, sofern dieser connected ist.
+        /// </summary>
+        /// <param name="dVBViewerClient"></param>
+        /// <returns></returns>
+        public Task<HttpStatusCode> Play(DVBViewerClient dVBViewerClient)
+        {
+            return dVBViewerClient.PlayRecording(this);
+        }
 
     }
 }

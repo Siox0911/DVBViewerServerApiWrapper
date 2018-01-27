@@ -26,6 +26,7 @@ namespace DVBViewerServerApiWrapper.Model
         public string Channel { get; set; }
         /// <summary>
         /// Das Datum an dem die Aufnahme gestartet wurde. Das Format ist nicht klar.
+        /// Zeit in Millisekunden seit blub
         /// </summary>
         [XmlElement(ElementName = "DATEADDED")]
         public string DateAdded { get; set; }

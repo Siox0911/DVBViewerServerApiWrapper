@@ -4,7 +4,7 @@
     /// Sammelsurium der einfachsten UriParameter, welche von der API benötigt werden.
     /// Bundle of the simplest UriParameters, needed by the API.
     /// </summary>
-    public static class SUriParams
+    public static class UriParam
     {
         /// <summary>
         /// favonly = 1
@@ -169,9 +169,6 @@
         /// </summary>
         /// <param name="query">Die SQL Abfrage. The SQL Query</param>
         /// <returns></returns>
-        public static UriParameter Query(string query)
-        {
-            return new UriParameter("query", query);
-        }
+        public static UriParameter Query(string query) => new UriParameter("query", query);
     }
 }

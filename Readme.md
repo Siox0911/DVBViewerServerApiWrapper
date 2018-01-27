@@ -24,12 +24,12 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
 
 <br/><img src="images/ToDo_Ready_256.png" width="22"/> status2.html
 <br/><img src="images/ToDo_Current_256.png" width="22"/> dvbcommand.html
-<br/><img src="images/ToDo_Current_256.png" width="22"/> recordings.html - Add eventID to uri
-<br/><img src="images/ToDo_Add_256.png" width="22"/> getconfigfile.html
+<br/><img src="images/ToDo_Current_256.png" width="22"/> recordings.html
+<br/><img src="images/ToDo_Current_256.png" width="22"/> mediafiles.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> version.html
+<br/><img src="images/ToDo_Add_256.png" width="22"/> getconfigfile.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> setting.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> getchannelsxml.html
-<br/><img src="images/ToDo_Add_256.png" width="22"/> mediafiles.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> recdelete.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> epg.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> epgclear.html
@@ -38,6 +38,13 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
 <br/><img src="images/ToDo_Add_256.png" width="22"/> timeredit.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> timerdelete.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> tasks.html
+<br/><img src="images/ToDo_Add_256.png" width="22"/> sideload.html
+<br/><img src="images/ToDo_Add_256.png" width="22"/> startts.html
+<br/><img src="images/ToDo_Add_256.png" width="22"/> stopts.html
+<br/><img src="images/ToDo_Add_256.png" width="22"/> searchlist.html
+<br/><img src="images/ToDo_Add_256.png" width="22"/> searchdelete.html
+<br/><img src="images/ToDo_Add_256.png" width="22"/> searchedit.html
+<br/><img src="images/ToDo_Add_256.png" width="22"/> searchadd.html
 <br/><img src="images/ToDo_Current_256.png" width="22"/><img src="images/ToDo_Abort_256.png" width="22"/> sql.html - some changes in a newer media server version
 
 ### Using the lib
@@ -58,7 +65,7 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
             try
             {
                 
-                //Gets the serverstatus if online
+                //Get the serverstatus if online
                 var status = dvbServ.Serverstatus;
 
                 Console.WriteLine($"ServerRights: {status.Rights}");
@@ -70,6 +77,7 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
 
                 //All current recordings
                 var recsAll = dvbServ.Recordings;
+                Console.WriteLine($"Count of recordings: {recsAll.Items.Count}");
 
                 //All current recordings in a shorter and faster way
                 var recs = dvbServ.RecordingsShort;
@@ -79,12 +87,27 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
 
                 //All current recordings with "bank" in the name
                 var recsN = dvbServ.GetRecordings("bank");
+                Console.WriteLine($"Count of recordings with bank in the name: {recsN.Items.Count}");
 
                 //All current recordings with "bank" in the description
                 var recsD = dvbServ.GetRecordingsByDescription("bank");
+                Console.WriteLine($"Count of recordings with bank in the description: {recsD.Items.Count}");
 
                 //All connected Clients since media server restarts as PC-Names
                 var clients = dvbServ.DVBViewerClients;
+                Console.WriteLine($"Count of clients connected to MediaServer since start: {clients.Items.Count}");
+
+                //clients.Clients[0].PlayVideo(@"\\192.168.2.101\Dokus\Mathematik\S02\Mathematik zum Anfassen S02E01 - Wie hat alles angefangen.mpg");
+                var mediafiles = dvbServ.MediaFileList;
+                Console.WriteLine($"Count of mediafiles in MediaServer since last database update: {recsD.Items.Count}");
+
+                //Neuer Zufallsgenerator
+                var rnd = new Random();
+                //Neue Zufallszahl erzeugen
+                int next = rnd.Next(mediafiles.Items.Count);
+                //Dem ersten Clienten ein zufälliges Video abspielen lassen
+                clients.Items[0].PlayVideo(mediafiles.Items[next]);
+                Console.WriteLine($"Client \"{clients.Items[0].Name}\" plays video \"{mediafiles.Items[next].Title}\"");
             }
             catch (Exception ex)
             {
@@ -95,3 +118,5 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
         }
     }
 ```
+
+![Screenshot C L I](images/screenshotCLI.png)

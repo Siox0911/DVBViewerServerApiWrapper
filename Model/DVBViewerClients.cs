@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Net;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using DVBViewerServerApiWrapper.Helper;
-
 
 namespace DVBViewerServerApiWrapper.Model
 {
@@ -19,14 +18,14 @@ namespace DVBViewerServerApiWrapper.Model
         /// <summary>
         /// Liste mit den Namen der Clienten als PC-Name
         /// </summary>
-        [XmlElement(ElementName = "target", Type = typeof(string))]
-        public List<string> Clients { get; set; }
+        [XmlElement(ElementName = "target", Type = typeof(DVBViewerClient))]
+        public List<DVBViewerClient> Items { get; set; }
 
         internal DVBViewerClients() { }
 
         internal static DVBViewerClients CreateDvbViewerClients(XDocument xDocument)
         {
-            return Deserializer.Deserialize<DVBViewerClients>(xDocument);
+            return Helper.Deserializer.Deserialize<DVBViewerClients>(xDocument);
         }
 
         internal static DVBViewerClients GetDvbViewerClients()
@@ -42,6 +41,26 @@ namespace DVBViewerServerApiWrapper.Model
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Sendet an jeden Clienten ein DVBCommand. Da es sich um jeden Clienten handelt, gibt es keinen Rückgabewert
+        /// </summary>
+        /// <param name="dVBViewerXCommand"></param>
+        /// <returns></returns>
+        public async void SendXCommandAsync(Enums.DVBViewerXCommand dVBViewerXCommand)
+        {
+            try
+            {
+                foreach (var client in Items)
+                {
+                    await client.SendXCommandAsync(dVBViewerXCommand).ConfigureAwait(false);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
     }

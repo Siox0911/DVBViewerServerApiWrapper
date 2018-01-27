@@ -42,10 +42,13 @@
   <ItemGroup>
     <Compile Include="DVBViewerServerApi.cs" />
     <Compile Include="Helper\Deserializer.cs" />
-    <Compile Include="Helper\SUriParams.cs" />
+    <Compile Include="Helper\UriParam.cs" />
+    <Compile Include="Model\DVBViewerClient.cs" />
     <Compile Include="Model\DVBViewerClients.cs" />
-    <Compile Include="Model\ETypes.cs" />
+    <Compile Include="Model\Enums.cs" />
     <Compile Include="Helper\FileSize.cs" />
+    <Compile Include="Model\VideoFileItem.cs" />
+    <Compile Include="Model\VideoFileList.cs" />
     <Compile Include="Model\RecordingItem.cs" />
     <Compile Include="Model\RecordedItem.cs" />
     <Compile Include="Model\RecordedList.cs" />
@@ -53,18 +56,22 @@
     <Compile Include="Model\RecordingFolder.cs" />
     <Compile Include="Model\Serverstatus.cs" />
     <Compile Include="Helper\UriParameter.cs" />
+    <Compile Include="Model\Version.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="changelog.md" />
     <None Include="Readme.md" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ApiXml\files.txt" />
+    <Content Include="ApiXml\mediafile1.xml" />
     <Content Include="ApiXml\recordings.xml" />
     <Content Include="ApiXml\recordingsAll.xml" />
     <Content Include="ApiXml\SqlRecordedList.xml" />
     <Content Include="ApiXml\status2.xml" />
     <Content Include="ApiXml\TextFile1.txt" />
+    <Content Include="images\screenshotCLI.png" />
     <Content Include="images\ToDo_Abort_256.png" />
     <Content Include="images\ToDo_Add_256.png" />
     <Content Include="images\ToDo_Current_256.png" />
