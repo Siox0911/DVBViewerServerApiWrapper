@@ -65,7 +65,7 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
             try
             {
                 
-                //Get the serverstatus if online
+               //Get the serverstatus if online
                 var status = dvbServ.Serverstatus;
 
                 Console.WriteLine($"ServerRights: {status.Rights}");
@@ -75,9 +75,12 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
                     Console.WriteLine($"RecordingFolder: {item.Folder}");
                 }
 
+                var version = dvbServ.ServerVersion;
+                Console.WriteLine($"Serverversion: {version.ServerVersion}");
+
                 //All current recordings
                 var recsAll = dvbServ.Recordings;
-                Console.WriteLine($"Count of recordings: {recsAll.Items.Count}");
+                Console.WriteLine($"Number of recordings: {recsAll.Items.Count}");
 
                 //All current recordings in a shorter and faster way
                 var recs = dvbServ.RecordingsShort;
@@ -87,27 +90,27 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
 
                 //All current recordings with "bank" in the name
                 var recsN = dvbServ.GetRecordings("bank");
-                Console.WriteLine($"Count of recordings with bank in the name: {recsN.Items.Count}");
+                Console.WriteLine($"Number of recordings with bank in the name: {recsN.Items.Count}");
 
                 //All current recordings with "bank" in the description
                 var recsD = dvbServ.GetRecordingsByDescription("bank");
-                Console.WriteLine($"Count of recordings with bank in the description: {recsD.Items.Count}");
+                Console.WriteLine($"Number of recordings with bank in the description: {recsD.Items.Count}");
 
                 //All connected Clients since media server restarts as PC-Names
                 var clients = dvbServ.DVBViewerClients;
-                Console.WriteLine($"Count of clients connected to MediaServer since start: {clients.Items.Count}");
+                Console.WriteLine($"Number of clients connected to MediaServer since start: {clients.Items.Count}");
 
                 //clients.Clients[0].PlayVideo(@"\\192.168.2.101\Dokus\Mathematik\S02\Mathematik zum Anfassen S02E01 - Wie hat alles angefangen.mpg");
-                var mediafiles = dvbServ.MediaFileList;
-                Console.WriteLine($"Count of mediafiles in MediaServer since last database update: {recsD.Items.Count}");
+                var videofiles = dvbServ.VideoFileList;
+                Console.WriteLine($"Number of videofiles in MediaServer since last database update: {videofiles.Items.Count}");
 
                 //Neuer Zufallsgenerator
                 var rnd = new Random();
                 //Neue Zufallszahl erzeugen
-                int next = rnd.Next(mediafiles.Items.Count);
+                int next = rnd.Next(videofiles.Items.Count);
                 //Dem ersten Clienten ein zufälliges Video abspielen lassen
-                clients.Items[0].PlayVideo(mediafiles.Items[next]);
-                Console.WriteLine($"Client \"{clients.Items[0].Name}\" plays video \"{mediafiles.Items[next].Title}\"");
+                clients.Items[0].PlayVideo(videofiles.Items[next]);
+                Console.WriteLine($"Client \"{clients.Items[0].Name}\" plays video \"{videofiles.Items[next].Title}\"");
             }
             catch (Exception ex)
             {
