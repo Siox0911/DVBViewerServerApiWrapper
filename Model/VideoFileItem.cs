@@ -52,16 +52,26 @@ namespace DVBViewerServerApiWrapper.Model
         public string Channel { get; set; }
 
         /// <summary>
-        /// ?
+        /// Datum der letzten Änderung
         /// </summary>
-        [XmlElement(ElementName = "TIME")]
-        public double Time { get; set; }
+        public DateTime DateLastChange => DateTime.FromOADate(DDateLastChange);
 
         /// <summary>
-        /// ?
+        /// Das letzte Datum der Änderung als Gleitkommazahl im Delphiformat
+        /// </summary>
+        [XmlElement(ElementName = "TIME")]
+        public double DDateLastChange { get; set; }
+
+        /// <summary>
+        /// Datum, wann die Datei in die Datenbank aufgenommen wurde.
+        /// </summary>
+        public DateTime DateAdded => DateTime.FromOADate(DDateAdded);
+
+        /// <summary>
+        /// Datum, wann die Datei in die Datenbank aufgenommen wurde als Gleitkommazahl im Delphiformat
         /// </summary>
         [XmlElement(ElementName = "ADDED")]
-        public double Added { get; set; }
+        public double DDateAdded { get; set; }
 
         /// <summary>
         /// Beschreibung des Videos, falls vorhanden
@@ -88,16 +98,34 @@ namespace DVBViewerServerApiWrapper.Model
         public double LastPlayed { get; set; }
 
         /// <summary>
-        /// Der Title der Aufnahme
+        /// Der Title des Videos
         /// </summary>
         [XmlElement(ElementName = "TITEL")]
         public string Title { get; set; }
 
         /// <summary>
-        /// Die Dateigröße der Aufnahme
+        /// Die Dateigröße des Videos
         /// </summary>
         [XmlElement(ElementName = "FILESIZE")]
         public long FileSize { get; set; }
+
+        /// <summary>
+        /// Das Video ist aktiviert und wird angezeigt
+        /// </summary>
+        [XmlElement(ElementName = "ENABLED", Type = typeof(bool))]
+        public bool Enabled { get; set; }
+
+        /// <summary>
+        /// Die Datei zum Video wurde auf dem Server gefunden
+        /// </summary>
+        [XmlElement(ElementName = "FOUND", Type = typeof(bool))]
+        public bool Found { get; set; }
+
+        /// <summary>
+        /// Gibt die Fileextension zurück. z.B. .avi, .mpeg, .mkv etc.
+        /// </summary>
+        [XmlElement(ElementName = "EXT")]
+        public string FileExtension { get; set; }
 
         internal VideoFileItem() { }
 
@@ -109,6 +137,26 @@ namespace DVBViewerServerApiWrapper.Model
         public Task<HttpStatusCode> Play(DVBViewerClient dVBViewerClient)
         {
             return dVBViewerClient.PlayVideo(this);
+        }
+
+        /// <summary>
+        /// Gibt eine URL zurück, welche das Video auf einen UPnP Gerät abspielen lässt.
+        /// </summary>
+        /// <returns></returns>
+        public string GetUPnPStream()
+        {
+            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
+            return $"http://{dvbApi.Hostname}:8090/upnp/video/{ObjectID.ToString("D5")}{FileExtension}?d={Duration}";
+        }
+
+        /// <summary>
+        /// Gibt den String zurück, der verwendet wird, bevor der UPnP String in die Datei m3u geschrieben wird.
+        /// Beginnend mit #EXTINF:
+        /// </summary>
+        /// <returns></returns>
+        internal string GetM3uPrefString()
+        {
+            return $"#EXTINF:{Duration},{Title}";
         }
     }
 }

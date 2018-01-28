@@ -38,11 +38,12 @@ namespace DVBViewerServerApiWrapper.Model
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                var xmldata = dvbApi.GetDataAsync("sql",
-                    new List<Helper.UriParameter> {
+                var xmldata = dvbApi.GetDataAsync("sql", new List<Helper.UriParameter>
+                {
                     Helper.UriParam.Rec1,
                     Helper.UriParam.Query("Select * from recordedlist")
-                    }).Result;
+                }
+                ).Result;
 
                 if (xmldata != null)
                 {

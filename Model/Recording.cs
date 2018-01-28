@@ -62,8 +62,8 @@ namespace DVBViewerServerApiWrapper.Model
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                var xmldata = dvbApi.GetDataAsync("recordings",
-                new List<Helper.UriParameter> {
+                var xmldata = dvbApi.GetDataAsync("recordings", new List<Helper.UriParameter>
+                {
                     Helper.UriParam.Utf81,
                     Helper.UriParam.EventID1,
                     Helper.UriParam.Images1
@@ -86,14 +86,14 @@ namespace DVBViewerServerApiWrapper.Model
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                var xmldata = dvbApi.GetDataAsync("recordings",
-                        new List<Helper.UriParameter> {
-                            Helper.UriParam.Utf81 ,
-                            Helper.UriParam.Images1,
-                            Helper.UriParam.NoDesc1,
-                            Helper.UriParam.NoFileName1,
-                            Helper.UriParam.EventID1
-                        }).Result;
+                var xmldata = dvbApi.GetDataAsync("recordings", new List<Helper.UriParameter>
+                {
+                    Helper.UriParam.Utf81 ,
+                    Helper.UriParam.Images1,
+                    Helper.UriParam.NoDesc1,
+                    Helper.UriParam.NoFileName1,
+                    Helper.UriParam.EventID1
+                }).Result;
 
                 if (xmldata != null)
                 {
@@ -113,8 +113,8 @@ namespace DVBViewerServerApiWrapper.Model
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                var xmldata = dvbApi.GetDataAsync("recordings",
-                new List<Helper.UriParameter> {
+                var xmldata = dvbApi.GetDataAsync("recordings", new List<Helper.UriParameter>
+                {
                     Helper.UriParam.Utf81,
                     Helper.UriParam.Images1,
                     Helper.UriParam.EventID1,

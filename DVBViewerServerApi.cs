@@ -142,7 +142,7 @@ namespace DVBViewerServerApiWrapper
             {
                 try
                 {
-                    return VideoFileList.GetMediaFileList();
+                    return VideoFileList.GetVideoFileList();
                 }
                 catch (Exception)
                 {
@@ -166,6 +166,24 @@ namespace DVBViewerServerApiWrapper
                 catch (Exception)
                 {
 
+                    throw;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gibt alle Servertasks zurück. Tasks sind z.B. Datenbanken aktualisieren etc.
+        /// </summary>
+        public Model.ServerTaskList ServerTasks
+        {
+            get
+            {
+                try
+                {
+                    return Model.ServerTaskList.GetServerTaskList();
+                }
+                catch (Exception)
+                {
                     throw;
                 }
             }
@@ -249,9 +267,91 @@ namespace DVBViewerServerApiWrapper
             }
             return null;
         }
+
+        /// <summary>
+        /// Gibt eine Videoliste zurück, welche einen Teil des Suchtextes im Titel tragen.
+        /// </summary>
+        /// <param name="partOfName"></param>
+        /// <returns></returns>
+        public VideoFileList GetVideoList(string partOfName)
+        {
+            if (!string.IsNullOrEmpty(partOfName))
+            {
+                try
+                {
+                    return VideoFileList.GetVideoFileList(partOfName);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            return null;
+        }
         #endregion
 
         #region Private Methodes
+        /// <summary>
+        /// Generiert aus den Daten eine URL zum Verbinden zum Service
+        /// </summary>
+        /// <param name="page">Die Seite welche geladen werden soll ohne html am Ende</param>
+        /// <param name="uriParameters">Eine Liste mit Parametern</param>
+        /// <returns>Eine Uri welche zum Connect zum Service genutzt werden kann.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Der Port konnte nicht gesetzt werden.</exception>
+        /// <exception cref="ArgumentException">Das Schema konnte nicht gesetzt werden.</exception>
+        /// <exception cref="MissingFieldException"><seealso cref="Hostname"/> oder <seealso cref="Port"/> wurden nicht gesetzt.</exception>
+        private Uri CreateApiUri(string page, List<UriParameter> uriParameters)
+        {
+
+            if (string.IsNullOrEmpty(ipAddress) || Port == 0)
+            {
+                throw new MissingFieldException("Hostname oder Port wurden nicht gesetzt.");
+            }
+
+            try
+            {
+                var ub = new UriBuilder
+                {
+                    Host = ipAddress,
+                    //Wird nicht benötigt: Credentials werden beim Abrufen gesetzt
+                    //UserName = user,
+                    //Password = password,
+                    Port = Port,
+                    Scheme = "http",
+                    Path = $"/api/{page.ToLower()}.html"
+                };
+
+                //URL um die Parameter erweitern, falls vorhanden
+                if (uriParameters?.Count > 0)
+                {
+                    var uriQuery = "";
+                    var first = true;
+                    foreach (var item in uriParameters)
+                    {
+                        if (!first)
+                        {
+                            uriQuery += "&";
+                        }
+                        uriQuery += $"{item.Key}={Uri.EscapeDataString(item.Value)}";
+                        first = false;
+                    }
+                    ub.Query = uriQuery;
+                }
+
+                return ub.Uri;
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                //Port passt nicht
+                throw;
+            }
+            catch (ArgumentException)
+            {
+                //Schema passt nicht
+                throw;
+            }
+        }
+
         /// <summary>
         /// Generiert aus den Daten eine URL zum Verbinden zum Service
         /// </summary>
@@ -279,7 +379,7 @@ namespace DVBViewerServerApiWrapper
                     //Password = password,
                     Port = Port,
                     Scheme = "http",
-                    Path = $"/api/{page.ToLower()}.html"
+                    Path = $"/{page.ToLower()}.html"
                 };
 
                 //URL um die Parameter erweitern, falls vorhanden
@@ -335,7 +435,7 @@ namespace DVBViewerServerApiWrapper
             try
             {
                 //Uri
-                var uri = CreateUri(page, uriParameters);
+                var uri = CreateApiUri(page, uriParameters);
 
                 //Rückgabedokument
                 XDocument xmlData;
@@ -372,7 +472,55 @@ namespace DVBViewerServerApiWrapper
         /// <param name="page"></param>
         /// <param name="uriParameters"></param>
         /// <returns></returns>
+        /// <exception cref="NullReferenceException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public async Task<HttpStatusCode> SendDataAsync(string page = "dvbcommand", List<UriParameter> uriParameters = null)
+        {
+            if (string.IsNullOrEmpty(page))
+            {
+                throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein.");
+            }
+
+            if (string.IsNullOrEmpty(User) || string.IsNullOrEmpty(Password))
+            {
+                throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt.");
+            }
+
+            try
+            {
+                //Uri
+                var uri = CreateApiUri(page, uriParameters);
+
+                var webRequest = WebRequest.Create(uri);
+                //Falls ein Proxy im System ist, kann das helfen. So lange im IE ein Proxy eingetragen wurde.
+                webRequest.Proxy = WebRequest.DefaultWebProxy;
+                //AuthType
+                webRequest.Credentials = new NetworkCredential(User, Password);
+                webRequest.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
+                //Abfragemethode
+                webRequest.Method = WebRequestMethods.Http.Get;
+
+                //Abfrage durchführen
+                var response = (HttpWebResponse)await webRequest.GetResponseAsync().ConfigureAwait(false);
+                var status = response.StatusCode;
+                response.Close();
+                return status;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Ruft eine Seite auf und gibt die erhaltene Datei als Pfad und Dateiname zurück.
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="uriParameters"></param>
+        /// <returns></returns>
+        /// <exception cref="NullReferenceException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        public async Task<string> GetFileAsync(string page, List<UriParameter> uriParameters)
         {
             if (string.IsNullOrEmpty(page))
             {
@@ -399,10 +547,16 @@ namespace DVBViewerServerApiWrapper
                 webRequest.Method = WebRequestMethods.Http.Get;
 
                 //Abfrage durchführen
-                var response =(HttpWebResponse) await webRequest.GetResponseAsync().ConfigureAwait(false);
-                var status = response.StatusCode;
-                response.Close();
-                return status;
+                using (var response = (HttpWebResponse)await webRequest.GetResponseAsync().ConfigureAwait(false))
+                {
+                    var file = response.ResponseUri.AbsolutePath;
+
+                    using (var stream = response.GetResponseStream())
+                    {
+                        //TODO: Hier muss noch die Datei gespeichert werden. Aktuell wird nur der Absolute Pfad der Datei aus dem Server zurückgegeben.
+                        return response.ResponseUri.AbsolutePath;
+                    }
+                }
             }
             catch (Exception)
             {
