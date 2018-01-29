@@ -26,6 +26,7 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
 
 <br/><img src="images/ToDo_Ready_256.png" width="22"/> status2.html
 <br/><img src="images/ToDo_Ready_256.png" width="22"/> version.html
+<br/><img src="images/ToDo_Ready_256.png" width="22"/> tasks.html
 <br/><img src="images/ToDo_Current_256.png" width="22"/> dvbcommand.html
 <br/><img src="images/ToDo_Current_256.png" width="22"/> recordings.html
 <br/><img src="images/ToDo_Current_256.png" width="22"/> mediafiles.html -> own implementation over the sql.html
@@ -39,7 +40,6 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
 <br/><img src="images/ToDo_Add_256.png" width="22"/> timeradd.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> timeredit.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> timerdelete.html
-<br/><img src="images/ToDo_Add_256.png" width="22"/> tasks.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> sideload.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> startts.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> stopts.html

@@ -150,10 +150,13 @@ namespace DVBViewerServerApiWrapper.Model
                 {
                     using (var sw = new StreamWriter(fStream))
                     {
-                        foreach (var item in Items)
+                        for (int i = 0; i < Items.Count; i++)
                         {
-                            sw.WriteLine(item.GetM3uPrefString());
-                            sw.WriteLine(item.GetUPnPStream());
+                            var oldTitle = Items[i].Title;
+                            Items[i].Title = $"[{i+1} / {Items.Count}] {oldTitle}";
+                            sw.WriteLine(Items[i].GetM3uPrefString());
+                            Items[i].Title = oldTitle;
+                            sw.WriteLine(Items[i].GetUPnPStream());
                         }
                     }
                 }
