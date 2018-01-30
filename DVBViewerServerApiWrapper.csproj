@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,6 +43,7 @@
   <ItemGroup>
     <Compile Include="DVBViewerServerApi.cs" />
     <Compile Include="Helper\Deserializer.cs" />
+    <Compile Include="Helper\Security.cs" />
     <Compile Include="Helper\UriParam.cs" />
     <Compile Include="Model\DVBViewerClient.cs" />
     <Compile Include="Model\DVBViewerClients.cs" />

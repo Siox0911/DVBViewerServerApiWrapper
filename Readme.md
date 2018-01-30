@@ -10,7 +10,7 @@ www.dvbviewer.com
 
 ### Current state (Aktueller Status)
 
-Version 0.0.2.1
+Version 0.0.2.2
 
 Retrieve data
 - parse the service API into .Net objects (readonly)
@@ -59,10 +59,60 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
             var dvbServ = new DVBViewerServerApi
             {
                 IpAddress = "Name-of-PC or IpAddress",
-                Password = "password for guest or admin",
+                //Password is now a SecureString, see below
+                //Password = "password for guest or admin",
                 User = "username for guest or admin",
                 Port = 8089
             };
+
+            //Define new SecureString
+            var spw = new SecureString();
+
+            //Basics of SecureString
+            //Get the password in a CLI app and save it to a SecureString
+            ConsoleKeyInfo key;
+            Console.Write("Enter the server password: ");
+            spw = new SecureString();
+            do
+            {
+                key = Console.ReadKey(true);
+                spw.AppendChar(key.KeyChar);
+                Console.Write("*");
+
+            } while (key.Key != ConsoleKey.Enter);
+            Console.WriteLine();
+
+            //Set the password
+            dvbServ.Password = spw;
+            spw = null;
+
+            //For the next steps, the Class "Security" ist stored under the namespace
+            //DVBViewerServerApiWrapper.Helper
+
+            //For set the password as SecureString in WPF or Forms Applikations
+            //Read the password from a PasswordBox
+            //Save the Password with 
+            string entropy;
+            string pwEncrypted = Security.GenerateEnrcyptedPassword("thePasswort", out entropy);
+
+            //Save the both, also entropy and pwEncrypted in the same, better to different places
+            //After the App is new or restarted, load the encrypted values (pwEncrypted, entropy)
+            //Decrypt the password with
+            string password = Security.GenerateUnEnrcyptedPassword(pwEncrypted, entropy);
+
+            //Generate the SecureString
+            var securePW = new SecureString();
+            foreach (char c in password)
+            {
+                securePW.AppendChar(c);
+            }
+            //Set the secure Password to the ApiWrapper
+            dvbServ.Password = securePW;
+            //Set all vars to null
+            password = null;
+            securePW = null;
+            pwEncrypted = null;
+            entropy = null;
 
             try
             {

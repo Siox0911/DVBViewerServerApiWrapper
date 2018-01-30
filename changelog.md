@@ -1,5 +1,11 @@
 ﻿# Changelog
 
+v0.0.2.2
+- Changed Type of Password from String to SecureString
+  - Added Class to encrypt and decrypt a password to store it in a file
+    - The decryption and encryption methods are bound to the Windows account
+    - For more details, see the example below (readme.md)
+
 v0.0.2.1
 - DVBViewerServerApi.cs
   - renamed Function CreateUri to CreateApiUri for Api Uris

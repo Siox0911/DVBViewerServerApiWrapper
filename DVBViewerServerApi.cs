@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using DVBViewerServerApiWrapper.Model;
 using DVBViewerServerApiWrapper.Helper;
 using System.Diagnostics;
+using System.Security;
 
 namespace DVBViewerServerApiWrapper
 {
@@ -30,10 +31,20 @@ namespace DVBViewerServerApiWrapper
         /// Benutzername des Service
         /// </summary>
         public string User { get; set; }
+
+        private SecureString password;
         /// <summary>
         /// Password für den Service
         /// </summary>
-        public string Password { get; set; }
+        public SecureString Password
+        {
+            private get { return password; }
+            set
+            {
+                password = value;
+                password.MakeReadOnly();
+            }
+        }
         /// <summary>
         /// Port zum Service: Default 8089
         /// </summary>
@@ -427,7 +438,7 @@ namespace DVBViewerServerApiWrapper
                 throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein.");
             }
 
-            if (string.IsNullOrEmpty(User) || string.IsNullOrEmpty(Password))
+            if (string.IsNullOrEmpty(User) || Password == null)
             {
                 throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt.");
             }
@@ -481,7 +492,7 @@ namespace DVBViewerServerApiWrapper
                 throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein.");
             }
 
-            if (string.IsNullOrEmpty(User) || string.IsNullOrEmpty(Password))
+            if (string.IsNullOrEmpty(User) || Password == null)
             {
                 throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt.");
             }
@@ -527,7 +538,7 @@ namespace DVBViewerServerApiWrapper
                 throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein.");
             }
 
-            if (string.IsNullOrEmpty(User) || string.IsNullOrEmpty(Password))
+            if (string.IsNullOrEmpty(User) || Password == null)
             {
                 throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt.");
             }
