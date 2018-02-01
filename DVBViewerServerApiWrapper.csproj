@@ -49,6 +49,7 @@
     <Compile Include="Model\DVBViewerClients.cs" />
     <Compile Include="Model\Enums.cs" />
     <Compile Include="Helper\FileSize.cs" />
+    <Compile Include="Model\RecordingSeries.cs" />
     <Compile Include="Model\ServerTaskGroup.cs" />
     <Compile Include="Model\ServerTaskItem.cs" />
     <Compile Include="Model\ServerTaskList.cs" />
@@ -57,11 +58,11 @@
     <Compile Include="Model\RecordingItem.cs" />
     <Compile Include="Model\RecordedItem.cs" />
     <Compile Include="Model\RecordedList.cs" />
-    <Compile Include="Model\Recording.cs" />
+    <Compile Include="Model\RecordingList.cs" />
     <Compile Include="Model\RecordingFolder.cs" />
     <Compile Include="Model\Serverstatus.cs" />
     <Compile Include="Helper\UriParameter.cs" />
-    <Compile Include="Model\Version.cs" />
+    <Compile Include="Model\ServerVersion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

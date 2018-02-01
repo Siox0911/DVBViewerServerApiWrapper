@@ -143,7 +143,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// Gibt eine URL zurück, welche das Video auf einen UPnP Gerät abspielen lässt.
         /// </summary>
         /// <returns></returns>
-        public string GetUPnPStream()
+        public string GetUPnPUriString()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             return $"http://{dvbApi.Hostname}:8090/upnp/video/{ObjectID.ToString("D5")}{FileExtension}?d={Duration}";
@@ -158,5 +158,27 @@ namespace DVBViewerServerApiWrapper.Model
         {
             return $"#EXTINF:{Duration},{Title}";
         }
+
+        /// <summary>
+        /// Erzeugt aus der Liste der Videos eine M3U Datei. Die Datei befindet sich normalerweise im Tempverzeichnis
+        /// </summary>
+        /// <returns>Ein Pfad zur m3u Datei</returns>
+        public string CreateM3UFile()
+        {
+            var tPath = System.IO.Path.GetTempPath();
+            var fName = $"{Title}.m3u";
+            var cPathName = tPath + fName;
+            using (var fStream = new System.IO.FileStream(cPathName, System.IO.FileMode.OpenOrCreate))
+            {
+                using (var sw = new System.IO.StreamWriter(fStream))
+                {
+                        sw.WriteLine(GetM3uPrefString());
+                        sw.WriteLine(GetUPnPUriString());
+                }
+            }
+
+            return cPathName;
+        }
+
     }
 }

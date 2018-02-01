@@ -42,7 +42,8 @@ namespace DVBViewerServerApiWrapper
             set
             {
                 password = value;
-                password.MakeReadOnly();
+                if (password != null)
+                    password.MakeReadOnly();
             }
         }
         /// <summary>
@@ -94,13 +95,13 @@ namespace DVBViewerServerApiWrapper
         /// <summary>
         /// Gibt alle Aufnahmen vom Service zurück
         /// </summary>
-        public Recording Recordings
+        public RecordingList Recordings
         {
             get
             {
                 try
                 {
-                    return Recording.GetRecordings();
+                    return RecordingList.GetRecordings();
                 }
                 catch (Exception)
                 {
@@ -111,13 +112,13 @@ namespace DVBViewerServerApiWrapper
         /// <summary>
         /// Gibt alle Aufnahmen vom Service zurück. Es fehlen darin Dateinamen und die lange Beschreibung.
         /// </summary>
-        public Recording RecordingsShort
+        public RecordingList RecordingsShort
         {
             get
             {
                 try
                 {
-                    return Recording.GetRecordingsShort();
+                    return RecordingList.GetRecordingsShort();
                 }
                 catch (Exception)
                 {
@@ -166,13 +167,13 @@ namespace DVBViewerServerApiWrapper
         /// <summary>
         /// Gibt die aktuelle Media Server Version zurück.
         /// </summary>
-        public Model.Version ServerVersion
+        public Model.ServerVersion ServerVersion
         {
             get
             {
                 try
                 {
-                    return Model.Version.GetVersion();
+                    return Model.ServerVersion.GetServerVersion();
                 }
                 catch (Exception)
                 {
@@ -221,13 +222,13 @@ namespace DVBViewerServerApiWrapper
         /// </summary>
         /// <param name="recordID"></param>
         /// <returns></returns>
-        public Recording GetRecording(int recordID)
+        public RecordingList GetRecording(int recordID)
         {
             if (recordID > 0)
             {
                 try
                 {
-                    return Recording.GetRecording(recordID);
+                    return RecordingList.GetRecording(recordID);
                 }
                 catch (Exception)
                 {
@@ -242,13 +243,13 @@ namespace DVBViewerServerApiWrapper
         /// </summary>
         /// <param name="partOfName"></param>
         /// <returns></returns>
-        public Recording GetRecordings(string partOfName)
+        public RecordingList GetRecordings(string partOfName)
         {
             if (!string.IsNullOrEmpty(partOfName))
             {
                 try
                 {
-                    return Recording.GetRecordings(partOfName);
+                    return RecordingList.GetRecordings(partOfName);
                 }
                 catch (Exception)
                 {
@@ -263,13 +264,13 @@ namespace DVBViewerServerApiWrapper
         /// </summary>
         /// <param name="partOfDescription"></param>
         /// <returns></returns>
-        public Recording GetRecordingsByDescription(string partOfDescription)
+        public RecordingList GetRecordingsByDescription(string partOfDescription)
         {
             if (!string.IsNullOrEmpty(partOfDescription))
             {
                 try
                 {
-                    return Recording.GetRecordingsByDesc(partOfDescription);
+                    return RecordingList.GetRecordingsByDesc(partOfDescription);
                 }
                 catch (Exception)
                 {

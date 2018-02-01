@@ -35,12 +35,35 @@ namespace DVBViewerServerApiWrapper.Model
         /// Die Start Zeit als YYMMDDHHMMSS
         /// </summary>
         [XmlAttribute(AttributeName = "start")]
-        public long Start { get; set; }
+        public long StartDatum { get; set; }
+        /// <summary>
+        /// Die Start Zeit als Datum in YY:MM:DD:HH:MM:SS
+        /// </summary>
+        public DateTime RecDate
+        {
+            get
+            {
+                if (StartDatum != 0)
+                    return DateTime.Parse(StartDatum.ToString("0000-00-00 00:00:00"));
+
+                return default(DateTime);
+            }
+        }
         /// <summary>
         /// Die Länge der Aufnahme HHMMSS
         /// </summary>
         [XmlAttribute(AttributeName = "duration")]
         public long Duration { get; set; }
+        /// <summary>
+        /// Die Länge der Aufnahme HH:MM:SS
+        /// </summary>
+        public string SDuration
+        {
+            get
+            {
+                return Duration.ToString("00:00:00");
+            }
+        }
         /// <summary>
         /// Die EventID der Aufnahme (EPG)
         /// </summary>
@@ -74,8 +97,8 @@ namespace DVBViewerServerApiWrapper.Model
         /// <summary>
         /// Die Serie falls festgelegt
         /// </summary>
-        [XmlElement(ElementName = "series")]
-        public string Series { get; set; }
+        [XmlElement(ElementName = "series", Type = typeof(RecordingSeries))]
+        public RecordingSeries Series { get; set; }
         /// <summary>
         /// Die Bilddatei (Thumpnail) falls erlaubt
         /// </summary>
@@ -92,6 +115,49 @@ namespace DVBViewerServerApiWrapper.Model
         public Task<HttpStatusCode> Play(DVBViewerClient dVBViewerClient)
         {
             return dVBViewerClient.PlayRecording(this);
+        }
+
+        /// <summary>
+        /// Gibt den String zurück, der verwendet wird, bevor der UPnP String in die Datei m3u geschrieben wird.
+        /// Beginnend mit #EXTINF:
+        /// </summary>
+        /// <returns></returns>
+        internal string GetM3uPrefString()
+        {
+            var tspan = TimeSpan.Parse(SDuration);
+            return $"#EXTINF:{tspan.TotalSeconds},{Title}";
+        }
+
+        /// <summary>
+        /// Gibt eine URL zurück, welche die Aufnahme auf einen UPnP Gerät abspielen lässt.
+        /// </summary>
+        /// <returns></returns>
+        public string GetUPnPUriString()
+        {
+            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
+            var extension = System.IO.Path.GetExtension(File);
+            return $"http://{dvbApi.Hostname}:8090/upnp/recording/{ID}{extension}";
+        }
+
+        /// <summary>
+        /// Erzeugt aus der Liste der Videos eine M3U Datei. Die Datei befindet sich normalerweise im Tempverzeichnis
+        /// </summary>
+        /// <returns>Ein Pfad zur m3u Datei</returns>
+        public string CreateM3UFile()
+        {
+            var tPath = System.IO.Path.GetTempPath();
+            
+            var fName = $"{ID}.m3u";
+            var cPathName = tPath + fName;
+            using (var fStream = new System.IO.FileStream(cPathName, System.IO.FileMode.OpenOrCreate))
+            {
+                using (var sw = new System.IO.StreamWriter(fStream))
+                {
+                    sw.WriteLine(GetM3uPrefString());
+                    sw.WriteLine(GetUPnPUriString());
+                }
+            }
+            return cPathName;
         }
 
     }

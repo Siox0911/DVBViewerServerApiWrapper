@@ -1,10 +1,18 @@
 ﻿# Changelog
 
+v0.0.2.3
+- changed access modifiers of getter methods in some classes
+- renamed Recording to RecordingList
+- add RecordingSeries as seperate object to RecordingItem
+- Recordings can now be filtered by Series
+- added functions to generate M3U Files for video and recordings
+- some improvements and bugfixes
+
 v0.0.2.2
 - Changed Type of Password from String to SecureString
   - Added Class to encrypt and decrypt a password to store it in a file
     - The decryption and encryption methods are bound to the Windows account
-    - For more details, see the example below (readme.md)
+    - For more details, see the readme.md
 
 v0.0.2.1
 - DVBViewerServerApi.cs

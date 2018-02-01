@@ -10,7 +10,7 @@ www.dvbviewer.com
 
 ### Current state (Aktueller Status)
 
-Version 0.0.2.2
+Version 0.0.2.3
 
 Retrieve data
 - parse the service API into .Net objects (readonly)
@@ -65,6 +65,10 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
                 Port = 8089
             };
 
+            /*
+            / Section with Secure Password
+            */
+
             //Define new SecureString
             var spw = new SecureString();
 
@@ -86,17 +90,20 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
             dvbServ.Password = spw;
             spw = null;
 
+            //Using SecureString in a GUI App
+
             //For the next steps, the Class "Security" ist stored under the namespace
             //DVBViewerServerApiWrapper.Helper
 
-            //For set the password as SecureString in WPF or Forms Applikations
+            //For set the password as SecureString in WPF or Win-Forms applications
             //Read the password from a PasswordBox
-            //Save the Password with 
+            //Encrypt the Password with 
             string entropy;
             string pwEncrypted = Security.GenerateEnrcyptedPassword("thePasswort", out entropy);
 
-            //Save the both, also entropy and pwEncrypted in the same, better to different places
-            //After the App is new or restarted, load the encrypted values (pwEncrypted, entropy)
+            //Save the both, also entropy and pwEncrypted in the same, better in different places
+            //After the App is new or re-started, load the encrypted values (pwEncrypted, entropy)
+
             //Decrypt the password with
             string password = Security.GenerateUnEnrcyptedPassword(pwEncrypted, entropy);
 
@@ -107,12 +114,17 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
                 securePW.AppendChar(c);
             }
             //Set the secure Password to the ApiWrapper
+            //the SecureString in the ApiWrapper is readonly
             dvbServ.Password = securePW;
             //Set all vars to null
             password = null;
             securePW = null;
             pwEncrypted = null;
             entropy = null;
+
+            /*
+            / Section with examples how to use
+            */
 
             try
             {
@@ -128,7 +140,7 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
                 }
 
                 var version = dvbServ.ServerVersion;
-                Console.WriteLine($"Serverversion: {version.ServerVersion}");
+                Console.WriteLine($"Serverversion: {version.Version}");
 
                 //All current recordings
                 var recsAll = dvbServ.Recordings;
@@ -162,6 +174,20 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
                 //Dem ersten Clienten ein zufälliges Video abspielen lassen
                 clients.Items[0].PlayVideo(videofiles.Items[next]);
                 Console.WriteLine($"Client \"{clients.Items[0].Name}\" plays video \"{videofiles.Items[next].Title}\"");
+
+                //Get alle VideoFiles with bank in the title
+                var filteredFiles = dvbServ.GetVideoList("bank");
+                var m3uFile = filteredFiles.CreateM3UFile();
+                Console.WriteLine($"Playlist in: {m3uFile}");
+
+                //send it to your video player who was registered with m3u
+                System.Diagnostics.Process.Start(m3uFile);
+
+                //Get all Servertasks from the DVBViewer Media Server
+                var servertasks = dvbServ.ServerTasks;
+
+                //Get all Series from the RecordingsList
+                var serien = RecordingSeries.GetSeries();
             }
             catch (Exception ex)
             {

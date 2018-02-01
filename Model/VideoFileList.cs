@@ -68,7 +68,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="partOfTitle"></param>
         /// <returns></returns>
-        internal static VideoFileList GetVideoFileList(string partOfTitle)
+        public static VideoFileList GetVideoFileList(string partOfTitle)
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -156,7 +156,7 @@ namespace DVBViewerServerApiWrapper.Model
                             Items[i].Title = $"[{i+1} / {Items.Count}] {oldTitle}";
                             sw.WriteLine(Items[i].GetM3uPrefString());
                             Items[i].Title = oldTitle;
-                            sw.WriteLine(Items[i].GetUPnPStream());
+                            sw.WriteLine(Items[i].GetUPnPUriString());
                         }
                     }
                 }

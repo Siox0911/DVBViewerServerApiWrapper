@@ -9,10 +9,10 @@ using System.Xml.Serialization;
 namespace DVBViewerServerApiWrapper.Model
 {
     /// <summary>
-    /// Ein Pool mit allen existierenden Aufnahmen
+    /// Ein Pool mit allen existierenden Aufnahmen. Dies ist eine Basisklasse, welche selbst zusätzliche Informationen und zudem die Liste der Aufnahmen enthält.
     /// </summary>
     [XmlRoot(ElementName = "recordings")]
-    public class Recording
+    public class RecordingList
     {
         /// <summary>
         /// Version der Aufnahmetabelle
@@ -40,16 +40,16 @@ namespace DVBViewerServerApiWrapper.Model
         [XmlElement(ElementName = "recording", Type = typeof(RecordingItem))]
         public List<RecordingItem> Items { get; set; }
 
-        internal Recording() { }
+        internal RecordingList() { }
 
         /// <summary>
         /// Erzeugt ein Recording
         /// </summary>
         /// <param name="xDocument"></param>
         /// <returns></returns>
-        internal static Recording CreateRecording(XDocument xDocument)
+        internal static RecordingList CreateRecording(XDocument xDocument)
         {
-            return Helper.Deserializer.Deserialize<Recording>(xDocument, new Type[] { typeof(RecordingItem) });
+            return Helper.Deserializer.Deserialize<RecordingList>(xDocument, new Type[] { typeof(RecordingItem), typeof(RecordingSeries) });
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="recordID"></param>
         /// <returns></returns>
-        internal static Recording GetRecordings()
+        internal static RecordingList GetRecordings()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -81,7 +81,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// Gibt alle Aufnahmen vom Service zurück. Es fehlen darin Dateinamen und die lange Beschreibung.
         /// </summary>
         /// <returns></returns>
-        internal static Recording GetRecordingsShort()
+        internal static RecordingList GetRecordingsShort()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -108,7 +108,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="recordID"></param>
         /// <returns></returns>
-        internal static Recording GetRecording(int recordID)
+        public static RecordingList GetRecording(int recordID)
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -134,7 +134,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="partOfName">Teil des Namens</param>
         /// <returns></returns>
-        internal static Recording GetRecordings(string partOfName)
+        public static RecordingList GetRecordings(string partOfName)
         {
             var result = GetRecordings();
             if (result != null)
@@ -145,18 +145,67 @@ namespace DVBViewerServerApiWrapper.Model
         }
 
         /// <summary>
+        /// Gibt eine Liste mit Aufnahmen zurück, welche zu dieser Serie aufgenommen wurden.
+        /// </summary>
+        /// <param name="recordingSeries"></param>
+        /// <returns></returns>
+        public static RecordingList GetRecordings(RecordingSeries recordingSeries)
+        {
+            var result = GetRecordings();
+            if(result != null)
+            {
+                result.Items = (from f in result.Items where f.Series?.Name.Equals(recordingSeries.Name) == true select f).ToList();
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Gibt eine Liste mit Aufnahmen zurück, welche Text als Teil in der Beschreibung haben.
         /// </summary>
         /// <param name="partOfDesc">Ein Teil der Beschreibung</param>
         /// <returns></returns>
-        internal static Recording GetRecordingsByDesc(string partOfDesc)
+        public static RecordingList GetRecordingsByDesc(string partOfDesc)
         {
             var result = GetRecordings();
             if (result != null)
             {
-                result.Items = (from f in result.Items where f.Description.IndexOf(partOfDesc, StringComparison.OrdinalIgnoreCase) != -1 select f).ToList();
+                result.Items = (from f in result.Items where f.Description?.IndexOf(partOfDesc, StringComparison.OrdinalIgnoreCase) != -1 select f).ToList();
             }
             return result;
         }
+
+
+
+        /// <summary>
+        /// Erzeugt aus der Liste der Videos eine M3U Datei. Die Datei befindet sich normalerweise im Tempverzeichnis
+        /// </summary>
+        /// <returns>Ein Pfad zur m3u Datei</returns>
+        public string CreateM3UFile()
+        {
+            if (Items.Count > 0)
+            {
+                var tPath = System.IO.Path.GetTempPath();
+                var fName = $"{Items[0].ID}.m3u";
+                var cPathName = tPath + fName;
+                using (var fStream = new System.IO.FileStream(cPathName, System.IO.FileMode.OpenOrCreate))
+                {
+                    using (var sw = new System.IO.StreamWriter(fStream))
+                    {
+                        for (int i = 0; i < Items.Count; i++)
+                        {
+                            var oldTitle = Items[i].Title;
+                            Items[i].Title = $"[{i + 1} / {Items.Count}] {oldTitle}";
+                            sw.WriteLine(Items[i].GetM3uPrefString());
+                            Items[i].Title = oldTitle;
+                            sw.WriteLine(Items[i].GetUPnPUriString());
+                        }
+                    }
+                }
+
+                return cPathName;
+            }
+            return null;
+        }
+
     }
 }
