@@ -32,7 +32,7 @@ namespace DVBViewerServerApiWrapper.Model
         [XmlAttribute(AttributeName = "content")]
         public int Content { get; set; }
         /// <summary>
-        /// Die Start Zeit als YYMMDDHHMMSS
+        /// Die Start Zeit als YYMMDDHHMMSS. Wenn ein richtiges Datum genommen werden soll, nimm <seealso cref="RecDate"/>.
         /// </summary>
         [XmlAttribute(AttributeName = "start")]
         public long StartDatum { get; set; }
@@ -50,18 +50,18 @@ namespace DVBViewerServerApiWrapper.Model
             }
         }
         /// <summary>
-        /// Die Länge der Aufnahme HHMMSS
+        /// Die Länge der Aufnahme HHMMSS, verwende <seealso cref="Duration2"/>.
         /// </summary>
         [XmlAttribute(AttributeName = "duration")]
         public long Duration { get; set; }
         /// <summary>
-        /// Die Länge der Aufnahme HH:MM:SS
+        /// Die Länge der Aufnahme als TimeSpan.
         /// </summary>
-        public string SDuration
+        public TimeSpan Duration2
         {
             get
             {
-                return Duration.ToString("00:00:00");
+                return TimeSpan.Parse(Duration.ToString("00:00:00"));
             }
         }
         /// <summary>
@@ -72,8 +72,8 @@ namespace DVBViewerServerApiWrapper.Model
         /// <summary>
         /// Der Aufnahmekanal als Text
         /// </summary>
-        [XmlElement(ElementName = "channel")]
-        public string Channel { get; set; }
+        [XmlElement(ElementName = "channel", Type = typeof(RecordingChannel))]
+        public RecordingChannel Channel { get; set; }
         /// <summary>
         /// Der Dateinahme als Pfad wie er im Service festgelegt wurde.
         /// </summary>
@@ -124,8 +124,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// <returns></returns>
         internal string GetM3uPrefString()
         {
-            var tspan = TimeSpan.Parse(SDuration);
-            return $"#EXTINF:{tspan.TotalSeconds},{Title}";
+            return $"#EXTINF:{Duration2.TotalSeconds},{Title} - {Info}";
         }
 
         /// <summary>

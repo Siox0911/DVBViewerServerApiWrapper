@@ -49,7 +49,11 @@ namespace DVBViewerServerApiWrapper.Model
         /// <returns></returns>
         internal static RecordingList CreateRecording(XDocument xDocument)
         {
-            return Helper.Deserializer.Deserialize<RecordingList>(xDocument, new Type[] { typeof(RecordingItem), typeof(RecordingSeries) });
+            return Helper.Deserializer.Deserialize<RecordingList>(xDocument, new Type[] {
+                typeof(RecordingItem),
+                typeof(RecordingSeries),
+                typeof(RecordingChannel)
+            });
         }
 
         /// <summary>

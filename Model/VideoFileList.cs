@@ -22,6 +22,8 @@ namespace DVBViewerServerApiWrapper.Model
         [XmlElement(ElementName = "row", Type = typeof(VideoFileItem))]
         public List<VideoFileItem> Items { get; set; }
 
+        internal VideoFileList() { }
+
         internal static VideoFileList CreateVideoFileList(XDocument xDocument)
         {
             return Helper.Deserializer.Deserialize<VideoFileList>(xDocument, new Type[] { typeof(VideoFileItem) });
@@ -101,6 +103,104 @@ namespace DVBViewerServerApiWrapper.Model
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Eine Liste mit Videos, welche bis zur letzten Aktualisierung der Datenbank vorhanden waren. Filtert nach einem Teil des Pfades.
+        /// </summary>
+        /// <param name="partOfPath"></param>
+        /// <returns></returns>
+        public static VideoFileList GetVideoFileListByPath(string partOfPath)
+        {
+            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
+            if (dvbApi != null)
+            {
+                //very simple SQL-Injektion prevention. Not perfekt, but the database is readonly...
+                partOfPath = partOfPath.Replace("'", "''");
+
+                string query = "Select objects.Object_ID, objects.Enabled, objects.found, object_details.Details_ID, " +
+                                    "objects.Ext, paths.idPath, objects.Filename, paths.Path, " +
+                                    "object_details.channel, object_details.Added, " +
+                                    "object_details.Description, object_details.Duration, " +
+                                    "object_details.Info, object_details.Lastplayed, " +
+                                    "object_details.Time, object_details.Titel, " +
+                                    "object_details.filesize " +
+                               "from paths inner join objects " +
+                                    "on paths.idPath = objects.PathID " +
+                                    "inner join object_details " +
+                                    "on objects.Detail_ID = object_details.Details_ID " +
+                                    "where Type=3 AND paths.Path like '%" + partOfPath + "%'";
+
+                var xmldata = dvbApi.GetDataAsync("sql", new List<Helper.UriParameter>
+                {
+                    Helper.UriParam.Video1,
+                    Helper.UriParam.Query(query)
+                }).Result;
+
+                if (xmldata != null)
+                {
+                    return CreateVideoFileList(xmldata);
+                }
+            }
+            return null;
+        }
+
+        internal static VideoFileList GetVideoFileListRecursive(int pathObjectID)
+        {
+            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
+            if (dvbApi != null && pathObjectID > 0)
+            {
+                var currentDir = VideoFilePath.GetVideoFilePathParents(pathObjectID);
+                //Im aktuellen Verzeichnis die Videos holen
+                var videos = GetVideoFileList(pathObjectID);
+                foreach (var item in currentDir.Items)
+                {
+                    //videos.Items.AddRange(GetVideoFileList(item.ObjectID).Items);
+                    if(item.ChildPaths.Items.Count > 0)
+                    {
+                        foreach (var item2 in item.ChildPaths.Items)
+                        {
+                            videos.Items.AddRange(GetVideoFileListRecursive(item2.ObjectID).Items);
+                        }
+                    }
+                }
+
+                return videos;
+            }
+            return null;
+        }
+
+        internal static VideoFileList GetVideoFileList(int parentID)
+        {
+            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
+            if (dvbApi != null)
+            {
+                string query = "Select objects.Object_ID, objects.Enabled, objects.found, object_details.Details_ID, " +
+                                    "objects.Ext, paths.idPath, objects.Filename, paths.Path, " +
+                                    "object_details.channel, object_details.Added, " +
+                                    "object_details.Description, object_details.Duration, " +
+                                    "object_details.Info, object_details.Lastplayed, " +
+                                    "object_details.Time, object_details.Titel, " +
+                                    "object_details.filesize " +
+                               "from paths inner join objects " +
+                                    "on paths.idPath = objects.PathID " +
+                                    "inner join object_details " +
+                                    "on objects.Detail_ID = object_details.Details_ID " +
+                                    "where Type=3 AND parent_ID = " + parentID;
+
+                var xmldata = dvbApi.GetDataAsync("sql", new List<Helper.UriParameter>
+                {
+                    Helper.UriParam.Video1,
+                    Helper.UriParam.Query(query)
+                }).Result;
+
+                if (xmldata != null)
+                {
+                    return CreateVideoFileList(xmldata);
+                }
+            }
+            return null;
+
         }
 
         /// <summary>

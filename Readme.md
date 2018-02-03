@@ -10,7 +10,7 @@ www.dvbviewer.com
 
 ### Current state (Aktueller Status)
 
-Version 0.0.2.3
+Version 0.0.2.4
 
 Retrieve data
 - parse the service API into .Net objects (readonly)
@@ -92,7 +92,7 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
 
             //Using SecureString in a GUI App
 
-            //For the next steps, the Class "Security" ist stored under the namespace
+            //For the next steps, the Class "Security" is stored under the namespace
             //DVBViewerServerApiWrapper.Helper
 
             //For set the password as SecureString in WPF or Win-Forms applications

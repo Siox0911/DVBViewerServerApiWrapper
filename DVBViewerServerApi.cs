@@ -200,6 +200,18 @@ namespace DVBViewerServerApiWrapper
                 }
             }
         }
+
+        /// <summary>
+        /// Gibt eine Liste mit allen VideoPfaden zurück.
+        /// </summary>
+        public Model.VideoFilePath VideoPaths
+        {
+            get
+            {
+                return VideoFilePath.GetVideoFilePath();
+            }
+        }
+
         #endregion
 
         public DVBViewerServerApi()

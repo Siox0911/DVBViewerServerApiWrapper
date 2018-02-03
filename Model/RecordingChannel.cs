@@ -7,24 +7,21 @@ using System.Xml.Serialization;
 
 namespace DVBViewerServerApiWrapper.Model
 {
-    /// <summary>
-    /// Ein Aufnahmeserie
-    /// </summary>
-    [XmlRoot(ElementName = "series")]
-    public class RecordingSeries : IEquatable<RecordingSeries>
+    [XmlRoot(ElementName = "channel")]
+    public class RecordingChannel : IEquatable<RecordingChannel>
     {
         /// <summary>
-        /// Die Bezeichnung der Serie
+        /// Der Name des Senders (Kanal)
         /// </summary>
         [XmlText(Type = typeof(string))]
         public string Name { get; set; }
 
         /// <summary>
-        /// Vergleicht beide Serien und gibt True zurück, wenn beide gleich sind
+        /// Vergleicht beide Sender und gibt True zurück, wenn beide gleich sind
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(RecordingSeries other)
+        public bool Equals(RecordingChannel other)
         {
             if (other is null) return false;
             if (Name.Equals(other.Name)) return true;
@@ -32,7 +29,7 @@ namespace DVBViewerServerApiWrapper.Model
         }
 
         /// <summary>
-        /// Gibt den Hashcode der Serie zurück
+        /// Gibt den HashCode des Senders zurück
         /// </summary>
         /// <returns></returns>
         public override int GetHashCode()
@@ -50,18 +47,19 @@ namespace DVBViewerServerApiWrapper.Model
         }
 
         /// <summary>
-        /// Gibt eine Liste der Serien zurück. Die Anzahl der Serien ist abhängig von den aktuellen Aufnahmen
+        /// Gibt eine Liste aller Sender zurück.
         /// </summary>
         /// <returns></returns>
-        public static List<RecordingSeries> GetSeries()
+        public static List<RecordingChannel> GetChannels()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
                 var recs = RecordingList.GetRecordings();
-                return (from f in recs.Items where f.Series != null orderby f.Series.Name select f.Series).Distinct().ToList();
+                return (from f in recs.Items where f.Channel != null orderby f.Channel.Name select f.Channel).Distinct().ToList();
             }
             return null;
         }
+
     }
 }
