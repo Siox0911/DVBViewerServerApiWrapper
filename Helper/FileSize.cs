@@ -60,5 +60,10 @@ namespace DVBViewerServerApiWrapper.Helper
             t.Size = Math.Round(nBytes, 2);
             return t;
         }
+
+        public override string ToString()
+        {
+            return $"{Size} {Weight}";
+        }
     }
 }

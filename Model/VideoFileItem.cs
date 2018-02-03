@@ -86,6 +86,11 @@ namespace DVBViewerServerApiWrapper.Model
         public int Duration { get; set; }
 
         /// <summary>
+        /// Die Abspieldauer als TimeSpan
+        /// </summary>
+        public TimeSpan Duration2 { get { return TimeSpan.FromSeconds(Duration); } }
+
+        /// <summary>
         /// Der Untertitel des Videos
         /// </summary>
         [XmlElement(ElementName = "INFO")]
@@ -108,6 +113,11 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         [XmlElement(ElementName = "FILESIZE")]
         public long FileSize { get; set; }
+
+        /// <summary>
+        /// Die Dateigröße des Videos
+        /// </summary>
+        public Helper.FileSize FileSizeF { get { return Helper.FileSize.GetFileSize(FileSize); } }
 
         /// <summary>
         /// Das Video ist aktiviert und wird angezeigt
