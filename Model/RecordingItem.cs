@@ -37,7 +37,7 @@ namespace DVBViewerServerApiWrapper.Model
         [XmlAttribute(AttributeName = "start")]
         public long StartDatum { get; set; }
         /// <summary>
-        /// Die Start Zeit als Datum in YY:MM:DD:HH:MM:SS
+        /// Die Start Zeit als Datum
         /// </summary>
         public DateTime RecDate
         {
@@ -118,6 +118,50 @@ namespace DVBViewerServerApiWrapper.Model
         }
 
         /// <summary>
+        /// Führt eine Aktualisierung der Aufnahme im Media Server durch. Geändert wird:
+        /// Title, Info, Series, Channel und Description
+        /// </summary>
+        /// <returns></returns>
+        public async Task<HttpStatusCode> Update()
+        {
+            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
+            if (dvbApi != null)
+            {
+                return await dvbApi.SendPostDataAsync("rec_edit", new List<Helper.UriParameter>
+                {
+                    new Helper.UriParameter("recid", ID.ToString()),
+                    new Helper.UriParameter("title", Title),
+                    new Helper.UriParameter("event", Info ?? ""),
+                    new Helper.UriParameter("Series", Series.Name),
+                    new Helper.UriParameter("Channel", Channel.Name),
+                    new Helper.UriParameter("details", Description),
+                    new Helper.UriParameter("chkinfofile", 1.ToString()),
+                    new Helper.UriParameter("chkfileinfo", 1.ToString()),
+                    new Helper.UriParameter("btnsave", 1.ToString())
+                }).ConfigureAwait(false);
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Löscht diese Aufnahme, gibt den Code 423 zurück, wenn eine Löschnung nicht funktioniert hat.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<HttpStatusCode> Delete()
+        {
+            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
+            if (dvbApi != null)
+            {
+                return await dvbApi.SendDataAsync("recdelete", new List<Helper.UriParameter>
+                {
+                    new Helper.UriParameter("recid", ID.ToString()),
+                    new Helper.UriParameter("delfile", 1.ToString())
+                }).ConfigureAwait(false);
+            }
+            return 0;
+        }
+
+        /// <summary>
         /// Gibt den String zurück, der verwendet wird, bevor der UPnP String in die Datei m3u geschrieben wird.
         /// Beginnend mit #EXTINF:
         /// </summary>
@@ -145,7 +189,7 @@ namespace DVBViewerServerApiWrapper.Model
         public string CreateM3UFile()
         {
             var tPath = System.IO.Path.GetTempPath();
-            
+
             var fName = $"{ID}.m3u";
             var cPathName = tPath + fName;
             using (var fStream = new System.IO.FileStream(cPathName, System.IO.FileMode.OpenOrCreate))

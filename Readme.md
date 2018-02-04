@@ -10,7 +10,7 @@ www.dvbviewer.com
 
 ### Current state (Aktueller Status)
 
-Version 0.0.2.4
+Version 0.0.3.0
 
 Retrieve data
 - parse the service API into .Net objects (readonly)
@@ -27,9 +27,9 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
 <br/><img src="images/ToDo_Ready_256.png" width="22"/> status2.html
 <br/><img src="images/ToDo_Ready_256.png" width="22"/> version.html
 <br/><img src="images/ToDo_Ready_256.png" width="22"/> tasks.html
-<br/><img src="images/ToDo_Current_256.png" width="22"/> dvbcommand.html
-<br/><img src="images/ToDo_Current_256.png" width="22"/> recordings.html
+<br/><img src="images/ToDo_Ready_256.png" width="22"/> recordings.html
 <br/><img src="images/ToDo_Current_256.png" width="22"/> mediafiles.html -> own implementation over the sql.html
+<br/><img src="images/ToDo_Current_256.png" width="22"/> dvbcommand.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> getconfigfile.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> setting.html -> maybe unnecessary (double support to status2.html)
 <br/><img src="images/ToDo_Add_256.png" width="22"/> getchannelsxml.html

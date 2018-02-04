@@ -316,7 +316,7 @@ namespace DVBViewerServerApiWrapper
 
         #region Private Methodes
         /// <summary>
-        /// Generiert aus den Daten eine URL zum Verbinden zum Service
+        /// Generiert aus den Daten eine URL mit Api zum Verbinden zum Service
         /// </summary>
         /// <param name="page">Die Seite welche geladen werden soll ohne html am Ende</param>
         /// <param name="uriParameters">Eine Liste mit Parametern</param>
@@ -377,7 +377,7 @@ namespace DVBViewerServerApiWrapper
         }
 
         /// <summary>
-        /// Generiert aus den Daten eine URL zum Verbinden zum Service
+        /// Generiert aus den Daten eine URL ohne Api zum Verbinden zum Service
         /// </summary>
         /// <param name="page">Die Seite welche geladen werden soll ohne html am Ende</param>
         /// <param name="uriParameters">Eine Liste mit Parametern</param>
@@ -438,7 +438,7 @@ namespace DVBViewerServerApiWrapper
         }
 
         /// <summary>
-        /// Gibt die Daten vom Server asynchron zurück.
+        /// Gibt die Api-Daten vom Server asynchron zurück.
         /// </summary>
         /// <param name="page">Die Seite welche geladen werden soll.</param>
         /// <param name="uriParameters"></param>
@@ -491,7 +491,7 @@ namespace DVBViewerServerApiWrapper
         }
 
         /// <summary>
-        /// Sendet Daten asynchron zum Server und gibt einen Code über den Erfolg zurück.
+        /// Sendet Daten über die API asynchron zum Server und gibt einen Code über den Erfolg zurück.
         /// </summary>
         /// <param name="page"></param>
         /// <param name="uriParameters"></param>
@@ -537,14 +537,15 @@ namespace DVBViewerServerApiWrapper
         }
 
         /// <summary>
-        /// Ruft eine Seite auf und gibt die erhaltene Datei als Pfad und Dateiname zurück.
+        /// Sendet Daten über POST (ohne Api) asynchron zum Server und gibt einen Code über den Erfolg zurück.
         /// </summary>
         /// <param name="page"></param>
         /// <param name="uriParameters"></param>
+        /// <param name="webRequestMethod"></param>
         /// <returns></returns>
         /// <exception cref="NullReferenceException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public async Task<string> GetFileAsync(string page, List<UriParameter> uriParameters)
+        public async Task<HttpStatusCode> SendPostDataAsync(string page = "rec_edit", List<UriParameter> uriParameters = null)
         {
             if (string.IsNullOrEmpty(page))
             {
@@ -559,34 +560,114 @@ namespace DVBViewerServerApiWrapper
             try
             {
                 //Uri
-                var uri = CreateUri(page, uriParameters);
+                var uri = new UriBuilder
+                {
+                    Host = ipAddress,
+                    //Wird nicht benötigt: Credentials werden beim Abrufen gesetzt
+                    //UserName = user,
+                    //Password = password,
+                    Port = Port,
+                    Scheme = "http",
+                    Path = $"/{page.ToLower()}.html"
+                };
 
-                var webRequest = WebRequest.Create(uri);
+                var postdata = new StringBuilder();
+                //URL um die Parameter erweitern, falls vorhanden
+                if (uriParameters?.Count > 0)
+                {
+                    var first = true;
+                    foreach (var item in uriParameters)
+                    {
+                        if (!first)
+                        {
+                            postdata.Append("&");
+                        }
+                        postdata.Append(item.Key).Append("=").Append(Uri.EscapeDataString(item.Value));
+                        first = false;
+                    }
+                }
+
+                var data = Encoding.ASCII.GetBytes(postdata.ToString());
+
+                var webRequest = WebRequest.Create(uri.Uri);
                 //Falls ein Proxy im System ist, kann das helfen. So lange im IE ein Proxy eingetragen wurde.
                 webRequest.Proxy = WebRequest.DefaultWebProxy;
                 //AuthType
                 webRequest.Credentials = new NetworkCredential(User, Password);
                 webRequest.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
                 //Abfragemethode
-                webRequest.Method = WebRequestMethods.Http.Get;
+                webRequest.Method = WebRequestMethods.Http.Post;
+                webRequest.ContentType = "application/x-www-form-urlencoded";
+                webRequest.ContentLength = data.Length;
+
+                using (var stream = webRequest.GetRequestStream())
+                {
+                    await stream.WriteAsync(data, 0, postdata.Length).ConfigureAwait(false);
+                }
 
                 //Abfrage durchführen
-                using (var response = (HttpWebResponse)await webRequest.GetResponseAsync().ConfigureAwait(false))
-                {
-                    var file = response.ResponseUri.AbsolutePath;
-
-                    using (var stream = response.GetResponseStream())
-                    {
-                        //TODO: Hier muss noch die Datei gespeichert werden. Aktuell wird nur der Absolute Pfad der Datei aus dem Server zurückgegeben.
-                        return response.ResponseUri.AbsolutePath;
-                    }
-                }
+                var response = (HttpWebResponse)await webRequest.GetResponseAsync().ConfigureAwait(false);
+                var status = response.StatusCode;
+                response.Close();
+                return status;
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
+        ///// <summary>
+        ///// Ruft eine Seite auf und gibt die erhaltene Datei als Pfad und Dateiname zurück.
+        ///// </summary>
+        ///// <param name="page"></param>
+        ///// <param name="uriParameters"></param>
+        ///// <returns></returns>
+        ///// <exception cref="NullReferenceException"></exception>
+        ///// <exception cref="ArgumentNullException"></exception>
+        //public async Task<string> GetFileAsync(string page, List<UriParameter> uriParameters)
+        //{
+        //    if (string.IsNullOrEmpty(page))
+        //    {
+        //        throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein.");
+        //    }
+
+        //    if (string.IsNullOrEmpty(User) || Password == null)
+        //    {
+        //        throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt.");
+        //    }
+
+        //    try
+        //    {
+        //        //Uri
+        //        var uri = CreateUri(page, uriParameters);
+
+        //        var webRequest = WebRequest.Create(uri);
+        //        //Falls ein Proxy im System ist, kann das helfen. So lange im IE ein Proxy eingetragen wurde.
+        //        webRequest.Proxy = WebRequest.DefaultWebProxy;
+        //        //AuthType
+        //        webRequest.Credentials = new NetworkCredential(User, Password);
+        //        webRequest.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
+        //        //Abfragemethode
+        //        webRequest.Method = WebRequestMethods.Http.Get;
+
+        //        //Abfrage durchführen
+        //        using (var response = (HttpWebResponse)await webRequest.GetResponseAsync().ConfigureAwait(false))
+        //        {
+        //            var file = response.ResponseUri.AbsolutePath;
+
+        //            using (var stream = response.GetResponseStream())
+        //            {
+        //                //TODO: Hier muss noch die Datei gespeichert werden. Aktuell wird nur der Absolute Pfad der Datei aus dem Server zurückgegeben.
+        //                return response.ResponseUri.AbsolutePath;
+        //            }
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
         #endregion
     }
 }

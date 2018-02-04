@@ -61,7 +61,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="recordID"></param>
         /// <returns></returns>
-        internal static RecordingList GetRecordings()
+        public static RecordingList GetRecordings()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
