@@ -10,7 +10,7 @@ www.dvbviewer.com
 
 ### Current state (Aktueller Status)
 
-Version 0.0.3.0
+Version 0.3.0.0
 
 Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready, 
 <img src="images/ToDo_Current_256.png" width="22"/> Work, 

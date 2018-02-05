@@ -1,5 +1,8 @@
 ﻿# Changelog
 
+v0.3.0.0
+ - changed version to a realistic value
+
 v0.0.3.0
  - changed access modifier in RecordingList to public
  - added a Function to send POST data to the media server
