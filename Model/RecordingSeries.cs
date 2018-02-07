@@ -8,19 +8,21 @@ using System.Xml.Serialization;
 namespace DVBViewerServerApiWrapper.Model
 {
     /// <summary>
-    /// Ein Aufnahmeserie
+    /// Ein Aufnahmeserie. A recording series
     /// </summary>
     [XmlRoot(ElementName = "series")]
     public class RecordingSeries : IEquatable<RecordingSeries>
     {
         /// <summary>
-        /// Die Bezeichnung der Serie
+        /// Die Bezeichnung der Serie.
+        /// The name of the series
         /// </summary>
         [XmlText(Type = typeof(string))]
         public string Name { get; set; }
 
         /// <summary>
-        /// Vergleicht beide Serien und gibt True zurück, wenn beide gleich sind
+        /// Vergleicht beide Serien und gibt True zurück, wenn beide gleich sind.
+        /// Compare both series and return true if both are the same
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
@@ -33,6 +35,7 @@ namespace DVBViewerServerApiWrapper.Model
 
         /// <summary>
         /// Gibt den Hashcode der Serie zurück
+        /// Returns the hash code of the series
         /// </summary>
         /// <returns></returns>
         public override int GetHashCode()
@@ -42,6 +45,7 @@ namespace DVBViewerServerApiWrapper.Model
 
         /// <summary>
         /// Gibt eine Zeichenfolge der Instanz zurück.
+        /// Returns a string of the instance.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
@@ -50,15 +54,16 @@ namespace DVBViewerServerApiWrapper.Model
         }
 
         /// <summary>
-        /// Gibt eine Liste der Serien zurück. Die Anzahl der Serien ist abhängig von den aktuellen Aufnahmen
+        /// Gibt eine Liste der Serien zurück. Die Anzahl der Serien ist abhängig von den aktuellen Aufnahmen.
+        /// Returns a list of series. The number of series depends on the current recordings
         /// </summary>
         /// <returns></returns>
-        public static List<RecordingSeries> GetSeries()
+        public static async Task<List<RecordingSeries>> GetSeries()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                var recs = RecordingList.GetRecordings();
+                var recs = await RecordingList.GetRecordings().ConfigureAwait(false);
                 return (from f in recs.Items where f.Series != null orderby f.Series.Name select f.Series).Distinct().ToList();
             }
             return null;

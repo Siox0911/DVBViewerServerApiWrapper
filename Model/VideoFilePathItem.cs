@@ -43,22 +43,22 @@ namespace DVBViewerServerApiWrapper.Model
         /// <summary>
         /// Gibt eine Liste mit Pfaden zurück, welche diesem untergeordnet sind
         /// </summary>
-        public VideoFilePath ChildPaths { get { return VideoFilePath.GetVideoFilePathChilds(ObjectID); } }
+        public Task<VideoFilePath> ChildPaths { get { return VideoFilePath.GetVideoFilePathChilds(ObjectID); } }
 
         /// <summary>
         /// Gibt einen Pfad zurück, welche diesem Pfad übergeordnet ist
         /// </summary>
-        public VideoFilePath ParentPath { get { return VideoFilePath.GetVideoFilePathParents(ParentID); } }
+        public Task<VideoFilePath> ParentPath { get { return VideoFilePath.GetVideoFilePathParents(ParentID); } }
 
         /// <summary>
         /// Eine Liste von Videos im aktuellen Verzeichnis
         /// </summary>
-        public VideoFileList Videos { get { return VideoFileList.GetVideoFileList(ObjectID); } }
+        public Task<VideoFileList> Videos { get { return VideoFileList.GetVideoFileList(ObjectID); } }
 
         /// <summary>
         /// Eine Liste mit Videos im aktuellen und allen Unterverzeichnissen
         /// </summary>
-        public VideoFileList SubVideos { get { return VideoFileList.GetVideoFileListRecursive(ObjectID); } }
+        public Task<VideoFileList> SubVideos { get { return VideoFileList.GetVideoFileListRecursive(ObjectID); } }
 
         internal VideoFilePathItem() { }
     }

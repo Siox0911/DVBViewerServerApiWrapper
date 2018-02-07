@@ -11,33 +11,39 @@ namespace DVBViewerServerApiWrapper.Model
 {
     /// <summary>
     /// Eine Aufnahme aus dem Pool aller existierender Aufnahmen.
+    /// A recording from the pool of all existing recordings.
     /// </summary>
     [XmlRoot(ElementName = "recording")]
     public class RecordingItem
     {
         /// <summary>
         /// Die ID der Aufnahme
+        /// The ID of the recording
         /// </summary>
         [XmlAttribute(AttributeName = "id")]
         public int ID { get; set; }
         /// <summary>
         /// 255 bedeutet, der Text ist in UTF-8.
+        /// 255 means the text is in UTF-8.
         /// http://www.dvbviewer.tv/forum/topic/37211-recording-service-api/?tab=comments#comment-272680
         /// </summary>
         [XmlAttribute(AttributeName = "charset")]
         public int Charset { get; set; }
         /// <summary>
         /// Habe ich noch nicht ganz gerafft
+        /// I have not quite gathered
         /// </summary>
         [XmlAttribute(AttributeName = "content")]
         public int Content { get; set; }
         /// <summary>
         /// Die Start Zeit als YYMMDDHHMMSS. Wenn ein richtiges Datum genommen werden soll, nimm <seealso cref="RecDate"/>.
+        /// The start time as YYMMDDHHMMSS. If a correct date is to be taken, take <seealso cref = "RecDate" />.
         /// </summary>
         [XmlAttribute(AttributeName = "start")]
         public long StartDatum { get; set; }
         /// <summary>
         /// Die Start Zeit als Datum
+        /// The start time as a date
         /// </summary>
         public DateTime RecDate
         {
@@ -51,11 +57,13 @@ namespace DVBViewerServerApiWrapper.Model
         }
         /// <summary>
         /// Die Länge der Aufnahme HHMMSS, verwende <seealso cref="Duration2"/>.
+        /// The length of the recording HHMMSS, use <seealso cref = "Duration2" />.
         /// </summary>
         [XmlAttribute(AttributeName = "duration")]
         public long Duration { get; set; }
         /// <summary>
         /// Die Länge der Aufnahme als TimeSpan.
+        /// The length of the recording as TimeSpan.
         /// </summary>
         public TimeSpan Duration2
         {
@@ -66,41 +74,49 @@ namespace DVBViewerServerApiWrapper.Model
         }
         /// <summary>
         /// Die EventID der Aufnahme (EPG)
+        /// The EventID of the recording (EPG)
         /// </summary>
         [XmlAttribute(AttributeName = "eventid")]
         public int EventID { get; set; }
         /// <summary>
-        /// Der Aufnahmekanal als Text
+        /// Der Aufnahmekanal als Channel
+        /// The recording channel as channel
         /// </summary>
         [XmlElement(ElementName = "channel", Type = typeof(RecordingChannel))]
         public RecordingChannel Channel { get; set; }
         /// <summary>
         /// Der Dateinahme als Pfad wie er im Service festgelegt wurde.
+        /// The filename as the path as set in the service.
         /// </summary>
         [XmlElement(ElementName = "file")]
         public string File { get; set; }
         /// <summary>
         /// Der Aufnahme Titel
+        /// The recording title
         /// </summary>
         [XmlElement(ElementName = "title")]
         public string Title { get; set; }
         /// <summary>
         /// Der Untertitel des Titels oder Kurzbeschreibung
+        /// The subtitle of the title or short description
         /// </summary>
         [XmlElement(ElementName = "info")]
         public string Info { get; set; }
         /// <summary>
         /// Beschreibung aus dem EPG
+        /// Description from the EPG
         /// </summary>
         [XmlElement(ElementName = "desc")]
         public string Description { get; set; }
         /// <summary>
         /// Die Serie falls festgelegt
+        /// The series if specified
         /// </summary>
         [XmlElement(ElementName = "series", Type = typeof(RecordingSeries))]
         public RecordingSeries Series { get; set; }
         /// <summary>
         /// Die Bilddatei (Thumpnail) falls erlaubt
+        /// The image file (thumbnail) if allowed
         /// </summary>
         [XmlElement(ElementName = "image")]
         public string Image { get; set; }
@@ -109,6 +125,7 @@ namespace DVBViewerServerApiWrapper.Model
 
         /// <summary>
         /// Spiel diese Aufnahme auf einem Clienten (DVBViewer) ab, sofern dieser connected ist.
+        /// Play this recording on a client (DVBViewer), if it is connected.
         /// </summary>
         /// <param name="dVBViewerClient"></param>
         /// <returns></returns>
@@ -119,6 +136,7 @@ namespace DVBViewerServerApiWrapper.Model
 
         /// <summary>
         /// Führt eine Aktualisierung der Aufnahme im Media Server durch. Geändert wird:
+        /// Performs an update of the recording in the Media Server. Will be changed:
         /// Title, Info, Series, Channel und Description
         /// </summary>
         /// <returns></returns>
@@ -145,6 +163,7 @@ namespace DVBViewerServerApiWrapper.Model
 
         /// <summary>
         /// Löscht diese Aufnahme, gibt den Code 423 zurück, wenn eine Löschnung nicht funktioniert hat.
+        /// Deletes this recording, returns the code 423, if a deletion did not work.
         /// </summary>
         /// <returns></returns>
         public async Task<HttpStatusCode> Delete()
@@ -164,6 +183,8 @@ namespace DVBViewerServerApiWrapper.Model
         /// <summary>
         /// Gibt den String zurück, der verwendet wird, bevor der UPnP String in die Datei m3u geschrieben wird.
         /// Beginnend mit #EXTINF:
+        /// Returns the string used before the UPnP string is written to the m3u file.
+        /// Starting with #EXTINF:
         /// </summary>
         /// <returns></returns>
         internal string GetM3uPrefString()
@@ -173,6 +194,7 @@ namespace DVBViewerServerApiWrapper.Model
 
         /// <summary>
         /// Gibt eine URL zurück, welche die Aufnahme auf einen UPnP Gerät abspielen lässt.
+        /// Returns a URL that plays the recording on a UPnP device.
         /// </summary>
         /// <returns></returns>
         public string GetUPnPUriString()
@@ -184,6 +206,7 @@ namespace DVBViewerServerApiWrapper.Model
 
         /// <summary>
         /// Erzeugt aus der Liste der Videos eine M3U Datei. Die Datei befindet sich normalerweise im Tempverzeichnis
+        /// Generates an M3U file from the list of videos. The file is usually located in the Temp directory
         /// </summary>
         /// <returns>Ein Pfad zur m3u Datei</returns>
         public string CreateM3UFile()

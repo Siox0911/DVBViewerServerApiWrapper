@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-using DVBViewerServerApiWrapper.Model;
 using DVBViewerServerApiWrapper.Helper;
 using System.Diagnostics;
 using System.Security;
@@ -19,7 +18,7 @@ namespace DVBViewerServerApiWrapper
     /// </summary>
     public class DVBViewerServerApi
     {
-        private string ipAddress;
+        private SecureString password;
 
         /// <summary>
         /// aktive Instanz
@@ -32,7 +31,6 @@ namespace DVBViewerServerApiWrapper
         /// </summary>
         public string User { get; set; }
 
-        private SecureString password;
         /// <summary>
         /// Password für den Service
         /// </summary>
@@ -42,8 +40,7 @@ namespace DVBViewerServerApiWrapper
             set
             {
                 password = value;
-                if (password != null)
-                    password.MakeReadOnly();
+                password?.MakeReadOnly();
             }
         }
         /// <summary>
@@ -53,21 +50,21 @@ namespace DVBViewerServerApiWrapper
         /// <summary>
         /// IpAdresse zum Service, falls bereits ein Hostname gesetzt wurde, wird die IpAdresse nicht benötigt
         /// </summary>
-        public string IpAddress { get => ipAddress; set => ipAddress = value; }
+        public string IpAddress { get; set; }
         /// <summary>
         /// Hostname des Service, falls bereits eine IpAdresse gesetzt wurde, wird der Hostname nicht benötigt
         /// </summary>
-        public string Hostname { get => ipAddress; set => ipAddress = value; }
+        public string Hostname { get => IpAddress; set => IpAddress = value; }
         /// <summary>
         /// Gibt die DVBViewer Clienten (PC-Name) zurück, welche seit dem letzten Start des Servers verbunden waren.
         /// </summary>
-        public DVBViewerClients DVBViewerClients
+        public Task<Model.DVBViewerClients> DVBViewerClients
         {
             get
             {
                 try
                 {
-                    return DVBViewerClients.GetDvbViewerClients();
+                    return Model.DVBViewerClients.GetDvbViewerClients();
                 }
                 catch (Exception)
                 {
@@ -78,13 +75,13 @@ namespace DVBViewerServerApiWrapper
         /// <summary>
         /// Der aktuelle Serverstatus
         /// </summary>
-        public Serverstatus Serverstatus
+        public Task<Model.Serverstatus> Serverstatus
         {
             get
             {
                 try
                 {
-                    return Serverstatus.CreateServerstatus(GetDataAsync().Result);
+                    return Model.Serverstatus.GetServerstatus();
                 }
                 catch (Exception ex)
                 {
@@ -95,13 +92,13 @@ namespace DVBViewerServerApiWrapper
         /// <summary>
         /// Gibt alle Aufnahmen vom Service zurück
         /// </summary>
-        public RecordingList Recordings
+        public Task<Model.RecordingList> Recordings
         {
             get
             {
                 try
                 {
-                    return RecordingList.GetRecordings();
+                    return Model.RecordingList.GetRecordings();
                 }
                 catch (Exception)
                 {
@@ -112,13 +109,13 @@ namespace DVBViewerServerApiWrapper
         /// <summary>
         /// Gibt alle Aufnahmen vom Service zurück. Es fehlen darin Dateinamen und die lange Beschreibung.
         /// </summary>
-        public RecordingList RecordingsShort
+        public Task<Model.RecordingList> RecordingsShort
         {
             get
             {
                 try
                 {
-                    return RecordingList.GetRecordingsShort();
+                    return Model.RecordingList.GetRecordingsShort();
                 }
                 catch (Exception)
                 {
@@ -130,13 +127,13 @@ namespace DVBViewerServerApiWrapper
         /// Eine Liste mit Aufnahmen welche irgendwann aufgenommen wurden. Diese müssen nicht mehr als Datei existieren. Es existieren auch keine Verweise auf Dateinamen.
         /// Dies wird verwendet um bereits aufgenommene Aufnahmen zu erkennen.
         /// </summary>
-        public RecordedList RecordedList
+        public Task<Model.RecordedList> RecordedList
         {
             get
             {
                 try
                 {
-                    return RecordedList.GetRecordedList();
+                    return Model.RecordedList.GetRecordedListAsync();
                 }
                 catch (Exception)
                 {
@@ -148,13 +145,13 @@ namespace DVBViewerServerApiWrapper
         /// <summary>
         /// Gibt eine Liste mit allen Videos zurück, welche im Service bekannt sind
         /// </summary>
-        public VideoFileList VideoFileList
+        public Task<Model.VideoFileList> VideoFileList
         {
             get
             {
                 try
                 {
-                    return VideoFileList.GetVideoFileList();
+                    return Model.VideoFileList.GetVideoFileList();
                 }
                 catch (Exception)
                 {
@@ -167,7 +164,7 @@ namespace DVBViewerServerApiWrapper
         /// <summary>
         /// Gibt die aktuelle Media Server Version zurück.
         /// </summary>
-        public Model.ServerVersion ServerVersion
+        public Task<Model.ServerVersion> ServerVersion
         {
             get
             {
@@ -186,7 +183,7 @@ namespace DVBViewerServerApiWrapper
         /// <summary>
         /// Gibt alle Servertasks zurück. Tasks sind z.B. Datenbanken aktualisieren etc.
         /// </summary>
-        public Model.ServerTaskList ServerTasks
+        public Task<Model.ServerTaskList> ServerTasks
         {
             get
             {
@@ -204,11 +201,11 @@ namespace DVBViewerServerApiWrapper
         /// <summary>
         /// Gibt eine Liste mit allen VideoPfaden zurück.
         /// </summary>
-        public Model.VideoFilePath VideoPaths
+        public Task<Model.VideoFilePath> VideoPaths
         {
             get
             {
-                return VideoFilePath.GetVideoFilePath();
+                return Model.VideoFilePath.GetVideoFilePath();
             }
         }
 
@@ -234,20 +231,20 @@ namespace DVBViewerServerApiWrapper
         /// </summary>
         /// <param name="recordID"></param>
         /// <returns></returns>
-        public RecordingList GetRecording(int recordID)
+        public Task<Model.RecordingList> GetRecording(int recordID)
         {
             if (recordID > 0)
             {
                 try
                 {
-                    return RecordingList.GetRecording(recordID);
+                    return Model.RecordingList.GetRecording(recordID);
                 }
                 catch (Exception)
                 {
                     throw;
                 }
             }
-            return null;
+            return Task.FromResult<Model.RecordingList>(null);
         }
 
         /// <summary>
@@ -255,13 +252,13 @@ namespace DVBViewerServerApiWrapper
         /// </summary>
         /// <param name="partOfName"></param>
         /// <returns></returns>
-        public RecordingList GetRecordings(string partOfName)
+        public async Task<Model.RecordingList> GetRecordings(string partOfName)
         {
             if (!string.IsNullOrEmpty(partOfName))
             {
                 try
                 {
-                    return RecordingList.GetRecordings(partOfName);
+                    return await Model.RecordingList.GetRecordings(partOfName).ConfigureAwait(false);
                 }
                 catch (Exception)
                 {
@@ -276,13 +273,13 @@ namespace DVBViewerServerApiWrapper
         /// </summary>
         /// <param name="partOfDescription"></param>
         /// <returns></returns>
-        public RecordingList GetRecordingsByDescription(string partOfDescription)
+        public async Task<Model.RecordingList> GetRecordingsByDescription(string partOfDescription)
         {
             if (!string.IsNullOrEmpty(partOfDescription))
             {
                 try
                 {
-                    return RecordingList.GetRecordingsByDesc(partOfDescription);
+                    return await Model.RecordingList.GetRecordingsByDesc(partOfDescription).ConfigureAwait(false);
                 }
                 catch (Exception)
                 {
@@ -297,13 +294,13 @@ namespace DVBViewerServerApiWrapper
         /// </summary>
         /// <param name="partOfName"></param>
         /// <returns></returns>
-        public VideoFileList GetVideoList(string partOfName)
+        public async Task<Model.VideoFileList> GetVideoListAsync(string partOfName)
         {
             if (!string.IsNullOrEmpty(partOfName))
             {
                 try
                 {
-                    return VideoFileList.GetVideoFileList(partOfName);
+                    return await Model.VideoFileList.GetVideoFileList(partOfName).ConfigureAwait(false);
                 }
                 catch (Exception)
                 {
@@ -327,16 +324,16 @@ namespace DVBViewerServerApiWrapper
         private Uri CreateApiUri(string page, List<UriParameter> uriParameters)
         {
 
-            if (string.IsNullOrEmpty(ipAddress) || Port == 0)
+            if (string.IsNullOrEmpty(IpAddress) || Port == 0)
             {
-                throw new MissingFieldException("Hostname oder Port wurden nicht gesetzt.");
+                throw new MissingFieldException("Hostname oder Port wurden nicht gesetzt. Hostname or Port not set.");
             }
 
             try
             {
                 var ub = new UriBuilder
                 {
-                    Host = ipAddress,
+                    Host = IpAddress,
                     //Wird nicht benötigt: Credentials werden beim Abrufen gesetzt
                     //UserName = user,
                     //Password = password,
@@ -388,16 +385,16 @@ namespace DVBViewerServerApiWrapper
         private Uri CreateUri(string page, List<UriParameter> uriParameters)
         {
 
-            if (string.IsNullOrEmpty(ipAddress) || Port == 0)
+            if (string.IsNullOrEmpty(IpAddress) || Port == 0)
             {
-                throw new MissingFieldException("Hostname oder Port wurden nicht gesetzt.");
+                throw new MissingFieldException("Hostname oder Port wurden nicht gesetzt. Hostname or Port not set.");
             }
 
             try
             {
                 var ub = new UriBuilder
                 {
-                    Host = ipAddress,
+                    Host = IpAddress,
                     //Wird nicht benötigt: Credentials werden beim Abrufen gesetzt
                     //UserName = user,
                     //Password = password,
@@ -448,12 +445,12 @@ namespace DVBViewerServerApiWrapper
         {
             if (string.IsNullOrEmpty(page))
             {
-                throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein.");
+                throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein. Page can't be empty.");
             }
 
             if (string.IsNullOrEmpty(User) || Password == null)
             {
-                throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt.");
+                throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt. User or passwort not set.");
             }
 
             try
@@ -502,12 +499,12 @@ namespace DVBViewerServerApiWrapper
         {
             if (string.IsNullOrEmpty(page))
             {
-                throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein.");
+                throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein. Page can't be empty.");
             }
 
             if (string.IsNullOrEmpty(User) || Password == null)
             {
-                throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt.");
+                throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt. User or passwort not set.");
             }
 
             try
@@ -549,12 +546,12 @@ namespace DVBViewerServerApiWrapper
         {
             if (string.IsNullOrEmpty(page))
             {
-                throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein.");
+                throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein. Page can't be empty.");
             }
 
             if (string.IsNullOrEmpty(User) || Password == null)
             {
-                throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt.");
+                throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt. User or passwort not set.");
             }
 
             try
@@ -562,7 +559,7 @@ namespace DVBViewerServerApiWrapper
                 //Uri
                 var uri = new UriBuilder
                 {
-                    Host = ipAddress,
+                    Host = IpAddress,
                     //Wird nicht benötigt: Credentials werden beim Abrufen gesetzt
                     //UserName = user,
                     //Password = password,
@@ -629,12 +626,12 @@ namespace DVBViewerServerApiWrapper
         //{
         //    if (string.IsNullOrEmpty(page))
         //    {
-        //        throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein.");
+        //        throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein. Page can't be empty.");
         //    }
 
         //    if (string.IsNullOrEmpty(User) || Password == null)
         //    {
-        //        throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt.");
+        //        throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt. User or passwort not set.");
         //    }
 
         //    try

@@ -8,6 +8,9 @@ using System.Xml.Serialization;
 
 namespace DVBViewerServerApiWrapper.Model
 {
+    /// <summary>
+    /// Die Serverversion. The server version.
+    /// </summary>
     [XmlRoot(ElementName = "version")]
     public class ServerVersion
     {
@@ -17,7 +20,8 @@ namespace DVBViewerServerApiWrapper.Model
         [XmlAttribute(AttributeName = "iver")]
         public string IVer { get; set; }
         /// <summary>
-        /// Die Serverversion des DVBViewerServers
+        /// Die Serverversion des DVBViewerServers.
+        /// The server version of the DVBViewer server
         /// </summary>
         [XmlText(Type = typeof(string))]
         public string Version { get; set; }
@@ -29,12 +33,16 @@ namespace DVBViewerServerApiWrapper.Model
             return Helper.Deserializer.Deserialize<ServerVersion>(xDocument);
         }
 
-        internal static ServerVersion GetServerVersion()
+        /// <summary>
+        /// Gibt die Serverversion zurück. Returns the server version.
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<ServerVersion> GetServerVersion()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                var xmldata = dvbApi.GetDataAsync("version").Result;
+                var xmldata = await dvbApi.GetDataAsync("version").ConfigureAwait(false);
 
                 if (xmldata != null)
                 {

@@ -12,6 +12,8 @@ www.dvbviewer.com
 
 Version 0.3.0.0
 
+ - work on more asynchronous execution of the Api
+
 Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready, 
 <img src="images/ToDo_Current_256.png" width="22"/> Work, 
 <img src="images/ToDo_Add_256.png" width="22"/> ToDo, 

@@ -11,12 +11,14 @@ namespace DVBViewerServerApiWrapper.Model
 {
     /// <summary>
     /// Gibt eine Liste mit den DVBViewer Clienten des Service zurück.
+    /// Returns a list of service DVBViewer clients.
     /// </summary>
     [XmlRoot(ElementName = "targets")]
     public class DVBViewerClients
     {
         /// <summary>
-        /// Liste mit den Namen der Clienten als PC-Name
+        /// Liste mit den Namen der Clienten als Netbios PC-Name
+        /// List with the names of Clients as Netbios PC-Name
         /// </summary>
         [XmlElement(ElementName = "target", Type = typeof(DVBViewerClient))]
         public List<DVBViewerClient> Items { get; set; }
@@ -28,16 +30,21 @@ namespace DVBViewerServerApiWrapper.Model
             return Helper.Deserializer.Deserialize<DVBViewerClients>(xDocument);
         }
 
-        internal static DVBViewerClients GetDvbViewerClients()
+        /// <summary>
+        /// Gibt alle verbundenen DVBViewer zurück.
+        /// Gives back all connected DVBViewer Clients
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<DVBViewerClients> GetDvbViewerClients()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                var xmldata = dvbApi.GetDataAsync("dvbcommand").Result;
+                var xmldata = await dvbApi.GetDataAsync("dvbcommand").ConfigureAwait(false);
 
                 if (xmldata != null)
                 {
-                    return CreateDvbViewerClients(xmldata);
+                   return CreateDvbViewerClients(xmldata);
                 }
             }
             return null;
@@ -45,6 +52,7 @@ namespace DVBViewerServerApiWrapper.Model
 
         /// <summary>
         /// Sendet an jeden Clienten ein DVBCommand. Da es sich um jeden Clienten handelt, gibt es keinen Rückgabewert
+        /// Send a DVCommand to each client. Because it is every client, there is no return value
         /// </summary>
         /// <param name="dVBViewerXCommand"></param>
         /// <returns></returns>
@@ -54,7 +62,7 @@ namespace DVBViewerServerApiWrapper.Model
             {
                 foreach (var client in Items)
                 {
-                    await client.SendXCommandAsync(dVBViewerXCommand).ConfigureAwait(false);
+                   await client.SendXCommandAsync(dVBViewerXCommand).ConfigureAwait(false);
                 }
             }
             catch (Exception)
