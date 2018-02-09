@@ -143,7 +143,7 @@ namespace DVBViewerServerApiWrapper.Model
             var result = GetRecordings();
             if (result != null)
             {
-                result.Items = (from f in result.Items where f.Title.IndexOf(partOfName, StringComparison.OrdinalIgnoreCase) != -1 select f).ToList();
+                result.Items = (from f in result.Items where f.Title.IndexOf(partOfName, StringComparison.CurrentCultureIgnoreCase) != -1 select f).ToList();
             }
             return result;
         }
@@ -173,7 +173,7 @@ namespace DVBViewerServerApiWrapper.Model
             var result = GetRecordings();
             if (result != null)
             {
-                result.Items = (from f in result.Items where f.Description?.IndexOf(partOfDesc, StringComparison.OrdinalIgnoreCase) != -1 select f).ToList();
+                result.Items = (from f in result.Items where f.Description?.IndexOf(partOfDesc, StringComparison.CurrentCultureIgnoreCase) != -1 select f).ToList();
             }
             return result;
         }

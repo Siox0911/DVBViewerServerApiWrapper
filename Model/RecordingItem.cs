@@ -68,7 +68,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// Die EventID der Aufnahme (EPG)
         /// </summary>
         [XmlAttribute(AttributeName = "eventid")]
-        public int EventID { get; set; }
+        public string EventID { get; set; }
         /// <summary>
         /// Der Aufnahmekanal als Text
         /// </summary>
