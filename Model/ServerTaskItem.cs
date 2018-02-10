@@ -11,33 +11,48 @@ namespace DVBViewerServerApiWrapper.Model
 {
     /// <summary>
     /// Ein Servertask, der direkt ausgeführt werden kann.
+    /// A server task that can be executed directly.
     /// </summary>
     [XmlRoot(ElementName = "task")]
     public class ServerTaskItem
     {
         /// <summary>
-        /// Der Tasktyp 0 oder 2
+        /// Der Tasktyp 0 oder 2.
+        /// The task type 0 or 2
         /// </summary>
         [XmlAttribute(AttributeName = "type")]
         public int Tasktype { get; set; }
 
         /// <summary>
         /// Der Name des Tasks
+        /// The name of the task
         /// </summary>
         [XmlElement(ElementName = "name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Die Aktion welche ausgeführt wird
+        /// Die Aktion welche ausgeführt wird.
+        /// he action which is executed
         /// </summary>
         [XmlElement(ElementName = "action")]
         public string Action { get; set; }
 
         /// <summary>
-        /// Startet den Task auf dem Server
+        /// Startet den Task auf dem Server.
+        /// Starts the task on the server
         /// </summary>
         /// <returns></returns>
-        public Task<HttpStatusCode> RunTask()
+        public HttpStatusCode RunTask()
+        {
+            return RunTaskAsync().Result;
+        }
+
+        /// <summary>
+        /// Startet den Task auf dem Server.
+        /// Starts the task on the server
+        /// </summary>
+        /// <returns></returns>
+        public Task<HttpStatusCode> RunTaskAsync()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             return dvbApi.SendDataAsync("tasks", new List<Helper.UriParameter>

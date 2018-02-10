@@ -10,6 +10,7 @@ namespace DVBViewerServerApiWrapper.Model
 {
     /// <summary>
     /// Ein Client welcher seit dem Start des Media Servers connected war.
+    /// A client which was connected since the start of the Media Server.
     /// </summary>
     [XmlRoot(ElementName = "target")]
     public class DVBViewerClient
@@ -24,6 +25,7 @@ namespace DVBViewerServerApiWrapper.Model
 
         /// <summary>
         /// Sendet einen Befehl an den Clienten und gibt einen Statuscode über die Antwort zurück.
+        /// Sends a command to the client and returns a status code about the response.
         /// </summary>
         /// <param name="dVBViewerCommand"></param>
         /// <returns></returns>
@@ -37,25 +39,49 @@ namespace DVBViewerServerApiWrapper.Model
         }
 
         /// <summary>
-        /// Spiel das Video auf dem Clienten (DVBViewer) ab, sofern dieser connected ist.
+        /// Sendet einen Befehl an den Clienten und gibt einen Statuscode über die Antwort zurück.
+        /// Sends a command to the client and returns a status code about the response.
         /// </summary>
-        /// <param name="mediaFileItem"></param>
+        /// <param name="dVBViewerCommand"></param>
         /// <returns></returns>
-        public Task<HttpStatusCode> PlayVideo(VideoFileItem mediaFileItem)
+        public HttpStatusCode SendXCommand(Enums.DVBViewerXCommand dVBViewerCommand)
+        {
+            return SendXCommandAsync(dVBViewerCommand).Result;
+        }
+
+        /// <summary>
+        /// Spielt das Video auf dem Clienten (DVBViewer) ab, sofern dieser connected ist.
+        /// Plays the video on the client (DVBViewer), if it is connected.
+        /// </summary>
+        /// <param name="videoFileItem"></param>
+        /// <returns></returns>
+        public Task<HttpStatusCode> PlayVideoAsync(VideoFileItem videoFileItem)
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             return dvbApi.SendDataAsync("dvbcommand", new List<Helper.UriParameter> {
                 new Helper.UriParameter("target", Name),
-                new Helper.UriParameter("cmd", mediaFileItem.Path + mediaFileItem.FileName)
+                new Helper.UriParameter("cmd", videoFileItem.Path + videoFileItem.FileName)
             });
         }
 
         /// <summary>
+        /// Spielt das Video auf dem Clienten (DVBViewer) ab, sofern dieser connected ist.
+        /// Plays the video on the client (DVBViewer), if it is connected.
+        /// </summary>
+        /// <param name="videoFileItem"></param>
+        /// <returns></returns>
+        public HttpStatusCode PlayVideo(VideoFileItem videoFileItem)
+        {
+            return PlayVideoAsync(videoFileItem).Result;
+        }
+
+        /// <summary>
         /// Spiel die Aufnahme auf dem Clienten (DVBViewer) ab, sofern dieser connected ist.
+        /// Plays the recording on the client (DVBViewer), if it is connected.
         /// </summary>
         /// <param name="recordingItem"></param>
         /// <returns></returns>
-        public Task<HttpStatusCode> PlayRecording(RecordingItem recordingItem)
+        public Task<HttpStatusCode> PlayRecordingAsync(RecordingItem recordingItem)
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             return dvbApi.SendDataAsync("dvbcommand", new List<Helper.UriParameter> {
@@ -64,5 +90,15 @@ namespace DVBViewerServerApiWrapper.Model
             });
         }
 
+        /// <summary>
+        /// Spiel die Aufnahme auf dem Clienten (DVBViewer) ab, sofern dieser connected ist.
+        /// Plays the recording on the client (DVBViewer), if it is connected.
+        /// </summary>
+        /// <param name="recordingItem"></param>
+        /// <returns></returns>
+        public HttpStatusCode PlayRecording(RecordingItem recordingItem)
+        {
+            return PlayRecordingAsync(recordingItem).Result;
+        }
     }
 }

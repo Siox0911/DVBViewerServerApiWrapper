@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-using DVBViewerServerApiWrapper.Model;
 using DVBViewerServerApiWrapper.Helper;
 using System.Diagnostics;
 using System.Security;
@@ -16,25 +15,28 @@ namespace DVBViewerServerApiWrapper
 {
     /// <summary>
     /// Bündelt alle Informationen zum RecordingService oder Mediaserver
+    /// Bundles all information about the recording service or media server
     /// </summary>
     public class DVBViewerServerApi
     {
-        private string ipAddress;
+        private SecureString password;
 
         /// <summary>
         /// aktive Instanz
+        /// active instance
         /// </summary>
         private static DVBViewerServerApi currentInstance;
 
         #region Public Properties
         /// <summary>
         /// Benutzername des Service
+        /// Username of the service
         /// </summary>
         public string User { get; set; }
 
-        private SecureString password;
         /// <summary>
         /// Password für den Service
+        /// Password for the service
         /// </summary>
         public SecureString Password
         {
@@ -42,32 +44,35 @@ namespace DVBViewerServerApiWrapper
             set
             {
                 password = value;
-                if (password != null)
-                    password.MakeReadOnly();
+                password?.MakeReadOnly();
             }
         }
         /// <summary>
         /// Port zum Service: Default 8089
+        /// Port to Service: Default 8089
         /// </summary>
         public int Port { get; set; } = 8089;
         /// <summary>
         /// IpAdresse zum Service, falls bereits ein Hostname gesetzt wurde, wird die IpAdresse nicht benötigt
+        /// IP address for service, if a host name has already been set, the IP address is not required
         /// </summary>
-        public string IpAddress { get => ipAddress; set => ipAddress = value; }
+        public string IpAddress { get; set; }
         /// <summary>
         /// Hostname des Service, falls bereits eine IpAdresse gesetzt wurde, wird der Hostname nicht benötigt
+        /// Hostname of the service, if an ipaddress has already been set, the hostname is not needed
         /// </summary>
-        public string Hostname { get => ipAddress; set => ipAddress = value; }
+        public string Hostname { get => IpAddress; set => IpAddress = value; }
         /// <summary>
         /// Gibt die DVBViewer Clienten (PC-Name) zurück, welche seit dem letzten Start des Servers verbunden waren.
+        /// Returns the DVBViewer clients (PC name) that have been connected since the server was last started.
         /// </summary>
-        public DVBViewerClients DVBViewerClients
+        public Task<Model.DVBViewerClients> DVBViewerClientsAsync
         {
             get
             {
                 try
                 {
-                    return DVBViewerClients.GetDvbViewerClients();
+                    return Model.DVBViewerClients.GetDVBViewerClientsAsync();
                 }
                 catch (Exception)
                 {
@@ -75,16 +80,37 @@ namespace DVBViewerServerApiWrapper
                 }
             }
         }
+
         /// <summary>
-        /// Der aktuelle Serverstatus
+        /// Gibt die DVBViewer Clienten (PC-Name) zurück, welche seit dem letzten Start des Servers verbunden waren.
+        /// Returns the DVBViewer clients (PC name) that have been connected since the server was last started.
         /// </summary>
-        public Serverstatus Serverstatus
+        public Model.DVBViewerClients DVBViewerClients
         {
             get
             {
                 try
                 {
-                    return Serverstatus.CreateServerstatus(GetDataAsync().Result);
+                    return DVBViewerClientsAsync.Result;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Der aktuelle Serverstatus
+        /// The current server status
+        /// </summary>
+        public Task<Model.Serverstatus> ServerstatusAsync
+        {
+            get
+            {
+                try
+                {
+                    return Model.Serverstatus.GetServerstatusAsync();
                 }
                 catch (Exception ex)
                 {
@@ -92,16 +118,37 @@ namespace DVBViewerServerApiWrapper
                 }
             }
         }
+
+        /// <summary>
+        /// Der aktuelle Serverstatus
+        /// The current server status
+        /// </summary>
+        public Model.Serverstatus Serverstatus
+        {
+            get
+            {
+                try
+                {
+                    return ServerstatusAsync.Result;
+                }
+                catch (Exception ex)
+                {
+                    throw ex.InnerException;
+                }
+            }
+        }
+
         /// <summary>
         /// Gibt alle Aufnahmen vom Service zurück
+        /// Returns all recordings of the service
         /// </summary>
-        public RecordingList Recordings
+        public Task<Model.RecordingList> RecordingsAsync
         {
             get
             {
                 try
                 {
-                    return RecordingList.GetRecordings();
+                    return Model.RecordingList.GetRecordingsAsync();
                 }
                 catch (Exception)
                 {
@@ -109,16 +156,37 @@ namespace DVBViewerServerApiWrapper
                 }
             }
         }
+
+        /// <summary>
+        /// Gibt alle Aufnahmen vom Service zurück
+        /// Returns all recordings of the service
+        /// </summary>
+        public Model.RecordingList Recordings
+        {
+            get
+            {
+                try
+                {
+                    return RecordingsAsync.Result;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+        }
+
         /// <summary>
         /// Gibt alle Aufnahmen vom Service zurück. Es fehlen darin Dateinamen und die lange Beschreibung.
+        /// Returns all recordings of the service. It lacks file names and the long description.
         /// </summary>
-        public RecordingList RecordingsShort
+        public Task<Model.RecordingList> RecordingsShortAsync
         {
             get
             {
                 try
                 {
-                    return RecordingList.GetRecordingsShort();
+                    return Model.RecordingList.GetRecordingsShortAsync();
                 }
                 catch (Exception)
                 {
@@ -126,17 +194,60 @@ namespace DVBViewerServerApiWrapper
                 }
             }
         }
+
+        /// <summary>
+        /// Gibt alle Aufnahmen vom Service zurück. Es fehlen darin Dateinamen und die lange Beschreibung.
+        /// Returns all recordings of the service. It lacks file names and the long description.
+        /// </summary>
+        public Model.RecordingList RecordingsShort
+        {
+            get
+            {
+                try
+                {
+                    return RecordingsShortAsync.Result;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+        }
+
         /// <summary>
         /// Eine Liste mit Aufnahmen welche irgendwann aufgenommen wurden. Diese müssen nicht mehr als Datei existieren. Es existieren auch keine Verweise auf Dateinamen.
         /// Dies wird verwendet um bereits aufgenommene Aufnahmen zu erkennen.
+        /// A list of recordings that were taken at some point. These no longer need to exist as a file. There are no references to filenames.
+        /// This is used to recognize already recorded images.
         /// </summary>
-        public RecordedList RecordedList
+        public Task<Model.RecordedList> RecordedListAsync
         {
             get
             {
                 try
                 {
-                    return RecordedList.GetRecordedList();
+                    return Model.RecordedList.GetRecordedListAsync();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Eine Liste mit Aufnahmen welche irgendwann aufgenommen wurden. Diese müssen nicht mehr als Datei existieren. Es existieren auch keine Verweise auf Dateinamen.
+        /// Dies wird verwendet um bereits aufgenommene Aufnahmen zu erkennen.
+        /// A list of recordings that were taken at some point. These no longer need to exist as a file. There are no references to filenames.
+        /// This is used to recognize already recorded images.
+        /// </summary>
+        public Model.RecordedList RecordedList
+        {
+            get
+            {
+                try
+                {
+                    return RecordedListAsync.Result;
                 }
                 catch (Exception)
                 {
@@ -147,14 +258,35 @@ namespace DVBViewerServerApiWrapper
 
         /// <summary>
         /// Gibt eine Liste mit allen Videos zurück, welche im Service bekannt sind
+        /// Returns a list of all videos known in the service
         /// </summary>
-        public VideoFileList VideoFileList
+        public Task<Model.VideoFileList> VideoFileListAsync
         {
             get
             {
                 try
                 {
-                    return VideoFileList.GetVideoFileList();
+                    return Model.VideoFileList.GetVideoFileListAsync();
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gibt eine Liste mit allen Videos zurück, welche im Service bekannt sind
+        /// Returns a list of all videos known in the service
+        /// </summary>
+        public Model.VideoFileList VideoFileList
+        {
+            get
+            {
+                try
+                {
+                    return VideoFileListAsync.Result;
                 }
                 catch (Exception)
                 {
@@ -166,6 +298,27 @@ namespace DVBViewerServerApiWrapper
 
         /// <summary>
         /// Gibt die aktuelle Media Server Version zurück.
+        /// Returns the current Media Server version.
+        /// </summary>
+        public Task<Model.ServerVersion> ServerVersionAsync
+        {
+            get
+            {
+                try
+                {
+                    return Model.ServerVersion.GetServerVersionAsync();
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gibt die aktuelle Media Server Version zurück.
+        /// Returns the current Media Server version.
         /// </summary>
         public Model.ServerVersion ServerVersion
         {
@@ -173,7 +326,7 @@ namespace DVBViewerServerApiWrapper
             {
                 try
                 {
-                    return Model.ServerVersion.GetServerVersion();
+                    return ServerVersionAsync.Result;
                 }
                 catch (Exception)
                 {
@@ -185,6 +338,26 @@ namespace DVBViewerServerApiWrapper
 
         /// <summary>
         /// Gibt alle Servertasks zurück. Tasks sind z.B. Datenbanken aktualisieren etc.
+        /// Returns all server tasks. Tasks are e.g. Update databases etc.
+        /// </summary>
+        public Task<Model.ServerTaskList> ServerTasksAsync
+        {
+            get
+            {
+                try
+                {
+                    return Model.ServerTaskList.GetServerTaskListAsync();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gibt alle Servertasks zurück. Tasks sind z.B. Datenbanken aktualisieren etc.
+        /// Returns all server tasks. Tasks are e.g. Update databases etc.
         /// </summary>
         public Model.ServerTaskList ServerTasks
         {
@@ -192,7 +365,7 @@ namespace DVBViewerServerApiWrapper
             {
                 try
                 {
-                    return Model.ServerTaskList.GetServerTaskList();
+                    return ServerTasksAsync.Result;
                 }
                 catch (Exception)
                 {
@@ -203,12 +376,25 @@ namespace DVBViewerServerApiWrapper
 
         /// <summary>
         /// Gibt eine Liste mit allen VideoPfaden zurück.
+        /// Returns a list of all video paths.
+        /// </summary>
+        public Task<Model.VideoFilePath> VideoPathsAsync
+        {
+            get
+            {
+                return Model.VideoFilePath.GetVideoFilePathAsync();
+            }
+        }
+
+        /// <summary>
+        /// Gibt eine Liste mit allen VideoPfaden zurück.
+        /// Returns a list of all video paths.
         /// </summary>
         public Model.VideoFilePath VideoPaths
         {
             get
             {
-                return VideoFilePath.GetVideoFilePath();
+                return VideoPathsAsync.Result;
             }
         }
 
@@ -222,6 +408,7 @@ namespace DVBViewerServerApiWrapper
         #region Public Getter
         /// <summary>
         /// Gibt die aktive Instanz dieser Klasse zurück.
+        /// Returns the active instance of this class.
         /// </summary>
         /// <returns></returns>
         public static DVBViewerServerApi GetCurrentInstance()
@@ -231,16 +418,39 @@ namespace DVBViewerServerApiWrapper
 
         /// <summary>
         /// Gibt eine Aufnahme anhand der AufnahmeID zurück.
+        /// Returns a recording based on the recording ID.
         /// </summary>
         /// <param name="recordID"></param>
         /// <returns></returns>
-        public RecordingList GetRecording(int recordID)
+        public async Task<Model.RecordingList> GetRecordingAsync(int recordID)
         {
             if (recordID > 0)
             {
                 try
                 {
-                    return RecordingList.GetRecording(recordID);
+                    return await Model.RecordingList.GetRecordingAsync(recordID).ConfigureAwait(false);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gibt eine Aufnahme anhand der AufnahmeID zurück.
+        /// Returns a recording based on the recording ID.
+        /// </summary>
+        /// <param name="recordID"></param>
+        /// <returns></returns>
+        public Model.RecordingList GetRecording(int recordID)
+        {
+            if (recordID > 0)
+            {
+                try
+                {
+                    return GetRecordingAsync(recordID).Result;
                 }
                 catch (Exception)
                 {
@@ -252,16 +462,39 @@ namespace DVBViewerServerApiWrapper
 
         /// <summary>
         /// Gibt eine Liste mit Aufnahmen zurück, welche den Text als Teil im Namen haben
+        /// Returns a list of recordings that have the text as part of the name
         /// </summary>
         /// <param name="partOfName"></param>
         /// <returns></returns>
-        public RecordingList GetRecordings(string partOfName)
+        public async Task<Model.RecordingList> GetRecordingsAsync(string partOfName)
         {
             if (!string.IsNullOrEmpty(partOfName))
             {
                 try
                 {
-                    return RecordingList.GetRecordings(partOfName);
+                    return await Model.RecordingList.GetRecordingsAsync(partOfName).ConfigureAwait(false);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gibt eine Liste mit Aufnahmen zurück, welche den Text als Teil im Namen haben
+        /// Returns a list of recordings that have the text as part of the name
+        /// </summary>
+        /// <param name="partOfName"></param>
+        /// <returns></returns>
+        public Model.RecordingList GetRecordings(string partOfName)
+        {
+            if (!string.IsNullOrEmpty(partOfName))
+            {
+                try
+                {
+                    return GetRecordingsAsync(partOfName).Result;
                 }
                 catch (Exception)
                 {
@@ -273,16 +506,39 @@ namespace DVBViewerServerApiWrapper
 
         /// <summary>
         /// Gibt eine Liste mit Aufnahmen zurück, welche Text als Teil in der Beschreibung haben.
+        /// Returns a list of recordings that have text as part of the description.
         /// </summary>
         /// <param name="partOfDescription"></param>
         /// <returns></returns>
-        public RecordingList GetRecordingsByDescription(string partOfDescription)
+        public async Task<Model.RecordingList> GetRecordingsByDescriptionAsync(string partOfDescription)
         {
             if (!string.IsNullOrEmpty(partOfDescription))
             {
                 try
                 {
-                    return RecordingList.GetRecordingsByDesc(partOfDescription);
+                    return await Model.RecordingList.GetRecordingsByDescAsync(partOfDescription).ConfigureAwait(false);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gibt eine Liste mit Aufnahmen zurück, welche Text als Teil in der Beschreibung haben.
+        /// Returns a list of recordings that have text as part of the description.
+        /// </summary>
+        /// <param name="partOfDescription"></param>
+        /// <returns></returns>
+        public Model.RecordingList GetRecordingsByDescription(string partOfDescription)
+        {
+            if (!string.IsNullOrEmpty(partOfDescription))
+            {
+                try
+                {
+                    return GetRecordingsByDescriptionAsync(partOfDescription).Result;
                 }
                 catch (Exception)
                 {
@@ -294,16 +550,39 @@ namespace DVBViewerServerApiWrapper
 
         /// <summary>
         /// Gibt eine Videoliste zurück, welche einen Teil des Suchtextes im Titel tragen.
+        /// Returns a video list that carries part of the search text in the title.
         /// </summary>
         /// <param name="partOfName"></param>
         /// <returns></returns>
-        public VideoFileList GetVideoList(string partOfName)
+        public async Task<Model.VideoFileList> GetVideoListAsync(string partOfName)
         {
             if (!string.IsNullOrEmpty(partOfName))
             {
                 try
                 {
-                    return VideoFileList.GetVideoFileList(partOfName);
+                    return await Model.VideoFileList.GetVideoFileListAsync(partOfName).ConfigureAwait(false);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gibt eine Videoliste zurück, welche einen Teil des Suchtextes im Titel tragen.
+        /// Returns a video list that carries part of the search text in the title.
+        /// </summary>
+        /// <param name="partOfName"></param>
+        /// <returns></returns>
+        public Model.VideoFileList GetVideoList(string partOfName)
+        {
+            if (!string.IsNullOrEmpty(partOfName))
+            {
+                try
+                {
+                    return GetVideoListAsync(partOfName).Result;
                 }
                 catch (Exception)
                 {
@@ -327,16 +606,16 @@ namespace DVBViewerServerApiWrapper
         private Uri CreateApiUri(string page, List<UriParameter> uriParameters)
         {
 
-            if (string.IsNullOrEmpty(ipAddress) || Port == 0)
+            if (string.IsNullOrEmpty(IpAddress) || Port == 0)
             {
-                throw new MissingFieldException("Hostname oder Port wurden nicht gesetzt.");
+                throw new MissingFieldException("Hostname oder Port wurden nicht gesetzt. Hostname or Port not set.");
             }
 
             try
             {
                 var ub = new UriBuilder
                 {
-                    Host = ipAddress,
+                    Host = IpAddress,
                     //Wird nicht benötigt: Credentials werden beim Abrufen gesetzt
                     //UserName = user,
                     //Password = password,
@@ -388,16 +667,16 @@ namespace DVBViewerServerApiWrapper
         private Uri CreateUri(string page, List<UriParameter> uriParameters)
         {
 
-            if (string.IsNullOrEmpty(ipAddress) || Port == 0)
+            if (string.IsNullOrEmpty(IpAddress) || Port == 0)
             {
-                throw new MissingFieldException("Hostname oder Port wurden nicht gesetzt.");
+                throw new MissingFieldException("Hostname oder Port wurden nicht gesetzt. Hostname or Port not set.");
             }
 
             try
             {
                 var ub = new UriBuilder
                 {
-                    Host = ipAddress,
+                    Host = IpAddress,
                     //Wird nicht benötigt: Credentials werden beim Abrufen gesetzt
                     //UserName = user,
                     //Password = password,
@@ -444,16 +723,16 @@ namespace DVBViewerServerApiWrapper
         /// <param name="uriParameters"></param>
         /// <exception cref="ArgumentNullException">Es wurde keine Seite angegeben oder die Seite ist null</exception>
         /// <exception cref="NullReferenceException">Benutzername und Password zum Service wurden nicht angegeben oder sind leer.</exception>
-        public async Task<XDocument> GetDataAsync(string page = "status2", List<UriParameter> uriParameters = null)
+        internal async Task<XDocument> GetDataAsync(string page = "status2", List<UriParameter> uriParameters = null)
         {
             if (string.IsNullOrEmpty(page))
             {
-                throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein.");
+                throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein. Page can't be empty.");
             }
 
             if (string.IsNullOrEmpty(User) || Password == null)
             {
-                throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt.");
+                throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt. User or passwort not set.");
             }
 
             try
@@ -498,16 +777,16 @@ namespace DVBViewerServerApiWrapper
         /// <returns></returns>
         /// <exception cref="NullReferenceException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public async Task<HttpStatusCode> SendDataAsync(string page = "dvbcommand", List<UriParameter> uriParameters = null)
+        internal async Task<HttpStatusCode> SendDataAsync(string page = "dvbcommand", List<UriParameter> uriParameters = null)
         {
             if (string.IsNullOrEmpty(page))
             {
-                throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein.");
+                throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein. Page can't be empty.");
             }
 
             if (string.IsNullOrEmpty(User) || Password == null)
             {
-                throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt.");
+                throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt. User or passwort not set.");
             }
 
             try
@@ -545,16 +824,16 @@ namespace DVBViewerServerApiWrapper
         /// <returns></returns>
         /// <exception cref="NullReferenceException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public async Task<HttpStatusCode> SendPostDataAsync(string page = "rec_edit", List<UriParameter> uriParameters = null)
+        internal async Task<HttpStatusCode> SendPostDataAsync(string page = "rec_edit", List<UriParameter> uriParameters = null)
         {
             if (string.IsNullOrEmpty(page))
             {
-                throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein.");
+                throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein. Page can't be empty.");
             }
 
             if (string.IsNullOrEmpty(User) || Password == null)
             {
-                throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt.");
+                throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt. User or passwort not set.");
             }
 
             try
@@ -562,7 +841,7 @@ namespace DVBViewerServerApiWrapper
                 //Uri
                 var uri = new UriBuilder
                 {
-                    Host = ipAddress,
+                    Host = IpAddress,
                     //Wird nicht benötigt: Credentials werden beim Abrufen gesetzt
                     //UserName = user,
                     //Password = password,
@@ -629,12 +908,12 @@ namespace DVBViewerServerApiWrapper
         //{
         //    if (string.IsNullOrEmpty(page))
         //    {
-        //        throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein.");
+        //        throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein. Page can't be empty.");
         //    }
 
         //    if (string.IsNullOrEmpty(User) || Password == null)
         //    {
-        //        throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt.");
+        //        throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt. User or passwort not set.");
         //    }
 
         //    try

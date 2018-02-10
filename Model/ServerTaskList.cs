@@ -9,13 +9,15 @@ using System.Xml.Serialization;
 namespace DVBViewerServerApiWrapper.Model
 {
     /// <summary>
-    /// Liste mit Aufgaben des DMC, betrifft Aufnahmen, Medien und Ruhezustand oder Standby
+    /// Liste mit Aufgaben des DMC, betrifft Aufnahmen, Medien und Ruhezustand oder Standby.
+    /// List of tasks of the DMC, affects recordings, media and hibernation or standby
     /// </summary>
     [XmlRoot(ElementName = "tasklist")]
     public class ServerTaskList
     {
         /// <summary>
-        /// DMC Aufgabengruppen
+        /// DMC Aufgabengruppen.
+        /// DMC task groups
         /// </summary>
         [XmlElement(ElementName = "group", Type = typeof(ServerTaskGroup))]
         public List<ServerTaskGroup> Groups { get; set; }
@@ -27,12 +29,16 @@ namespace DVBViewerServerApiWrapper.Model
             return Helper.Deserializer.Deserialize<ServerTaskList>(xDocument, new Type[] { typeof(ServerTaskGroup), typeof(ServerTaskItem) });
         }
 
-        internal static ServerTaskList GetServerTaskList()
+        /// <summary>
+        /// Gibt alle Aufgaben des Servers zurück. Returns all tasks run on the DMS.
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<ServerTaskList> GetServerTaskListAsync()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                var xmldata = dvbApi.GetDataAsync("tasks").Result;
+                var xmldata = await dvbApi.GetDataAsync("tasks").ConfigureAwait(false);
 
                 if (xmldata != null)
                 {
@@ -40,6 +46,15 @@ namespace DVBViewerServerApiWrapper.Model
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Gibt alle Aufgaben des Servers zurück. Returns all tasks run on the DMS.
+        /// </summary>
+        /// <returns></returns>
+        public static ServerTaskList GetServerTaskList()
+        {
+            return GetServerTaskListAsync().Result;
         }
     }
 }
