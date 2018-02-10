@@ -36,7 +36,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// A list of videos that existed until the last time the database was updated.
         /// </summary>
         /// <returns></returns>
-        public static async Task<VideoFileList> GetVideoFileList()
+        public static async Task<VideoFileList> GetVideoFileListAsync()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -69,12 +69,22 @@ namespace DVBViewerServerApiWrapper.Model
         }
 
         /// <summary>
+        /// Eine Liste mit Videos, welche bis zur letzten Aktualisierung der Datenbank vorhanden waren.
+        /// A list of videos that existed until the last time the database was updated.
+        /// </summary>
+        /// <returns></returns>
+        public static VideoFileList GetVideoFileList()
+        {
+            return GetVideoFileListAsync().Result;
+        }
+
+        /// <summary>
         /// Eine Liste mit Videos, welche bis zur letzten Aktualisierung der Datenbank vorhanden waren. Filtert nach einem Teil des Namens.
         /// A list of videos that existed until the last time the database was updated. Filters for a part of the name.
         /// </summary>
         /// <param name="partOfTitle"></param>
         /// <returns></returns>
-        public static async Task<VideoFileList> GetVideoFileList(string partOfTitle)
+        public static async Task<VideoFileList> GetVideoFileListAsync(string partOfTitle)
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -110,12 +120,23 @@ namespace DVBViewerServerApiWrapper.Model
         }
 
         /// <summary>
+        /// Eine Liste mit Videos, welche bis zur letzten Aktualisierung der Datenbank vorhanden waren. Filtert nach einem Teil des Namens.
+        /// A list of videos that existed until the last time the database was updated. Filters for a part of the name.
+        /// </summary>
+        /// <param name="partOfTitle"></param>
+        /// <returns></returns>
+        public static VideoFileList GetVideoFileList(string partOfTitle)
+        {
+            return GetVideoFileListAsync(partOfTitle).Result;
+        }
+
+        /// <summary>
         /// Eine Liste mit Videos, welche bis zur letzten Aktualisierung der Datenbank vorhanden waren. Filtert nach einem Teil des Pfades.
         /// A list of videos that existed until the last time the database was updated. Filters for part of the path.
         /// </summary>
         /// <param name="partOfPath"></param>
         /// <returns></returns>
-        public static async Task<VideoFileList> GetVideoFileListByPath(string partOfPath)
+        public static async Task<VideoFileList> GetVideoFileListByPathAsync(string partOfPath)
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -150,23 +171,40 @@ namespace DVBViewerServerApiWrapper.Model
             return null;
         }
 
-        internal static async Task< VideoFileList> GetVideoFileListRecursive(int pathObjectID)
+        /// <summary>
+        /// Eine Liste mit Videos, welche bis zur letzten Aktualisierung der Datenbank vorhanden waren. Filtert nach einem Teil des Pfades.
+        /// A list of videos that existed until the last time the database was updated. Filters for part of the path.
+        /// </summary>
+        /// <param name="partOfPath"></param>
+        /// <returns></returns>
+        public static VideoFileList GetVideoFileListByPath(string partOfPath)
+        {
+            return GetVideoFileListByPathAsync(partOfPath).Result;
+        }
+
+        /// <summary>
+        /// Gibt alle Videos im aktuellen Verzeichnis und den Unterverzeichnissen zurück. Leider dauert das eine Weile.
+        /// Returns all videos in the current directory and subdirectories. Unfortunately, that takes a while.
+        /// </summary>
+        /// <param name="pathObjectID"></param>
+        /// <returns></returns>
+        internal static async Task< VideoFileList> GetVideoFileListRecursiveAsync(int pathObjectID)
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null && pathObjectID > 0)
             {
-                var currentDir = await VideoFilePath.GetVideoFilePathParents(pathObjectID).ConfigureAwait(false);
+                var currentDir = await VideoFilePath.GetVideoFilePathParentsAsync(pathObjectID).ConfigureAwait(false);
                 //Im aktuellen Verzeichnis die Videos holen
-                var videos = await GetVideoFileList(pathObjectID).ConfigureAwait(false);
+                var videos = await GetVideoFileListAsync(pathObjectID).ConfigureAwait(false);
                 foreach (var item in currentDir.Items)
                 {
-                    var childpath = await item.ChildPaths;
+                    var childpath = await item.ChildPathsAsync;
                     //videos.Items.AddRange(GetVideoFileList(item.ObjectID).Items);
                     if (childpath.Items.Count > 0)
                     {
                         foreach (var item2 in childpath.Items)
                         {
-                            var recListe = await GetVideoFileListRecursive(item2.ObjectID).ConfigureAwait(false);
+                            var recListe = await GetVideoFileListRecursiveAsync(item2.ObjectID).ConfigureAwait(false);
                             videos.Items.AddRange(recListe.Items);
                         }
                     }
@@ -177,7 +215,24 @@ namespace DVBViewerServerApiWrapper.Model
             return null;
         }
 
-        internal static async Task<VideoFileList> GetVideoFileList(int parentID)
+        /// <summary>
+        /// Gibt alle Videos im aktuellen Verzeichnis und den Unterverzeichnissen zurück. Leider dauert das eine Weile.
+        /// Returns all videos in the current directory and subdirectories. Unfortunately, that takes a while.
+        /// </summary>
+        /// <param name="pathObjectID"></param>
+        /// <returns></returns>
+        internal static VideoFileList GetVideoFileListRecursive(int pathObjectID)
+        {
+            return GetVideoFileListRecursiveAsync(pathObjectID).Result;
+        }
+
+        /// <summary>
+        /// Gibt eine Liste von Videos im angegebenen Verzeichnis zurück.
+        /// Returns a list of videos in the specified directory.
+        /// </summary>
+        /// <param name="parentID"></param>
+        /// <returns></returns>
+        internal static async Task<VideoFileList> GetVideoFileListAsync(int parentID)
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -207,7 +262,17 @@ namespace DVBViewerServerApiWrapper.Model
                 }
             }
             return null;
+        }
 
+        /// <summary>
+        /// Gibt eine Liste von Videos im angegebenen Verzeichnis zurück.
+        /// Returns a list of videos in the specified directory.
+        /// </summary>
+        /// <param name="parentID"></param>
+        /// <returns></returns>
+        internal static VideoFileList GetVideoFileList(int parentID)
+        {
+            return GetVideoFileListAsync(parentID).Result;
         }
 
         /// <summary>
@@ -215,18 +280,47 @@ namespace DVBViewerServerApiWrapper.Model
         /// Renews the video database. All information in the DB is deleted and recreated.
         /// </summary>
         /// <returns></returns>
-        public async Task<HttpStatusCode> ReCreateVideoDatabase()
+        public async Task<HttpStatusCode> ReCreateVideoDatabaseAsync()
         {
             //Instanz besorgen
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             //all groups
-            var allgroups = await dvbApi?.ServerTasks;
+            var allgroups = await dvbApi?.ServerTasksAsync;
             //Gruppe ermitteln
             var taskgroup = (from f in allgroups.Groups where f.Name.IndexOf("Mediadateien", StringComparison.OrdinalIgnoreCase) != -1 select f).FirstOrDefault();
             //Task ermitteln
             var task = (from f in taskgroup?.TaskItems where f.Action.IndexOf("RebuildVideoDB", StringComparison.OrdinalIgnoreCase) != -1 select f).FirstOrDefault();
             //Starten
-            return await task?.RunTask();
+            return await task?.RunTaskAsync();
+        }
+
+        /// <summary>
+        /// Erneuert die Videodatenbank. Dazu werden alle Informationen in der DB gelöscht und wieder neu erstellt. 
+        /// Renews the video database. All information in the DB is deleted and recreated.
+        /// </summary>
+        /// <returns></returns>
+        public HttpStatusCode ReCreateVideoDatabase()
+        {
+            return ReCreateVideoDatabaseAsync().Result;
+        }
+        
+        /// <summary>
+        /// Bereinigt die Videodatenbank. 
+        /// Cleans up the video database.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<HttpStatusCode> CleanUpVideoDatabaseAsync()
+        {
+            //Instanz besorgen
+            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
+            //all groups
+            var allgroups = await dvbApi?.ServerTasksAsync;
+            //Gruppe ermitteln
+            var taskgroup = (from f in allgroups.Groups where f.Name.IndexOf("Mediadateien", StringComparison.OrdinalIgnoreCase) != -1 select f).FirstOrDefault();
+            //Task ermitteln
+            var task = (from f in taskgroup?.TaskItems where f.Action.IndexOf("CleanUpVideoDB", StringComparison.OrdinalIgnoreCase) != -1 select f).FirstOrDefault();
+            //Starten
+            return await task?.RunTaskAsync();
         }
 
         /// <summary>
@@ -234,18 +328,9 @@ namespace DVBViewerServerApiWrapper.Model
         /// Cleans up the video database.
         /// </summary>
         /// <returns></returns>
-        public async Task<HttpStatusCode> CleanUpVideoDatabase()
+        public HttpStatusCode CleanUpVideoDatabase()
         {
-            //Instanz besorgen
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            //all groups
-            var allgroups = await dvbApi?.ServerTasks;
-            //Gruppe ermitteln
-            var taskgroup = (from f in allgroups.Groups where f.Name.IndexOf("Mediadateien", StringComparison.OrdinalIgnoreCase) != -1 select f).FirstOrDefault();
-            //Task ermitteln
-            var task = (from f in taskgroup?.TaskItems where f.Action.IndexOf("CleanUpVideoDB", StringComparison.OrdinalIgnoreCase) != -1 select f).FirstOrDefault();
-            //Starten
-            return await task?.RunTask();
+            return CleanUpVideoDatabaseAsync().Result;
         }
 
         /// <summary>

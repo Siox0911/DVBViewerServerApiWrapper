@@ -167,9 +167,20 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="dVBViewerClient"></param>
         /// <returns></returns>
-        public Task<HttpStatusCode> Play(DVBViewerClient dVBViewerClient)
+        public Task<HttpStatusCode> PlayAsync(DVBViewerClient dVBViewerClient)
         {
-            return dVBViewerClient.PlayVideo(this);
+            return dVBViewerClient.PlayVideoAsync(this);
+        }
+
+        /// <summary>
+        /// Spiel das Video auf einem Clienten ab, sofern der DVBViewer auf dem Server läuft.
+        /// Play the video on a client, if the DVBViewer is connected to the server.
+        /// </summary>
+        /// <param name="dVBViewerClient"></param>
+        /// <returns></returns>
+        public HttpStatusCode Play(DVBViewerClient dVBViewerClient)
+        {
+            return PlayAsync(dVBViewerClient).Result;
         }
 
         /// <summary>

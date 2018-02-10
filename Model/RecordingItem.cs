@@ -77,7 +77,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// The EventID of the recording (EPG)
         /// </summary>
         [XmlAttribute(AttributeName = "eventid")]
-        public int EventID { get; set; }
+        public string EventID { get; set; }
         /// <summary>
         /// Der Aufnahmekanal als Channel
         /// The recording channel as channel
@@ -129,9 +129,20 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="dVBViewerClient"></param>
         /// <returns></returns>
-        public Task<HttpStatusCode> Play(DVBViewerClient dVBViewerClient)
+        public Task<HttpStatusCode> PlayAsync(DVBViewerClient dVBViewerClient)
         {
-            return dVBViewerClient.PlayRecording(this);
+            return dVBViewerClient.PlayRecordingAsync(this);
+        }
+
+        /// <summary>
+        /// Spiel diese Aufnahme auf einem Clienten (DVBViewer) ab, sofern dieser connected ist.
+        /// Play this recording on a client (DVBViewer), if it is connected.
+        /// </summary>
+        /// <param name="dVBViewerClient"></param>
+        /// <returns></returns>
+        public HttpStatusCode Play(DVBViewerClient dVBViewerClient)
+        {
+            return PlayAsync(dVBViewerClient).Result;
         }
 
         /// <summary>
@@ -140,7 +151,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// Title, Info, Series, Channel und Description
         /// </summary>
         /// <returns></returns>
-        public async Task<HttpStatusCode> Update()
+        public async Task<HttpStatusCode> UpdateAsync()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -162,11 +173,22 @@ namespace DVBViewerServerApiWrapper.Model
         }
 
         /// <summary>
+        /// Führt eine Aktualisierung der Aufnahme im Media Server durch. Geändert wird:
+        /// Performs an update of the recording in the Media Server. Will be changed:
+        /// Title, Info, Series, Channel und Description
+        /// </summary>
+        /// <returns></returns>
+        public HttpStatusCode Update()
+        {
+            return UpdateAsync().Result;
+        }
+
+        /// <summary>
         /// Löscht diese Aufnahme, gibt den Code 423 zurück, wenn eine Löschnung nicht funktioniert hat.
         /// Deletes this recording, returns the code 423, if a deletion did not work.
         /// </summary>
         /// <returns></returns>
-        public async Task<HttpStatusCode> Delete()
+        public async Task<HttpStatusCode> DeleteAsync()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -178,6 +200,16 @@ namespace DVBViewerServerApiWrapper.Model
                 }).ConfigureAwait(false);
             }
             return 0;
+        }
+
+        /// <summary>
+        /// Löscht diese Aufnahme, gibt den Code 423 zurück, wenn eine Löschnung nicht funktioniert hat.
+        /// Deletes this recording, returns the code 423, if a deletion did not work.
+        /// </summary>
+        /// <returns></returns>
+        public HttpStatusCode Delete()
+        {
+            return DeleteAsync().Result;
         }
 
         /// <summary>

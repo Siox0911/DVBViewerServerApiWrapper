@@ -62,5 +62,18 @@ namespace DVBViewerServerApiWrapper.Model
             }
             return null;
         }
+
+        /// <summary>
+        /// <para>Eine Liste mit Aufnahmen welche irgendwann aufgenommen wurden. Diese müssen nicht mehr als Datei existieren. Es existieren auch keine Verweise auf Dateinamen.
+        /// Dies wird verwendet um bereits aufgenommene Aufnahmen zu erkennen.</para>
+        /// <para>
+        /// A list of recordings that were taken sometime. These no longer need to exist as a file. There are no references to filenames.
+        /// This is used to recognize already recorded pictures.
+        /// </para>
+        /// </summary>
+        public static RecordedList GetRecordedList()
+        {
+            return GetRecordedListAsync().Result;
+        }
     }
 }

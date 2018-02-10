@@ -37,7 +37,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// Gibt die Serverversion zurück. Returns the server version.
         /// </summary>
         /// <returns></returns>
-        public static async Task<ServerVersion> GetServerVersion()
+        public static async Task<ServerVersion> GetServerVersionAsync()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -50,6 +50,15 @@ namespace DVBViewerServerApiWrapper.Model
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Gibt die Serverversion zurück. Returns the server version.
+        /// </summary>
+        /// <returns></returns>
+        public static ServerVersion GetServerVersion()
+        {
+            return GetServerVersionAsync().Result;
         }
     }
 }

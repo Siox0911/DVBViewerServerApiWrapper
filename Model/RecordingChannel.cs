@@ -56,15 +56,25 @@ namespace DVBViewerServerApiWrapper.Model
         /// Returns a list of all channels.
         /// </summary>
         /// <returns></returns>
-        public static async Task<List<RecordingChannel>> GetChannels()
+        public static async Task<List<RecordingChannel>> GetChannelsAsync()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                var recs = await RecordingList.GetRecordings().ConfigureAwait(false);
+                var recs = await RecordingList.GetRecordingsAsync().ConfigureAwait(false);
                 return (from f in recs.Items where f.Channel != null orderby f.Channel.Name select f.Channel).Distinct().ToList();
             }
             return null;
+        }
+
+        /// <summary>
+        /// Gibt eine Liste aller Sender zurück.
+        /// Returns a list of all channels.
+        /// </summary>
+        /// <returns></returns>
+        public static List<RecordingChannel> GetChannels()
+        {
+            return GetChannelsAsync().Result;
         }
     }
 }

@@ -33,7 +33,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// Gibt alle Aufgaben des Servers zurück. Returns all tasks run on the DMS.
         /// </summary>
         /// <returns></returns>
-        public static async Task<ServerTaskList> GetServerTaskList()
+        public static async Task<ServerTaskList> GetServerTaskListAsync()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -46,6 +46,15 @@ namespace DVBViewerServerApiWrapper.Model
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Gibt alle Aufgaben des Servers zurück. Returns all tasks run on the DMS.
+        /// </summary>
+        /// <returns></returns>
+        public static ServerTaskList GetServerTaskList()
+        {
+            return GetServerTaskListAsync().Result;
         }
     }
 }

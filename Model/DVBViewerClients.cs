@@ -35,7 +35,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// Gives back all connected DVBViewer Clients
         /// </summary>
         /// <returns></returns>
-        public static async Task<DVBViewerClients> GetDvbViewerClients()
+        public static async Task<DVBViewerClients> GetDVBViewerClientsAsync()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -44,10 +44,20 @@ namespace DVBViewerServerApiWrapper.Model
 
                 if (xmldata != null)
                 {
-                   return CreateDvbViewerClients(xmldata);
+                    return CreateDvbViewerClients(xmldata);
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Gibt alle verbundenen DVBViewer zurück.
+        /// Gives back all connected DVBViewer Clients
+        /// </summary>
+        /// <returns></returns>
+        public static DVBViewerClients GetDVBViewerClients()
+        {
+            return GetDVBViewerClientsAsync().Result;
         }
 
         /// <summary>
@@ -62,7 +72,7 @@ namespace DVBViewerServerApiWrapper.Model
             {
                 foreach (var client in Items)
                 {
-                   await client.SendXCommandAsync(dVBViewerXCommand).ConfigureAwait(false);
+                    await client.SendXCommandAsync(dVBViewerXCommand).ConfigureAwait(false);
                 }
             }
             catch (Exception)
@@ -71,5 +81,22 @@ namespace DVBViewerServerApiWrapper.Model
             }
         }
 
+        /// <summary>
+        /// Sendet an jeden Clienten ein DVBCommand. Da es sich um jeden Clienten handelt, gibt es keinen Rückgabewert
+        /// Send a DVCommand to each client. Because it is every client, there is no return value
+        /// </summary>
+        /// <param name="dVBViewerXCommand"></param>
+        /// <returns></returns>
+        public void SendXCommand(Enums.DVBViewerXCommand dVBViewerXCommand)
+        {
+            try
+            {
+                SendXCommandAsync(dVBViewerXCommand);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

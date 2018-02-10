@@ -58,15 +58,25 @@ namespace DVBViewerServerApiWrapper.Model
         /// Returns a list of series. The number of series depends on the current recordings
         /// </summary>
         /// <returns></returns>
-        public static async Task<List<RecordingSeries>> GetSeries()
+        public static async Task<List<RecordingSeries>> GetSeriesAsync()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                var recs = await RecordingList.GetRecordings().ConfigureAwait(false);
+                var recs = await RecordingList.GetRecordingsAsync().ConfigureAwait(false);
                 return (from f in recs.Items where f.Series != null orderby f.Series.Name select f.Series).Distinct().ToList();
             }
             return null;
+        }
+
+        /// <summary>
+        /// Gibt eine Liste der Serien zurück. Die Anzahl der Serien ist abhängig von den aktuellen Aufnahmen.
+        /// Returns a list of series. The number of series depends on the current recordings
+        /// </summary>
+        /// <returns></returns>
+        public static List<RecordingSeries> GetSeries()
+        {
+            return GetSeriesAsync().Result;
         }
     }
 }

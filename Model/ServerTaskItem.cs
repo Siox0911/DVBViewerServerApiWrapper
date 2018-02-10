@@ -42,7 +42,17 @@ namespace DVBViewerServerApiWrapper.Model
         /// Starts the task on the server
         /// </summary>
         /// <returns></returns>
-        public Task<HttpStatusCode> RunTask()
+        public HttpStatusCode RunTask()
+        {
+            return RunTaskAsync().Result;
+        }
+
+        /// <summary>
+        /// Startet den Task auf dem Server.
+        /// Starts the task on the server
+        /// </summary>
+        /// <returns></returns>
+        public Task<HttpStatusCode> RunTaskAsync()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             return dvbApi.SendDataAsync("tasks", new List<Helper.UriParameter>

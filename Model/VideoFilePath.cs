@@ -17,6 +17,7 @@ namespace DVBViewerServerApiWrapper.Model
     {
         /// <summary>
         /// Die Liste der Verzeichnisse.
+        /// A List of folders.
         /// </summary>
         [XmlElement(ElementName = "row", Type = typeof(VideoFilePathItem))]
         public List<VideoFilePathItem> Items { get; set; }
@@ -33,7 +34,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// A List with paths
         /// </summary>
         /// <returns></returns>
-        public static async Task<VideoFilePath> GetVideoFilePath()
+        public static async Task<VideoFilePath> GetVideoFilePathAsync()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -60,7 +61,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="objectID"></param>
         /// <returns></returns>
-        internal static async Task<VideoFilePath> GetVideoFilePathChilds(int objectID)
+        internal static async Task<VideoFilePath> GetVideoFilePathChildsAsync(int objectID)
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -82,12 +83,23 @@ namespace DVBViewerServerApiWrapper.Model
         }
 
         /// <summary>
+        /// Gibt die untergeordneten Verzeichnisse zurück.
+        /// Returns the child directories.
+        /// </summary>
+        /// <param name="objectID"></param>
+        /// <returns></returns>
+        internal static VideoFilePath GetVideoFilePathChilds(int objectID)
+        {
+            return GetVideoFilePathChildsAsync(objectID).Result;
+        }
+
+        /// <summary>
         /// Gibt das Elternverzeichnis zurück, oder wenn man die objectID nimmt das aktuelle Verzeichnis.
         /// Returns the parent directory, or if the objectID takes the current directory
         /// </summary>
         /// <param name="parentID"></param>
         /// <returns></returns>
-        internal static async Task<VideoFilePath> GetVideoFilePathParents(int parentID)
+        internal static async Task<VideoFilePath> GetVideoFilePathParentsAsync(int parentID)
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -106,6 +118,17 @@ namespace DVBViewerServerApiWrapper.Model
                 }
             }
             return null;
+        }
+        
+        /// <summary>
+        /// Gibt das Elternverzeichnis zurück, oder wenn man die objectID nimmt das aktuelle Verzeichnis.
+        /// Returns the parent directory, or if the objectID takes the current directory
+        /// </summary>
+        /// <param name="parentID"></param>
+        /// <returns></returns>
+        internal static VideoFilePath GetVideoFilePathParents(int parentID)
+        {
+            return GetVideoFilePathParentsAsync(parentID).Result;
         }
     }
 }

@@ -1,5 +1,10 @@
 ﻿# Changelog
 
+v0.3.5.0
+ - added additional async functions and properties
+   - now all can be used on a async manner
+ - added english documentation
+
 v0.3.0.0
  - changed version to a realistic value
 

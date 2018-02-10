@@ -69,7 +69,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="recordID"></param>
         /// <returns></returns>
-        public async static Task<RecordingList> GetRecordings()
+        public static async Task<RecordingList> GetRecordingsAsync()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -90,11 +90,22 @@ namespace DVBViewerServerApiWrapper.Model
         }
 
         /// <summary>
+        /// Gibt alle Aufnahmen zurück.
+        /// Returns all recordings.
+        /// </summary>
+        /// <param name="recordID"></param>
+        /// <returns></returns>
+        public static RecordingList GetRecordings()
+        {
+            return GetRecordingsAsync().Result;
+        }
+
+        /// <summary>
         /// Gibt alle Aufnahmen vom Service zurück. Es fehlen darin Dateinamen und die lange Beschreibung.
         /// Returns all recordings of the service. It lacks file names and the long description.
         /// </summary>
         /// <returns></returns>
-        internal async static Task<RecordingList> GetRecordingsShort()
+        internal static async Task<RecordingList> GetRecordingsShortAsync()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -117,12 +128,22 @@ namespace DVBViewerServerApiWrapper.Model
         }
 
         /// <summary>
+        /// Gibt alle Aufnahmen vom Service zurück. Es fehlen darin Dateinamen und die lange Beschreibung.
+        /// Returns all recordings of the service. It lacks file names and the long description.
+        /// </summary>
+        /// <returns></returns>
+        internal static RecordingList GetRecordingsShort()
+        {
+            return GetRecordingsShortAsync().Result;
+        }
+
+        /// <summary>
         /// Gibt eine Aufnahme anhand der AufnahmeID zurück.
         /// Returns a recording based on the recording ID.
         /// </summary>
         /// <param name="recordID"></param>
         /// <returns></returns>
-        public async static Task<RecordingList> GetRecording(int recordID)
+        public async static Task<RecordingList> GetRecordingAsync(int recordID)
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -144,17 +165,55 @@ namespace DVBViewerServerApiWrapper.Model
         }
 
         /// <summary>
+        /// Gibt eine Aufnahme anhand der AufnahmeID zurück.
+        /// Returns a recording based on the recording ID.
+        /// </summary>
+        /// <param name="recordID"></param>
+        /// <returns></returns>
+        public static RecordingList GetRecording(int recordID)
+        {
+            return GetRecordingAsync(recordID).Result;
+        }
+
+        /// <summary>
         /// Gibt eine Liste mit Aufnahmen zurück, welche den Titel enthalten
         /// Returns a list of recordings containing the title
         /// </summary>
         /// <param name="partOfName">Teil des Namens</param>
         /// <returns></returns>
-        public static async Task<RecordingList> GetRecordings(string partOfName)
+        public static async Task<RecordingList> GetRecordingsAsync(string partOfName)
         {
-            var result = await GetRecordings().ConfigureAwait(false);
+            var result = await GetRecordingsAsync().ConfigureAwait(false);
             if (result != null)
             {
                 result.Items = (from f in result.Items where f.Title.IndexOf(partOfName, StringComparison.OrdinalIgnoreCase) != -1 select f).ToList();
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Gibt eine Liste mit Aufnahmen zurück, welche den Titel enthalten
+        /// Returns a list of recordings containing the title
+        /// </summary>
+        /// <param name="partOfName">Teil des Namens</param>
+        /// <returns></returns>
+        public static RecordingList GetRecordings(string partOfName)
+        {
+            return GetRecordingsAsync(partOfName).Result;
+        }
+
+        /// <summary>
+        /// Gibt eine Liste mit Aufnahmen zurück, welche zu dieser Serie aufgenommen wurden.
+        /// Returns a list of recordings taken of this series.
+        /// </summary>
+        /// <param name="recordingSeries"></param>
+        /// <returns></returns>
+        public static async Task<RecordingList> GetRecordingsAsync(RecordingSeries recordingSeries)
+        {
+            var result = await GetRecordingsAsync().ConfigureAwait(false);
+            if (result != null)
+            {
+                result.Items = (from f in result.Items where f.Series?.Name.Equals(recordingSeries.Name) == true select f).ToList();
             }
             return result;
         }
@@ -165,12 +224,23 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="recordingSeries"></param>
         /// <returns></returns>
-        public static async Task<RecordingList> GetRecordings(RecordingSeries recordingSeries)
+        public static RecordingList GetRecordings(RecordingSeries recordingSeries)
         {
-            var result = await GetRecordings().ConfigureAwait(false);
+            return GetRecordingsAsync(recordingSeries).Result;
+        }
+
+        /// <summary>
+        /// Gibt eine Liste mit Aufnahmen zurück, welche Text als Teil in der Beschreibung haben.
+        /// Returns a list of recordings that have text as part of the description.
+        /// </summary>
+        /// <param name="partOfDesc">Ein Teil der Beschreibung. Part of the description</param>
+        /// <returns></returns>
+        public static async Task<RecordingList> GetRecordingsByDescAsync(string partOfDesc)
+        {
+            var result = await GetRecordingsAsync().ConfigureAwait(false);
             if (result != null)
             {
-                result.Items = (from f in result.Items where f.Series?.Name.Equals(recordingSeries.Name) == true select f).ToList();
+                result.Items = (from f in result.Items where f.Description?.IndexOf(partOfDesc, StringComparison.OrdinalIgnoreCase) != -1 select f).ToList();
             }
             return result;
         }
@@ -181,17 +251,10 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="partOfDesc">Ein Teil der Beschreibung. Part of the description</param>
         /// <returns></returns>
-        public static async Task<RecordingList> GetRecordingsByDesc(string partOfDesc)
+        public static RecordingList GetRecordingsByDesc(string partOfDesc)
         {
-            var result = await GetRecordings().ConfigureAwait(false);
-            if (result != null)
-            {
-                result.Items = (from f in result.Items where f.Description?.IndexOf(partOfDesc, StringComparison.OrdinalIgnoreCase) != -1 select f).ToList();
-            }
-            return result;
+            return GetRecordingsByDescAsync(partOfDesc).Result;
         }
-
-
 
         /// <summary>
         /// Erzeugt aus der Liste der Videos eine M3U Datei. Die Datei befindet sich normalerweise im Tempverzeichnis.

@@ -123,7 +123,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// Gibt den Serverstatus zurück. Returns the server status.
         /// </summary>
         /// <returns></returns>
-        public async static Task<Serverstatus> GetServerstatus()
+        public async static Task<Serverstatus> GetServerstatusAsync()
         {
             var api = DVBViewerServerApi.GetCurrentInstance();
             if(api != null)
@@ -131,6 +131,15 @@ namespace DVBViewerServerApiWrapper.Model
                 return CreateServerstatus(await api.GetDataAsync().ConfigureAwait(false));
             }
             return null;
+        }
+
+        /// <summary>
+        /// Gibt den Serverstatus zurück. Returns the server status.
+        /// </summary>
+        /// <returns></returns>
+        public static Serverstatus GetServerstatus()
+        {
+            return GetServerstatusAsync().Result;
         }
     }
 }
