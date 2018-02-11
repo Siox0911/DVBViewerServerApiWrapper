@@ -15,7 +15,7 @@ namespace DVBViewerServerApiWrapper.Model
     /// A list of videos in the Media Server
     /// </summary>
     [XmlRoot(ElementName = "table")]
-    public class VideoFileList
+    public class VideoFileList : IDisposable
     {
         /// <summary>
         /// Die Videos als Liste.
@@ -31,6 +31,20 @@ namespace DVBViewerServerApiWrapper.Model
             return Helper.Deserializer.Deserialize<VideoFileList>(xDocument, new Type[] { typeof(VideoFileItem) });
         }
 
+        private static string baseSQL = "SELECT objects.Object_ID, objects.Enabled, " +
+                                        "objects.found, object_details.Details_ID, " +
+                                        "objects.Ext, paths.idPath, objects.Filename, paths.Path, " +
+                                        "object_details.channel, object_details.Added, " +
+                                        "object_details.Description, object_details.Duration, " +
+                                        "object_details.Info, object_details.Lastplayed, " +
+                                        "object_details.Time, object_details.Titel, " +
+                                        "object_details.filesize " +
+                                            "FROM paths INNER JOIN objects " +
+                                            "ON paths.idPath = objects.PathID " +
+                                            "INNER JOIN object_details " +
+                                            "ON objects.Detail_ID = object_details.Details_ID " +
+                                        "WHERE found = 1";
+
         /// <summary>
         /// Eine Liste mit Videos, welche bis zur letzten Aktualisierung der Datenbank vorhanden waren.
         /// A list of videos that existed until the last time the database was updated.
@@ -41,18 +55,7 @@ namespace DVBViewerServerApiWrapper.Model
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                const string query = "Select objects.Object_ID, objects.Enabled, objects.found, object_details.Details_ID, " +
-                                        "objects.Ext, paths.idPath, objects.Filename, paths.Path, " +
-                                        "object_details.channel, object_details.Added, " +
-                                        "object_details.Description, object_details.Duration, " +
-                                        "object_details.Info, object_details.Lastplayed, " +
-                                        "object_details.Time, object_details.Titel, " +
-                                        "object_details.filesize " +
-                                   "from paths inner join objects " +
-                                        "on paths.idPath = objects.PathID " +
-                                        "inner join object_details " +
-                                        "on objects.Detail_ID = object_details.Details_ID " +
-                                        "where Type=3";
+                string query = $"{baseSQL} AND Type = 3";
 
                 var xmldata = await dvbApi.GetDataAsync("sql", new List<Helper.UriParameter>
                 {
@@ -92,18 +95,7 @@ namespace DVBViewerServerApiWrapper.Model
                 //very simple SQL-Injektion prevention. Not perfekt, but the database is readonly...
                 partOfTitle = partOfTitle.Replace("'", "''");
 
-                string query = "Select objects.Object_ID, objects.Enabled, objects.found, object_details.Details_ID, " +
-                                    "objects.Ext, paths.idPath, objects.Filename, paths.Path, " +
-                                    "object_details.channel, object_details.Added, " +
-                                    "object_details.Description, object_details.Duration, " +
-                                    "object_details.Info, object_details.Lastplayed, " +
-                                    "object_details.Time, object_details.Titel, " +
-                                    "object_details.filesize " +
-                               "from paths inner join objects " +
-                                    "on paths.idPath = objects.PathID " +
-                                    "inner join object_details " +
-                                    "on objects.Detail_ID = object_details.Details_ID " +
-                                    "where Type=3 AND object_details.Titel like '%" + partOfTitle + "%'";
+                string query = $"{baseSQL} AND Type = 3 AND object_details.Titel like '%" + partOfTitle + "%'";
 
                 var xmldata = await dvbApi.GetDataAsync("sql", new List<Helper.UriParameter>
                 {
@@ -144,18 +136,7 @@ namespace DVBViewerServerApiWrapper.Model
                 //very simple SQL-Injektion prevention. Not perfekt, but the database is readonly...
                 partOfPath = partOfPath.Replace("'", "''");
 
-                string query = "Select objects.Object_ID, objects.Enabled, objects.found, object_details.Details_ID, " +
-                                    "objects.Ext, paths.idPath, objects.Filename, paths.Path, " +
-                                    "object_details.channel, object_details.Added, " +
-                                    "object_details.Description, object_details.Duration, " +
-                                    "object_details.Info, object_details.Lastplayed, " +
-                                    "object_details.Time, object_details.Titel, " +
-                                    "object_details.filesize " +
-                               "from paths inner join objects " +
-                                    "on paths.idPath = objects.PathID " +
-                                    "inner join object_details " +
-                                    "on objects.Detail_ID = object_details.Details_ID " +
-                                    "where Type=3 AND paths.Path like '%" + partOfPath + "%'";
+                string query = $"{baseSQL} AND Type = 3 AND paths.Path like '%" + partOfPath + "%'";
 
                 var xmldata = await dvbApi.GetDataAsync("sql", new List<Helper.UriParameter>
                 {
@@ -188,14 +169,14 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="pathObjectID"></param>
         /// <returns></returns>
-        internal static async Task< VideoFileList> GetVideoFileListRecursiveAsync(int pathObjectID)
+        internal static async Task<VideoFileList> GetVideoFileListFromFolderRecursiveAsync(int pathObjectID)
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null && pathObjectID > 0)
             {
                 var currentDir = await VideoFilePath.GetVideoFilePathParentsAsync(pathObjectID).ConfigureAwait(false);
                 //Im aktuellen Verzeichnis die Videos holen
-                var videos = await GetVideoFileListAsync(pathObjectID).ConfigureAwait(false);
+                var videos = await GetVideoFileListFromFolderAsync(pathObjectID).ConfigureAwait(false);
                 foreach (var item in currentDir.Items)
                 {
                     var childpath = await item.ChildPathsAsync;
@@ -204,7 +185,7 @@ namespace DVBViewerServerApiWrapper.Model
                     {
                         foreach (var item2 in childpath.Items)
                         {
-                            var recListe = await GetVideoFileListRecursiveAsync(item2.ObjectID).ConfigureAwait(false);
+                            var recListe = await GetVideoFileListFromFolderRecursiveAsync(item2.ObjectID).ConfigureAwait(false);
                             videos.Items.AddRange(recListe.Items);
                         }
                     }
@@ -221,9 +202,9 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="pathObjectID"></param>
         /// <returns></returns>
-        internal static VideoFileList GetVideoFileListRecursive(int pathObjectID)
+        internal static VideoFileList GetVideoFileListFromFolderRecursive(int pathObjectID)
         {
-            return GetVideoFileListRecursiveAsync(pathObjectID).Result;
+            return GetVideoFileListFromFolderRecursiveAsync(pathObjectID).Result;
         }
 
         /// <summary>
@@ -232,23 +213,12 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="parentID"></param>
         /// <returns></returns>
-        internal static async Task<VideoFileList> GetVideoFileListAsync(int parentID)
+        internal static async Task<VideoFileList> GetVideoFileListFromFolderAsync(int parentID)
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                string query = "Select objects.Object_ID, objects.Enabled, objects.found, object_details.Details_ID, " +
-                                    "objects.Ext, paths.idPath, objects.Filename, paths.Path, " +
-                                    "object_details.channel, object_details.Added, " +
-                                    "object_details.Description, object_details.Duration, " +
-                                    "object_details.Info, object_details.Lastplayed, " +
-                                    "object_details.Time, object_details.Titel, " +
-                                    "object_details.filesize " +
-                               "from paths inner join objects " +
-                                    "on paths.idPath = objects.PathID " +
-                                    "inner join object_details " +
-                                    "on objects.Detail_ID = object_details.Details_ID " +
-                                    "where Type=3 AND parent_ID = " + parentID;
+                string query = $"{baseSQL} AND Type = 3 AND parent_ID = " + parentID;
 
                 var xmldata = await dvbApi.GetDataAsync("sql", new List<Helper.UriParameter>
                 {
@@ -270,9 +240,9 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="parentID"></param>
         /// <returns></returns>
-        internal static VideoFileList GetVideoFileList(int parentID)
+        internal static VideoFileList GetVideoFileListFromFolder(int parentID)
         {
-            return GetVideoFileListAsync(parentID).Result;
+            return GetVideoFileListFromFolderAsync(parentID).Result;
         }
 
         /// <summary>
@@ -303,7 +273,7 @@ namespace DVBViewerServerApiWrapper.Model
         {
             return ReCreateVideoDatabaseAsync().Result;
         }
-        
+
         /// <summary>
         /// Bereinigt die Videodatenbank. 
         /// Cleans up the video database.
@@ -363,6 +333,14 @@ namespace DVBViewerServerApiWrapper.Model
                 return cPathName;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Führt anwendungsspezifische Aufgaben durch, die mit der Freigabe, der Zurückgabe oder dem Zurücksetzen von nicht verwalteten Ressourcen zusammenhängen.
+        ///</summary>
+        public void Dispose()
+        {
+            Items = null;
         }
     }
 }

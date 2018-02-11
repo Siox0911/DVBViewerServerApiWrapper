@@ -62,6 +62,27 @@ namespace DVBViewerServerApiWrapper
         /// Hostname of the service, if an ipaddress has already been set, the hostname is not needed
         /// </summary>
         public string Hostname { get => IpAddress; set => IpAddress = value; }
+
+        /// <summary>
+        /// <para>
+        /// Das Gerät auf dem der Wrapper ausgeführt wird, befindet sich in der Liste für Trusted Devices im DMS. Wenn dies true gesetzt wird, werden Benutzername und Passwort nicht benötigt.
+        /// </para>
+        /// <para>
+        /// The device on which the wrapper is running is in the Trusted Devices list on the DMS. If is set to true, username and password are not required.
+        /// </para>
+        /// </summary>
+        public bool TrustedDevice { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Wenn der DMS und eine APP auf der selben Maschine laufen, kann ein Bypass gesetzt werden, welcher direkt auf die Mediendatei verweist. Das sorgt dafür, dass der Wrapper, bei Play, keine Playlisten als m3u für die UPnP streams erstellt. Es wird direkt die Mediendatei zurückgibt.
+        /// </para>
+        /// <para>
+        /// If the DMS and an APP are running on the same machine, a bypass can be set that points directly to the media file. This ensures that the wrapper, in Play, does not create playlists as m3u for the UPnP streams. It will directly return the media file.
+        /// </para>
+        /// </summary>
+        public bool BypassLocalhost { get; set; }
+
         /// <summary>
         /// Gibt die DVBViewer Clienten (PC-Name) zurück, welche seit dem letzten Start des Servers verbunden waren.
         /// Returns the DVBViewer clients (PC name) that have been connected since the server was last started.
@@ -616,9 +637,6 @@ namespace DVBViewerServerApiWrapper
                 var ub = new UriBuilder
                 {
                     Host = IpAddress,
-                    //Wird nicht benötigt: Credentials werden beim Abrufen gesetzt
-                    //UserName = user,
-                    //Password = password,
                     Port = Port,
                     Scheme = "http",
                     Path = $"/api/{page.ToLower()}.html"
@@ -677,9 +695,6 @@ namespace DVBViewerServerApiWrapper
                 var ub = new UriBuilder
                 {
                     Host = IpAddress,
-                    //Wird nicht benötigt: Credentials werden beim Abrufen gesetzt
-                    //UserName = user,
-                    //Password = password,
                     Port = Port,
                     Scheme = "http",
                     Path = $"/{page.ToLower()}.html"
@@ -730,7 +745,7 @@ namespace DVBViewerServerApiWrapper
                 throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein. Page can't be empty.");
             }
 
-            if (string.IsNullOrEmpty(User) || Password == null)
+            if (!TrustedDevice && (string.IsNullOrEmpty(User) || Password == null))
             {
                 throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt. User or passwort not set.");
             }
@@ -746,9 +761,12 @@ namespace DVBViewerServerApiWrapper
                 var webRequest = WebRequest.Create(uri);
                 //Falls ein Proxy im System ist, kann das helfen. So lange im IE ein Proxy eingetragen wurde.
                 webRequest.Proxy = WebRequest.DefaultWebProxy;
-                //AuthType
-                webRequest.Credentials = new NetworkCredential(User, Password);
-                webRequest.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
+                //AuthType, if device ist not in the trusted device List
+                if (!TrustedDevice)
+                {
+                    webRequest.Credentials = new NetworkCredential(User, Password);
+                    webRequest.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
+                }
                 //Abfragemethode
                 webRequest.Method = WebRequestMethods.Http.Get;
 
@@ -784,7 +802,7 @@ namespace DVBViewerServerApiWrapper
                 throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein. Page can't be empty.");
             }
 
-            if (string.IsNullOrEmpty(User) || Password == null)
+            if (!TrustedDevice && (string.IsNullOrEmpty(User) || Password == null))
             {
                 throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt. User or passwort not set.");
             }
@@ -797,9 +815,12 @@ namespace DVBViewerServerApiWrapper
                 var webRequest = WebRequest.Create(uri);
                 //Falls ein Proxy im System ist, kann das helfen. So lange im IE ein Proxy eingetragen wurde.
                 webRequest.Proxy = WebRequest.DefaultWebProxy;
-                //AuthType
-                webRequest.Credentials = new NetworkCredential(User, Password);
-                webRequest.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
+                //AuthType, if device ist not in the trusted device List
+                if (!TrustedDevice)
+                {
+                    webRequest.Credentials = new NetworkCredential(User, Password);
+                    webRequest.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
+                }
                 //Abfragemethode
                 webRequest.Method = WebRequestMethods.Http.Get;
 
@@ -831,7 +852,7 @@ namespace DVBViewerServerApiWrapper
                 throw new ArgumentNullException(nameof(page), "Die Seite darf nicht leer sein. Page can't be empty.");
             }
 
-            if (string.IsNullOrEmpty(User) || Password == null)
+            if (!TrustedDevice && (string.IsNullOrEmpty(User) || Password == null))
             {
                 throw new NullReferenceException("Benutzer oder Password wurde nicht gesetzt. User or passwort not set.");
             }
@@ -842,9 +863,6 @@ namespace DVBViewerServerApiWrapper
                 var uri = new UriBuilder
                 {
                     Host = IpAddress,
-                    //Wird nicht benötigt: Credentials werden beim Abrufen gesetzt
-                    //UserName = user,
-                    //Password = password,
                     Port = Port,
                     Scheme = "http",
                     Path = $"/{page.ToLower()}.html"
@@ -871,9 +889,12 @@ namespace DVBViewerServerApiWrapper
                 var webRequest = WebRequest.Create(uri.Uri);
                 //Falls ein Proxy im System ist, kann das helfen. So lange im IE ein Proxy eingetragen wurde.
                 webRequest.Proxy = WebRequest.DefaultWebProxy;
-                //AuthType
-                webRequest.Credentials = new NetworkCredential(User, Password);
-                webRequest.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
+                //AuthType, if device ist not in the trusted device List
+                if (!TrustedDevice)
+                {
+                    webRequest.Credentials = new NetworkCredential(User, Password);
+                    webRequest.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
+                }
                 //Abfragemethode
                 webRequest.Method = WebRequestMethods.Http.Post;
                 webRequest.ContentType = "application/x-www-form-urlencoded";

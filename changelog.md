@@ -1,5 +1,11 @@
 ﻿# Changelog
 
+v0.3.5.1
+ - added TrustedDevice Property. 
+   - The DMS has an option for trusted devices, with this username and password are not required.
+ - added BypassLocalhost Property
+   - If the DMS and an APP are running on the same machine, a bypass can be set that points directly to the media file. This ensures that the wrapper, in Play, does not create playlists as m3u for the UPnP streams. It will directly return the media file.
+
 v0.3.5.0
  - added additional async functions and properties
    - now all can be used on a async manner

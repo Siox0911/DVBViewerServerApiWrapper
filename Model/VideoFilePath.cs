@@ -29,6 +29,8 @@ namespace DVBViewerServerApiWrapper.Model
             return Helper.Deserializer.Deserialize<VideoFilePath>(xDocument, new Type[] { typeof(VideoFilePath), typeof(VideoFilePathItem) });
         }
 
+        private static string baseSQL = "Select paths.idPath, paths.Folder, paths.Path, objects.Object_ID, objects.Parent_ID from objects inner join paths on objects.PathID = paths.idPath where objects.Type < 3";
+
         /// <summary>
         /// Eine Liste mit Pfaden.
         /// A List with paths
@@ -39,7 +41,7 @@ namespace DVBViewerServerApiWrapper.Model
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                const string query = "Select paths.idPath, paths.Folder, paths.Path, objects.Object_ID, objects.Parent_ID from objects inner join paths on objects.PathID = paths.idPath where objects.Type < 3 Order by paths.Path";
+                string query = $"{baseSQL} Order by paths.Path";
 
                 var xmldata = await dvbApi.GetDataAsync("sql", new List<Helper.UriParameter>
                 {
@@ -66,7 +68,7 @@ namespace DVBViewerServerApiWrapper.Model
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                string query = $"Select paths.idPath, paths.Folder, paths.Path, objects.Object_ID, objects.Parent_ID from objects inner join paths on objects.PathID = paths.idPath where objects.Type < 3 and Parent_ID = {objectID} Order by paths.Path";
+                string query = $"{baseSQL} and Parent_ID = {objectID} Order by paths.Path";
 
                 var xmldata = await dvbApi.GetDataAsync("sql", new List<Helper.UriParameter>
                 {
@@ -104,7 +106,7 @@ namespace DVBViewerServerApiWrapper.Model
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                string query = $"Select paths.idPath, paths.Folder, paths.Path, objects.Object_ID, objects.Parent_ID from objects inner join paths on objects.PathID = paths.idPath where objects.Type < 3 and Object_ID = {parentID} Order by paths.Path";
+                string query = $"{baseSQL} and Object_ID = {parentID} Order by paths.Path";
 
                 var xmldata = await dvbApi.GetDataAsync("sql", new List<Helper.UriParameter>
                 {

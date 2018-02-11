@@ -89,6 +89,7 @@
     <Content Include="images\ToDo_Add_256.png" />
     <Content Include="images\ToDo_Current_256.png" />
     <Content Include="images\ToDo_Ready_256.png" />
+    <Content Include="ToDo.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

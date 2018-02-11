@@ -76,25 +76,25 @@ namespace DVBViewerServerApiWrapper.Model
         /// Eine Liste von Videos im aktuellen Verzeichnis
         /// A list of videos in the current directory
         /// </summary>
-        public Task<VideoFileList> VideosAsync { get { return VideoFileList.GetVideoFileListAsync(ObjectID); } }
+        public Task<VideoFileList> VideosAsync { get { return VideoFileList.GetVideoFileListFromFolderAsync(ObjectID); } }
 
         /// <summary>
         /// Eine Liste von Videos im aktuellen Verzeichnis
         /// A list of videos in the current directory
         /// </summary>
-        public VideoFileList Videos { get { return VideoFileList.GetVideoFileList(ObjectID); } }
+        public VideoFileList Videos { get { return VideoFileList.GetVideoFileListFromFolder(ObjectID); } }
 
         /// <summary>
         /// Eine Liste mit Videos im aktuellen und allen Unterverzeichnissen
         /// A list of videos in the current and all subdirectories
         /// </summary>
-        public Task<VideoFileList> SubVideosAsync { get { return VideoFileList.GetVideoFileListRecursiveAsync(ObjectID); } }
+        public Task<VideoFileList> SubVideosAsync { get { return VideoFileList.GetVideoFileListFromFolderRecursiveAsync(ObjectID); } }
 
         /// <summary>
         /// Eine Liste mit Videos im aktuellen und allen Unterverzeichnissen
         /// A list of videos in the current and all subdirectories
         /// </summary>
-        public VideoFileList SubVideos { get { return VideoFileList.GetVideoFileListRecursive(ObjectID); } }
+        public VideoFileList SubVideos { get { return VideoFileList.GetVideoFileListFromFolderRecursive(ObjectID); } }
 
         internal VideoFilePathItem() { }
     }

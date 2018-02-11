@@ -237,14 +237,20 @@ namespace DVBViewerServerApiWrapper.Model
         }
 
         /// <summary>
-        /// Erzeugt aus der Liste der Videos eine M3U Datei. Die Datei befindet sich normalerweise im Tempverzeichnis
-        /// Generates an M3U file from the list of videos. The file is usually located in the Temp directory
+        /// Erzeugt aus der Liste der Videos eine M3U Datei. Die Datei befindet sich normalerweise im Tempverzeichnis. Wenn BypassLocalhost true ist, wird der direkte Pfad zur Aufnahme zurückgegeben.
+        /// Generates an M3U file from the list of videos. The file is usually located in the Temp directory. If BypassLocalhost is true, the direct path to the mediafile will be returned.
         /// </summary>
         /// <returns>Ein Pfad zur m3u Datei</returns>
         public string CreateM3UFile()
         {
+            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
+            //Bypassing the playlist creation, if BypassLocalhost is set to true.
+            if (dvbApi.BypassLocalhost)
+            {
+                return File;
+            }
+            //Create a Playlist
             var tPath = System.IO.Path.GetTempPath();
-
             var fName = $"{ID}.m3u";
             var cPathName = tPath + fName;
             using (var fStream = new System.IO.FileStream(cPathName, System.IO.FileMode.OpenOrCreate))
@@ -257,6 +263,5 @@ namespace DVBViewerServerApiWrapper.Model
             }
             return cPathName;
         }
-
     }
 }

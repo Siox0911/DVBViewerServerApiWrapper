@@ -1,0 +1,7 @@
+﻿ - Die SQL Abfragen ändern, so dass nicht immer alle angefasst werden müssen: erledigt
+ - found = 1 prüfen, weil die Videos doppelt vorkommen: erledigt
+ - Serveraufgaben in die DEMO aufnehmen
+ - Fernbedienung für den DVBViewer x Commands
+ - Sender in den Wrapper holen
+ - EPG abholen
+ - Timer abholen und Aufgaben anbieten, wie Aufnahmedatenbank aktualisieren und Mediadatabase aktualisieren, direkt in den Menus

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DVBViewerServerApiWrapper.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -213,6 +214,13 @@ namespace DVBViewerServerApiWrapper.Model
         /// <returns>Ein Pfad zur m3u Datei. A path to the m3u file</returns>
         public string CreateM3UFile()
         {
+            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
+            //Bypassing the playlist creation, if BypassLocalhost is set to true.
+            if (dvbApi.BypassLocalhost)
+            {
+                return Path + FileName;
+            }
+            //Create a playlist
             var tPath = System.IO.Path.GetTempPath();
             var fName = $"{Title}.m3u";
             var cPathName = tPath + fName;
@@ -220,13 +228,12 @@ namespace DVBViewerServerApiWrapper.Model
             {
                 using (var sw = new System.IO.StreamWriter(fStream))
                 {
-                        sw.WriteLine(GetM3uPrefString());
-                        sw.WriteLine(GetUPnPUriString());
+                    sw.WriteLine(GetM3uPrefString());
+                    sw.WriteLine(GetUPnPUriString());
                 }
             }
 
             return cPathName;
         }
-
     }
 }
