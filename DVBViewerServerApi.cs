@@ -879,7 +879,7 @@ namespace DVBViewerServerApiWrapper
                         {
                             postdata.Append("&");
                         }
-                        postdata.Append(item.Key).Append("=").Append(Uri.EscapeDataString(item.Value));
+                        postdata.Append(item.Key).Append("=").Append(Uri.EscapeDataString(item.Value ?? ""));
                         first = false;
                     }
                 }

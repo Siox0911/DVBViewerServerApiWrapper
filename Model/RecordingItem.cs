@@ -159,14 +159,14 @@ namespace DVBViewerServerApiWrapper.Model
                 return await dvbApi.SendPostDataAsync("rec_edit", new List<Helper.UriParameter>
                 {
                     new Helper.UriParameter("recid", ID.ToString()),
-                    new Helper.UriParameter("title", Title),
+                    new Helper.UriParameter("title", Title ?? ""),
                     new Helper.UriParameter("event", Info ?? ""),
-                    new Helper.UriParameter("Series", Series.Name),
-                    new Helper.UriParameter("Channel", Channel.Name),
-                    new Helper.UriParameter("details", Description),
-                    new Helper.UriParameter("chkinfofile", 1.ToString()),
-                    new Helper.UriParameter("chkfileinfo", 1.ToString()),
-                    new Helper.UriParameter("btnsave", 1.ToString())
+                    new Helper.UriParameter("Series", Series?.Name),
+                    new Helper.UriParameter("Channel", Channel?.Name),
+                    new Helper.UriParameter("details", Description ?? ""),
+                    new Helper.UriParameter("chkinfofile", "1"),
+                    new Helper.UriParameter("chkfileinfo", "1"),
+                    new Helper.UriParameter("btnsave", "1")
                 }).ConfigureAwait(false);
             }
             return 0;

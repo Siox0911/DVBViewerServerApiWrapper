@@ -29,6 +29,7 @@ namespace DVBViewerServerApiWrapper.Model
         public bool Equals(RecordingSeries other)
         {
             if (other is null) return false;
+            if (Name == null && other.Name == null) return true;
             if (Name.Equals(other.Name)) return true;
             else return false;
         }
@@ -40,6 +41,8 @@ namespace DVBViewerServerApiWrapper.Model
         /// <returns></returns>
         public override int GetHashCode()
         {
+            if (Name == null)
+                return 0;
             return Name.GetHashCode();
         }
 
@@ -64,7 +67,7 @@ namespace DVBViewerServerApiWrapper.Model
             if (dvbApi != null)
             {
                 var recs = await RecordingList.GetRecordingsAsync().ConfigureAwait(false);
-                return (from f in recs.Items where f.Series != null orderby f.Series.Name select f.Series).Distinct().ToList();
+                return (from f in recs.Items where f.Series?.Name != null orderby f.Series.Name select f.Series).Distinct().ToList();
             }
             return null;
         }

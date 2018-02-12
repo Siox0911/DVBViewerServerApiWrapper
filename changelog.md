@@ -1,5 +1,12 @@
 ﻿# Changelog
 
+v0.3.5.2
+ - fixed bug on editing series of a recording and series is null or becomes null
+ - fixed bug on editing channel of a recording and channel is null or becomes null
+ - fixed bug if RecordingSeries.Name is null on GetChannels
+ - fixed bug if RecordingChannel.Name is null on GetSeries
+ - fixed bug if an item.value is Null on send the POST data for an update
+ 
 v0.3.5.1
  - added TrustedDevice Property. 
    - The DMS has an option for trusted devices, with this username and password are not required.

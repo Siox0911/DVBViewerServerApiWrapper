@@ -10,10 +10,9 @@ www.dvbviewer.com
 
 ### Current state (Aktueller Status)
 
-Version 0.3.5.1
+Version 0.3.5.2
 
- - asynchronous execution of the Api is completed, how to use it: [DMSApiWrapperDemo](https://github.com/Siox0911/DMSApiWrapperDemo)
- - added BypassLocalhost and an option for trusted devices, see [changelog.md](changelog.md) for more details
+[changelog.md](changelog.md) for more details
 
 Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready, 
 <img src="images/ToDo_Current_256.png" width="22"/> Work, 
