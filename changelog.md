@@ -1,5 +1,9 @@
 ﻿# Changelog
 
+v0.3.5.3
+ - replaced WebRequest trough HttpClient for easier async handling
+ - renamed DVBViewerServerApi.GetDataAsync to DVBViewerServerApi.GetApiDataAsync
+
 v0.3.5.2
  - fixed bug on editing series of a recording and series is null or becomes null
  - fixed bug on editing channel of a recording and channel is null or becomes null

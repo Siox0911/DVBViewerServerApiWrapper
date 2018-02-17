@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using DVBViewerServerApiWrapper.Helper;
 using System.Diagnostics;
 using System.Security;
+using System.Net.Http;
 
 namespace DVBViewerServerApiWrapper
 {
@@ -20,6 +21,8 @@ namespace DVBViewerServerApiWrapper
     public class DVBViewerServerApi
     {
         private SecureString password;
+
+        private HttpClient client;
 
         /// <summary>
         /// aktive Instanz
@@ -731,6 +734,33 @@ namespace DVBViewerServerApiWrapper
             }
         }
 
+        private WebRequest CreateApiWebRequest(string page = "status2", List<UriParameter> uriParameters = null)
+        {
+            try
+            {
+                //Uri
+                var uri = CreateApiUri(page, uriParameters);
+
+                var webRequest = WebRequest.Create(uri);
+                //Falls ein Proxy im System ist, kann das helfen. So lange im IE ein Proxy eingetragen wurde.
+                webRequest.Proxy = WebRequest.DefaultWebProxy;
+                //AuthType, if device is not in the trusted device List
+                if (!TrustedDevice)
+                {
+                    webRequest.Credentials = new NetworkCredential(User, Password);
+                    webRequest.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
+                }
+                //Abfragemethode
+                webRequest.Method = WebRequestMethods.Http.Get;
+                return webRequest;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         /// <summary>
         /// Gibt die Api-Daten vom Server asynchron zurück.
         /// </summary>
@@ -738,7 +768,7 @@ namespace DVBViewerServerApiWrapper
         /// <param name="uriParameters"></param>
         /// <exception cref="ArgumentNullException">Es wurde keine Seite angegeben oder die Seite ist null</exception>
         /// <exception cref="NullReferenceException">Benutzername und Password zum Service wurden nicht angegeben oder sind leer.</exception>
-        internal async Task<XDocument> GetDataAsync(string page = "status2", List<UriParameter> uriParameters = null)
+        internal async Task<XDocument> GetApiDataAsync(string page = "status2", List<UriParameter> uriParameters = null)
         {
             if (string.IsNullOrEmpty(page))
             {
@@ -752,31 +782,31 @@ namespace DVBViewerServerApiWrapper
 
             try
             {
-                //Uri
-                var uri = CreateApiUri(page, uriParameters);
-
                 //Rückgabedokument
                 XDocument xmlData;
 
-                var webRequest = WebRequest.Create(uri);
-                //Falls ein Proxy im System ist, kann das helfen. So lange im IE ein Proxy eingetragen wurde.
-                webRequest.Proxy = WebRequest.DefaultWebProxy;
-                //AuthType, if device ist not in the trusted device List
+                //Handler for authentication and proxy
+                var handler = new HttpClientHandler();
+
+                //AuthType, if device is not in the trusted device List
                 if (!TrustedDevice)
                 {
-                    webRequest.Credentials = new NetworkCredential(User, Password);
-                    webRequest.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
+                    handler.Credentials = new NetworkCredential(User, Password);
                 }
-                //Abfragemethode
-                webRequest.Method = WebRequestMethods.Http.Get;
+
+                //Proxy if defined
+                if (handler.SupportsProxy)
+                {
+                    handler.Proxy = WebRequest.DefaultWebProxy;
+                }
+
+                //initialize client
+                client = new HttpClient(handler);
 
                 //Abfrage durchführen
-                using (var response = await webRequest.GetResponseAsync().ConfigureAwait(false))
+                using (var stream = await client.GetStreamAsync(CreateApiUri(page, uriParameters)).ConfigureAwait(false))
                 {
-                    using (var stream = response.GetResponseStream())
-                    {
-                        xmlData = XDocument.Load(stream, LoadOptions.SetLineInfo);
-                    }
+                    xmlData = XDocument.Load(stream, LoadOptions.SetLineInfo);
                 }
 
                 return xmlData;
@@ -795,7 +825,7 @@ namespace DVBViewerServerApiWrapper
         /// <returns></returns>
         /// <exception cref="NullReferenceException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        internal async Task<HttpStatusCode> SendDataAsync(string page = "dvbcommand", List<UriParameter> uriParameters = null)
+        internal async Task<HttpStatusCode> SendApiDataAsync(string page = "dvbcommand", List<UriParameter> uriParameters = null)
         {
             if (string.IsNullOrEmpty(page))
             {

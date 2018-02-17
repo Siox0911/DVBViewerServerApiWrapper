@@ -193,7 +193,7 @@ namespace DVBViewerServerApiWrapper.Model
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                return await dvbApi.SendDataAsync("recdelete", new List<Helper.UriParameter>
+                return await dvbApi.SendApiDataAsync("recdelete", new List<Helper.UriParameter>
                 {
                     new Helper.UriParameter("recid", ID.ToString()),
                     new Helper.UriParameter("delfile", 1.ToString())

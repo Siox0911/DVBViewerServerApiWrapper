@@ -40,7 +40,7 @@ namespace DVBViewerServerApiWrapper.Model
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                var xmldata = await dvbApi.GetDataAsync("dvbcommand").ConfigureAwait(false);
+                var xmldata = await dvbApi.GetApiDataAsync("dvbcommand").ConfigureAwait(false);
 
                 if (xmldata != null)
                 {

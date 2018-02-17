@@ -43,7 +43,7 @@ namespace DVBViewerServerApiWrapper.Model
             {
                 string query = $"{baseSQL} Order by paths.Path";
 
-                var xmldata = await dvbApi.GetDataAsync("sql", new List<Helper.UriParameter>
+                var xmldata = await dvbApi.GetApiDataAsync("sql", new List<Helper.UriParameter>
                 {
                     Helper.UriParam.Video1,
                     Helper.UriParam.Query(query)
@@ -70,7 +70,7 @@ namespace DVBViewerServerApiWrapper.Model
             {
                 string query = $"{baseSQL} and Parent_ID = {objectID} Order by paths.Path";
 
-                var xmldata = await dvbApi.GetDataAsync("sql", new List<Helper.UriParameter>
+                var xmldata = await dvbApi.GetApiDataAsync("sql", new List<Helper.UriParameter>
                 {
                     Helper.UriParam.Video1,
                     Helper.UriParam.Query(query)
@@ -108,7 +108,7 @@ namespace DVBViewerServerApiWrapper.Model
             {
                 string query = $"{baseSQL} and Object_ID = {parentID} Order by paths.Path";
 
-                var xmldata = await dvbApi.GetDataAsync("sql", new List<Helper.UriParameter>
+                var xmldata = await dvbApi.GetApiDataAsync("sql", new List<Helper.UriParameter>
                 {
                     Helper.UriParam.Video1,
                     Helper.UriParam.Query(query)

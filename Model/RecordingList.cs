@@ -74,7 +74,7 @@ namespace DVBViewerServerApiWrapper.Model
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                var xmldata = await dvbApi.GetDataAsync("recordings", new List<Helper.UriParameter>
+                var xmldata = await dvbApi.GetApiDataAsync("recordings", new List<Helper.UriParameter>
                 {
                     Helper.UriParam.Utf81,
                     Helper.UriParam.EventID1,
@@ -110,7 +110,7 @@ namespace DVBViewerServerApiWrapper.Model
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                var xmldata = await dvbApi.GetDataAsync("recordings", new List<Helper.UriParameter>
+                var xmldata = await dvbApi.GetApiDataAsync("recordings", new List<Helper.UriParameter>
                 {
                     Helper.UriParam.Utf81 ,
                     Helper.UriParam.Images1,
@@ -148,7 +148,7 @@ namespace DVBViewerServerApiWrapper.Model
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                var xmldata = await dvbApi.GetDataAsync("recordings", new List<Helper.UriParameter>
+                var xmldata = await dvbApi.GetApiDataAsync("recordings", new List<Helper.UriParameter>
                 {
                     Helper.UriParam.Utf81,
                     Helper.UriParam.Images1,

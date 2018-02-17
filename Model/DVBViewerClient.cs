@@ -32,7 +32,7 @@ namespace DVBViewerServerApiWrapper.Model
         public Task<HttpStatusCode> SendXCommandAsync(Enums.DVBViewerXCommand dVBViewerCommand)
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            return dvbApi.SendDataAsync("dvbcommand", new List<Helper.UriParameter> {
+            return dvbApi.SendApiDataAsync("dvbcommand", new List<Helper.UriParameter> {
                 new Helper.UriParameter("target", Name),
                 new Helper.UriParameter("cmd",$"-x{(int)dVBViewerCommand}")
             });
@@ -58,7 +58,7 @@ namespace DVBViewerServerApiWrapper.Model
         public Task<HttpStatusCode> PlayVideoAsync(VideoFileItem videoFileItem)
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            return dvbApi.SendDataAsync("dvbcommand", new List<Helper.UriParameter> {
+            return dvbApi.SendApiDataAsync("dvbcommand", new List<Helper.UriParameter> {
                 new Helper.UriParameter("target", Name),
                 new Helper.UriParameter("cmd", videoFileItem.Path + videoFileItem.FileName)
             });
@@ -84,7 +84,7 @@ namespace DVBViewerServerApiWrapper.Model
         public Task<HttpStatusCode> PlayRecordingAsync(RecordingItem recordingItem)
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            return dvbApi.SendDataAsync("dvbcommand", new List<Helper.UriParameter> {
+            return dvbApi.SendApiDataAsync("dvbcommand", new List<Helper.UriParameter> {
                 new Helper.UriParameter("target", Name),
                 new Helper.UriParameter("cmd", recordingItem.File)
             });

@@ -128,7 +128,7 @@ namespace DVBViewerServerApiWrapper.Model
             var api = DVBViewerServerApi.GetCurrentInstance();
             if(api != null)
             {
-                return CreateServerstatus(await api.GetDataAsync().ConfigureAwait(false));
+                return CreateServerstatus(await api.GetApiDataAsync().ConfigureAwait(false));
             }
             return null;
         }

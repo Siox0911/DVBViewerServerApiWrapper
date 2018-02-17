@@ -57,7 +57,7 @@ namespace DVBViewerServerApiWrapper.Model
             {
                 string query = $"{baseSQL} AND Type = 3";
 
-                var xmldata = await dvbApi.GetDataAsync("sql", new List<Helper.UriParameter>
+                var xmldata = await dvbApi.GetApiDataAsync("sql", new List<Helper.UriParameter>
                 {
                     Helper.UriParam.Video1,
                     Helper.UriParam.Query(query)
@@ -97,7 +97,7 @@ namespace DVBViewerServerApiWrapper.Model
 
                 string query = $"{baseSQL} AND Type = 3 AND object_details.Titel like '%" + partOfTitle + "%'";
 
-                var xmldata = await dvbApi.GetDataAsync("sql", new List<Helper.UriParameter>
+                var xmldata = await dvbApi.GetApiDataAsync("sql", new List<Helper.UriParameter>
                 {
                     Helper.UriParam.Video1,
                     Helper.UriParam.Query(query)
@@ -138,7 +138,7 @@ namespace DVBViewerServerApiWrapper.Model
 
                 string query = $"{baseSQL} AND Type = 3 AND paths.Path like '%" + partOfPath + "%'";
 
-                var xmldata = await dvbApi.GetDataAsync("sql", new List<Helper.UriParameter>
+                var xmldata = await dvbApi.GetApiDataAsync("sql", new List<Helper.UriParameter>
                 {
                     Helper.UriParam.Video1,
                     Helper.UriParam.Query(query)
@@ -220,7 +220,7 @@ namespace DVBViewerServerApiWrapper.Model
             {
                 string query = $"{baseSQL} AND Type = 3 AND parent_ID = " + parentID;
 
-                var xmldata = await dvbApi.GetDataAsync("sql", new List<Helper.UriParameter>
+                var xmldata = await dvbApi.GetApiDataAsync("sql", new List<Helper.UriParameter>
                 {
                     Helper.UriParam.Video1,
                     Helper.UriParam.Query(query)

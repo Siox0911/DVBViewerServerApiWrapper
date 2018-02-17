@@ -49,7 +49,7 @@ namespace DVBViewerServerApiWrapper.Model
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
             {
-                var xmldata = await dvbApi.GetDataAsync("sql", new List<Helper.UriParameter>
+                var xmldata = await dvbApi.GetApiDataAsync("sql", new List<Helper.UriParameter>
                 {
                     Helper.UriParam.Rec1,
                     Helper.UriParam.Query("Select * from recordedlist")

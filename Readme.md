@@ -10,7 +10,7 @@ www.dvbviewer.com
 
 ### Current state (Aktueller Status)
 
-Version 0.3.5.2
+Version 0.3.5.3
 
 [changelog.md](changelog.md) for more details
 
