@@ -10,25 +10,25 @@ www.dvbviewer.com
 
 ### Current state (Aktueller Status)
 
-Version 0.3.5.3
+Version 0.3.6.0
 
 [changelog.md](changelog.md) for more details
 
 Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready, 
 <img src="images/ToDo_Current_256.png" width="22"/> Work, 
 <img src="images/ToDo_Add_256.png" width="22"/> ToDo, 
-<img src="images/ToDo_Abort_256.png" width="22"/> Abort, Canceled
+<img src="images/ToDo_Abort_256.png" width="22"/> Aborted, Canceled
 
 <br/><img src="images/ToDo_Ready_256.png" width="22"/> status2.html
 <br/><img src="images/ToDo_Ready_256.png" width="22"/> version.html
 <br/><img src="images/ToDo_Ready_256.png" width="22"/> tasks.html
 <br/><img src="images/ToDo_Ready_256.png" width="22"/> recordings.html
 <br/><img src="images/ToDo_Ready_256.png" width="22"/> recdelete.html
-<br/><img src="images/ToDo_Current_256.png" width="22"/> mediafiles.html -> own implementation over the sql.html
+<br/><img src="images/ToDo_Ready_256.png" width="22"/> mediafiles.html -> own implementation over the sql.html
 <br/><img src="images/ToDo_Current_256.png" width="22"/> dvbcommand.html
+<br/><img src="images/ToDo_Current_256.png" width="22"/> getchannelsxml.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> getconfigfile.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> setting.html -> maybe unnecessary (double support to status2.html)
-<br/><img src="images/ToDo_Add_256.png" width="22"/> getchannelsxml.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> epg.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> epgclear.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> timerlist.html
@@ -45,6 +45,8 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
 <br/><img src="images/ToDo_Abort_256.png" width="22"/> sql.html - integration in all relevant classes
 
 ### Using the lib
+
+For an UI-App Demo visit the [DMSApiWrapperDemo](https://github.com/Siox0911/DMSApiWrapperDemo).
 
 ```C#
     class Program

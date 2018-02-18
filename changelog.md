@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+v0.3.6.0
+ - add ChannelList
+   - add ChannelTopGroup, this a list of groups in the ChannelList which includes top-groups of the channel-list
+   - add ChannelGroup, this is a list of sub groups in the top-groups 
+   - add ChannelItem, this is a list of channels in a sub group
+   - add ChannelSubItem, this is a list of subchannel in a channel.
+ - add DVBViewerClients can play a channel or his subchannels directly
+ - add Server-Tasks to the recordings and videos directly
+   - In objects RecordingList and VideoList Update-, Recreate- and Delete-Databasetasks from server can now be started
+ - 
+
 v0.3.5.3
  - replaced WebRequest trough HttpClient for easier async handling
  - renamed DVBViewerServerApi.GetDataAsync to DVBViewerServerApi.GetApiDataAsync

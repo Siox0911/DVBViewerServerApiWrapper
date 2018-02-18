@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -15,6 +16,8 @@ namespace DVBViewerServerApiWrapper.Model
     [XmlRoot(ElementName = "recordings")]
     public class RecordingList
     {
+        private static RecordingList rList;
+
         /// <summary>
         /// Version der Aufnahmetabelle
         /// Version of the recording table
@@ -46,7 +49,9 @@ namespace DVBViewerServerApiWrapper.Model
         [XmlElement(ElementName = "recording", Type = typeof(RecordingItem))]
         public List<RecordingItem> Items { get; set; }
 
-        internal RecordingList() { }
+        internal RecordingList() => rList = this;
+
+        internal static RecordingList GetInstance() => rList;
 
         /// <summary>
         /// Erzeugt ein Recording
@@ -105,7 +110,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// Returns all recordings of the service. It lacks file names and the long description.
         /// </summary>
         /// <returns></returns>
-        internal static async Task<RecordingList> GetRecordingsShortAsync()
+        public static async Task<RecordingList> GetRecordingsShortAsync()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -132,7 +137,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// Returns all recordings of the service. It lacks file names and the long description.
         /// </summary>
         /// <returns></returns>
-        internal static RecordingList GetRecordingsShort()
+        public static RecordingList GetRecordingsShort()
         {
             return GetRecordingsShortAsync().Result;
         }
@@ -254,6 +259,126 @@ namespace DVBViewerServerApiWrapper.Model
         public static RecordingList GetRecordingsByDesc(string partOfDesc)
         {
             return GetRecordingsByDescAsync(partOfDesc).Result;
+        }
+
+        /// <summary>
+        /// Aktualisiert die Aufnahmedatenbank.
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<HttpStatusCode> RefreshDBAsync()
+        {
+            var tasks = await ServerTaskList.GetServerTaskListAsync().ConfigureAwait(false);
+            if (tasks != null)
+            {
+                var task = (from f in tasks.Groups.Where(p => p.TaskItems.Any(x => x.Action.IndexOf("RefreshDB", StringComparison.OrdinalIgnoreCase) != -1)) select f.TaskItems).FirstOrDefault().FirstOrDefault();
+                return await task?.RunTaskAsync();
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Aktualisiert die Aufnahmedatenbank.
+        /// </summary>
+        /// <returns></returns>
+        public static HttpStatusCode RefreshDB()
+        {
+            return RefreshDBAsync().Result;
+        }
+
+        /// <summary>
+        /// Bereinigt die Aufnahme Datenbank. Clean up the recording database.
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<HttpStatusCode> CleanUpDBAsync()
+        {
+            var tasks = await ServerTaskList.GetServerTaskListAsync().ConfigureAwait(false);
+            if (tasks != null)
+            {
+                var task = (from f in tasks.Groups.Where(p => p.TaskItems.Any(x => x.Action.IndexOf("CleanupDB", StringComparison.OrdinalIgnoreCase) != -1)) select f.TaskItems).FirstOrDefault().FirstOrDefault();
+                return await task?.RunTaskAsync();
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Bereinigt die Aufnahme Datenbank. Clean up the recording database.
+        /// </summary>
+        /// <returns></returns>
+        public static HttpStatusCode CleanUpDB()
+        {
+            return CleanUpDBAsync().Result;
+        }
+
+        /// <summary>
+        /// Baut die Historie der Aufnahmedatenbank anhand der Aufnahmen wieder auf. Rebuild the recorded hostorie with the current list of the recordings.
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<HttpStatusCode> RebuildRecordedHistoryAsync()
+        {
+            var tasks = await ServerTaskList.GetServerTaskListAsync().ConfigureAwait(false);
+            if (tasks != null)
+            {
+                var task = (from f in tasks.Groups.Where(p => p.TaskItems.Any(x => x.Action.IndexOf("RebuildRecordedHistory", StringComparison.OrdinalIgnoreCase) != -1)) select f.TaskItems).FirstOrDefault().FirstOrDefault();
+                return await task?.RunTaskAsync();
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Baut die Historie der Aufnahmedatenbank anhand der Aufnahmen wieder auf. Rebuild the recorded hostorie with the current list of the recordings.
+        /// </summary>
+        /// <returns></returns>
+        public static HttpStatusCode RebuildRecordedHistory()
+        {
+            return RebuildRecordedHistoryAsync().Result;
+        }
+
+        /// <summary>
+        /// Löscht die Aufnahme Historie. Deletes the recording history.
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<HttpStatusCode> ClearRecordingHistoryAsync()
+        {
+            var tasks = await ServerTaskList.GetServerTaskListAsync().ConfigureAwait(false);
+            if (tasks != null)
+            {
+                var task = (from f in tasks.Groups.Where(p => p.TaskItems.Any(x => x.Action.IndexOf("ClearRecordingHistory", StringComparison.OrdinalIgnoreCase) != -1)) select f.TaskItems).FirstOrDefault().FirstOrDefault();
+                return await task?.RunTaskAsync();
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Löscht die Aufnahme Historie. Deletes the recording history.
+        /// </summary>
+        /// <returns></returns>
+        public static HttpStatusCode ClearRecordingHistory()
+        {
+            return ClearRecordingHistoryAsync().Result;
+        }
+
+        /// <summary>
+        /// Löscht die Aufnahme Statistik. Deletes the recording statistic.
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<HttpStatusCode> ClearRecordingStatsAsync()
+        {
+            var tasks = await ServerTaskList.GetServerTaskListAsync().ConfigureAwait(false);
+            if (tasks != null)
+            {
+                var task = (from f in tasks.Groups.Where(p => p.TaskItems.Any(x => x.Action.IndexOf("ClearRecordingStats", StringComparison.OrdinalIgnoreCase) != -1)) select f.TaskItems).FirstOrDefault().FirstOrDefault();
+                return await task?.RunTaskAsync();
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Löscht die Aufnahme Statistik. Deletes the recording statistic.
+        /// </summary>
+        /// <returns></returns>
+        public static HttpStatusCode ClearRecordingStats()
+        {
+            return ClearRecordingStatsAsync().Result;
         }
 
         /// <summary>

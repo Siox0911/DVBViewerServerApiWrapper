@@ -32,7 +32,7 @@ namespace DVBViewerServerApiWrapper.Model
         public Task<HttpStatusCode> SendXCommandAsync(Enums.DVBViewerXCommand dVBViewerCommand)
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            return dvbApi.SendApiDataAsync("dvbcommand", new List<Helper.UriParameter> {
+            return dvbApi?.SendApiDataAsync("dvbcommand", new List<Helper.UriParameter> {
                 new Helper.UriParameter("target", Name),
                 new Helper.UriParameter("cmd",$"-x{(int)dVBViewerCommand}")
             });
@@ -58,7 +58,7 @@ namespace DVBViewerServerApiWrapper.Model
         public Task<HttpStatusCode> PlayVideoAsync(VideoFileItem videoFileItem)
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            return dvbApi.SendApiDataAsync("dvbcommand", new List<Helper.UriParameter> {
+            return dvbApi?.SendApiDataAsync("dvbcommand", new List<Helper.UriParameter> {
                 new Helper.UriParameter("target", Name),
                 new Helper.UriParameter("cmd", videoFileItem.Path + videoFileItem.FileName)
             });
@@ -84,7 +84,7 @@ namespace DVBViewerServerApiWrapper.Model
         public Task<HttpStatusCode> PlayRecordingAsync(RecordingItem recordingItem)
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            return dvbApi.SendApiDataAsync("dvbcommand", new List<Helper.UriParameter> {
+            return dvbApi?.SendApiDataAsync("dvbcommand", new List<Helper.UriParameter> {
                 new Helper.UriParameter("target", Name),
                 new Helper.UriParameter("cmd", recordingItem.File)
             });
@@ -99,6 +99,54 @@ namespace DVBViewerServerApiWrapper.Model
         public HttpStatusCode PlayRecording(RecordingItem recordingItem)
         {
             return PlayRecordingAsync(recordingItem).Result;
+        }
+
+        /// <summary>
+        /// Spiel einen Kanal auf dem DVBViewer ab. Plays a channel on the DVBViewer.
+        /// </summary>
+        /// <param name="channelItem"></param>
+        /// <returns></returns>
+        public Task<HttpStatusCode> PlayChannelAsync(ChannelItem channelItem)
+        {
+            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
+            return dvbApi?.SendApiDataAsync("dvbcommand", new List<Helper.UriParameter> {
+                new Helper.UriParameter("target", Name),
+                new Helper.UriParameter("cmd", $"-c:{channelItem.ID}")
+            });
+        }
+
+        /// <summary>
+        /// Spiel einen Kanal auf dem DVBViewer ab. Plays a channel on the DVBViewer.
+        /// </summary>
+        /// <param name="channelItem"></param>
+        /// <returns></returns>
+        public HttpStatusCode PlayChannel(ChannelItem channelItem)
+        {
+            return PlayChannelAsync(channelItem).Result;
+        }
+
+        /// <summary>
+        /// Spiel den Sender auf dem DVBViewer ab. Play the subchannel on the DVBViewer.
+        /// </summary>
+        /// <param name="channelSubItem"></param>
+        /// <returns></returns>
+        public Task<HttpStatusCode> PlayChannelAsync(ChannelSubItem channelSubItem)
+        {
+            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
+            return dvbApi?.SendApiDataAsync("dvbcommand", new List<Helper.UriParameter> {
+                new Helper.UriParameter("target", Name),
+                new Helper.UriParameter("cmd", $"-c:{channelSubItem.ID}")
+            });
+        }
+
+        /// <summary>
+        /// Spiel den Sender auf dem DVBViewer ab. Playback the subchannel on the DVBViewer.
+        /// </summary>
+        /// <param name="channelSubItem"></param>
+        /// <returns></returns>
+        public HttpStatusCode PlayChannel(ChannelSubItem channelSubItem)
+        {
+            return PlayChannelAsync(channelSubItem).Result;
         }
     }
 }

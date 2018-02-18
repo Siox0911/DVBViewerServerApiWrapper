@@ -233,7 +233,9 @@ namespace DVBViewerServerApiWrapper.Model
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             var extension = System.IO.Path.GetExtension(File);
-            return $"http://{dvbApi.Hostname}:8090/upnp/recording/{ID}{extension}";
+            var rList = RecordingList.GetInstance();
+            //return $"http://{dvbApi.Hostname}:8090/upnp/recording/{ID}{extension}";
+            return $"{rList?.ServerURL}{ID}{extension}";
         }
 
         /// <summary>

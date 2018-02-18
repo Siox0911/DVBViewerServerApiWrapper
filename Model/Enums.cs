@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace DVBViewerServerApiWrapper.Model
 {
@@ -841,17 +843,17 @@ namespace DVBViewerServerApiWrapper.Model
             /// Ändert die Darstellung im OSD (Musik,Bilder,Video) zwischen kleine Icons, große Icons und Listenansicht durch.
             /// Changes the appearance in the OSD (music, pictures, video) between small icons, large icons and list view.
             /// </summary>
-            OSDToggleView = 8278,
+            OSD_ToggleView = 8278,
             /// <summary>
             /// Ändert die Sortierkriterien im OSD (Musik,Bilder,Video) zwischen Name, Datum, Größe usw. durch.
             /// Changes the sorting criteria in the OSD (music, images, video) between name, date, size, etc.
             /// </summary>
-            OSDToggleSort = 8279,
+            OSD_ToggleSort = 8279,
             /// <summary>
             /// Ändert die Sortierreihenfolge im OSD (Musik,Bilder,Video) A-Z, Z-A.
             /// Changes the sort order in the OSD (Music, Pictures, Video) A-Z, Z-A.
             /// </summary>
-            OSDToggleSortdirection = 8280,
+            OSD_ToggleSortdirection = 8280,
             /// <summary>
             /// OSD Hintergrund ein/ausschalten
             /// Switch OSD background on / off
@@ -1017,6 +1019,70 @@ namespace DVBViewerServerApiWrapper.Model
             /// toggles the statistics OSD from Custom EVR and MadVR
             /// </summary>
             ToggleRendererStats = 16398
+        }
+
+        /// <summary>
+        /// Informationen welche der Sender enthält. Also z.B. Radio hat 16 für Audio und 4 für RDS so ist das Flag 20.
+        /// Information which the sender contains. So, for example Radio has 16 for audio and 4 for RDS so the flag is 20.
+        /// </summary>
+        [Flags]
+        [Serializable]
+        public enum ChannelServices
+        {
+            /// <summary>
+            /// Nichts.
+            /// Nothing
+            /// </summary>
+            [XmlEnum("0")]
+            None = 0x0,
+            /// <summary>
+            /// Verschlüsselter Kanal.
+            /// Encryted channel
+            /// </summary>
+            [XmlEnum("1")]
+            Enrypted = 0x1,
+            /// <summary>
+            /// Reserviert, kein Wert
+            /// Reserved bit, no value
+            /// </summary>
+            [XmlEnum("2")]
+            Reserved = 0x2,
+            /// <summary>
+            /// Der Kanals sendet RDS Daten.
+            /// Channel sends RDS data
+            /// </summary>
+            [XmlEnum("4")]
+            RDSBroadcast = 0x4,
+            /// <summary>
+            /// Der Kanal ist ein Videoservice.
+            /// channel is a video service
+            /// </summary>
+            [XmlEnum("8")]
+            VideoService = 0x8,
+            /// <summary>
+            /// Der Kanal ist ein Audioservice.
+            /// Channel is a audio service
+            /// </summary>
+            [XmlEnum("16")]
+            AudioService = 0x10,
+            /// <summary>
+            /// Audio hat eine andere Samplerate als 48 Khz.
+            /// audio has a different samplerate than 48 KHz
+            /// </summary>
+            [XmlEnum("32")]
+            Non48KhzSamplerate = 0x20,
+            /// <summary>
+            /// Bandstacking, interne Polarisation wird immer auf H gesetzt.
+            /// bandstacking, internally polarisation is always set to H
+            /// </summary>
+            [XmlEnum("64")]
+            Bandstacking = 0x40,
+            /// <summary>
+            /// Kaneleintrag ist ein zusätzlicher Audiokanal zum vorherigen.
+            /// channel entry is an additional audio track of the preceding 
+            /// </summary>
+            [XmlEnum("128")]
+            AdditionalAudioTrack = 0x80
         }
     }
 }

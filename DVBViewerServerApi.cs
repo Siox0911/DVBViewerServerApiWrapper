@@ -422,6 +422,30 @@ namespace DVBViewerServerApiWrapper
             }
         }
 
+        /// <summary>
+        /// Gibt die komplette Kanalliste des DMS zurück.
+        /// Gives back the complete channellist of the DMS.
+        /// </summary>
+        public Task<Model.ChannelList> ChannelListAsync
+        {
+            get
+            {
+                return Model.ChannelList.GetChannelList();
+            }
+        }
+
+        /// <summary>
+        /// Gibt die komplette Kanalliste des DMS zurück.
+        /// Gives back the complete channellist of the DMS.
+        /// </summary>
+        public Model.ChannelList ChannelList
+        {
+            get
+            {
+                return ChannelListAsync.Result;
+            }
+        }
+
         #endregion
 
         public DVBViewerServerApi()
@@ -740,7 +764,6 @@ namespace DVBViewerServerApiWrapper
             {
                 //Uri
                 var uri = CreateApiUri(page, uriParameters);
-
                 var webRequest = WebRequest.Create(uri);
                 //Falls ein Proxy im System ist, kann das helfen. So lange im IE ein Proxy eingetragen wurde.
                 webRequest.Proxy = WebRequest.DefaultWebProxy;

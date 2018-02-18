@@ -250,18 +250,15 @@ namespace DVBViewerServerApiWrapper.Model
         /// Renews the video database. All information in the DB is deleted and recreated.
         /// </summary>
         /// <returns></returns>
-        public async Task<HttpStatusCode> ReCreateVideoDatabaseAsync()
+        public static async Task<HttpStatusCode> ReCreateVideoDatabaseAsync()
         {
-            //Instanz besorgen
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            //all groups
-            var allgroups = await dvbApi?.ServerTasksAsync;
-            //Gruppe ermitteln
-            var taskgroup = (from f in allgroups.Groups where f.Name.IndexOf("Mediadateien", StringComparison.OrdinalIgnoreCase) != -1 select f).FirstOrDefault();
-            //Task ermitteln
-            var task = (from f in taskgroup?.TaskItems where f.Action.IndexOf("RebuildVideoDB", StringComparison.OrdinalIgnoreCase) != -1 select f).FirstOrDefault();
-            //Starten
-            return await task?.RunTaskAsync();
+            var tasks = await ServerTaskList.GetServerTaskListAsync().ConfigureAwait(false);
+            if (tasks != null)
+            {
+                var task = (from f in tasks.Groups.Where(p => p.TaskItems.Any(x => x.Action.IndexOf("RebuildVideoDB", StringComparison.OrdinalIgnoreCase) != -1)) select f.TaskItems).FirstOrDefault().FirstOrDefault();
+                return await task?.RunTaskAsync();
+            }
+            return 0;
         }
 
         /// <summary>
@@ -269,38 +266,87 @@ namespace DVBViewerServerApiWrapper.Model
         /// Renews the video database. All information in the DB is deleted and recreated.
         /// </summary>
         /// <returns></returns>
-        public HttpStatusCode ReCreateVideoDatabase()
+        public static HttpStatusCode ReCreateVideoDatabase()
         {
             return ReCreateVideoDatabaseAsync().Result;
         }
 
         /// <summary>
-        /// Bereinigt die Videodatenbank. 
-        /// Cleans up the video database.
+        /// Aktualisiert die Videodatenbank. Dazu werden neue Inhalte aufgenommmen.
+        /// Updates the video database. For this new content is added.
         /// </summary>
         /// <returns></returns>
-        public async Task<HttpStatusCode> CleanUpVideoDatabaseAsync()
+        public static async Task<HttpStatusCode> UpdateVideoDatabaseAsync()
         {
-            //Instanz besorgen
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            //all groups
-            var allgroups = await dvbApi?.ServerTasksAsync;
-            //Gruppe ermitteln
-            var taskgroup = (from f in allgroups.Groups where f.Name.IndexOf("Mediadateien", StringComparison.OrdinalIgnoreCase) != -1 select f).FirstOrDefault();
-            //Task ermitteln
-            var task = (from f in taskgroup?.TaskItems where f.Action.IndexOf("CleanUpVideoDB", StringComparison.OrdinalIgnoreCase) != -1 select f).FirstOrDefault();
-            //Starten
-            return await task?.RunTaskAsync();
+            var tasks = await ServerTaskList.GetServerTaskListAsync().ConfigureAwait(false);
+            if (tasks != null)
+            {
+                var task = (from f in tasks.Groups.Where(p => p.TaskItems.Any(x => x.Action.IndexOf("UpdateVideoDB", StringComparison.OrdinalIgnoreCase) != -1)) select f.TaskItems).FirstOrDefault().FirstOrDefault();
+                return await task?.RunTaskAsync();
+            }
+            return 0;
         }
 
         /// <summary>
-        /// Bereinigt die Videodatenbank. 
-        /// Cleans up the video database.
+        /// Aktualisiert die Videodatenbank. Dazu werden neue Inhalte aufgenommmen.
+        /// Updates the video database. For this new content is added.
         /// </summary>
         /// <returns></returns>
-        public HttpStatusCode CleanUpVideoDatabase()
+        public static HttpStatusCode UpdateVideoDatabase()
+        {
+            return UpdateVideoDatabaseAsync().Result;
+        }
+
+        /// <summary>
+        /// Bereinigt die Videodatenbank. Dazu werden Einträge welche nicht mehr existieren entfernt.
+        /// Cleans up the video database. For this purpose, entries that no longer exist are removed.
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<HttpStatusCode> CleanUpVideoDatabaseAsync()
+        {
+            var tasks = await ServerTaskList.GetServerTaskListAsync().ConfigureAwait(false);
+            if (tasks != null)
+            {
+                var task = (from f in tasks.Groups.Where(p => p.TaskItems.Any(x => x.Action.IndexOf("CleanUpVideoDB", StringComparison.OrdinalIgnoreCase) != -1)) select f.TaskItems).FirstOrDefault().FirstOrDefault();
+                return await task?.RunTaskAsync();
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Bereinigt die Videodatenbank. Dazu werden Einträge welche nicht mehr existieren entfernt.
+        /// Cleans up the video database. For this purpose, entries that no longer exist are removed.
+        /// </summary>
+        /// <returns></returns>
+        public static HttpStatusCode CleanUpVideoDatabase()
         {
             return CleanUpVideoDatabaseAsync().Result;
+        }
+
+        /// <summary>
+        /// Löscht die Wiedergabe-Statistik der Videodatenbank.
+        /// Clears the playback statistics of the video database.
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<HttpStatusCode> ClearVideoStatsAsync()
+        {
+            var tasks = await ServerTaskList.GetServerTaskListAsync().ConfigureAwait(false);
+            if (tasks != null)
+            {
+                var task = (from f in tasks.Groups.Where(p => p.TaskItems.Any(x => x.Action.IndexOf("ClearVideoStats", StringComparison.OrdinalIgnoreCase) != -1)) select f.TaskItems).FirstOrDefault().FirstOrDefault();
+                return await task?.RunTaskAsync();
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Löscht die Wiedergabe-Statistik der Videodatenbank.
+        /// Clears the playback statistics of the video database.
+        /// </summary>
+        /// <returns></returns>
+        public static HttpStatusCode ClearVideoStats()
+        {
+            return ClearVideoStatsAsync().Result;
         }
 
         /// <summary>
