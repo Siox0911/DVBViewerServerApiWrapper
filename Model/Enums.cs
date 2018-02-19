@@ -1027,7 +1027,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         [Flags]
         [Serializable]
-        public enum ChannelServices
+        public enum ChannelProperties
         {
             /// <summary>
             /// Nichts.

@@ -52,7 +52,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// Gibt die komplette Senderliste des DMS zurück. Darin sind die Favoriten enthalten. Returns the complete station list of the DMS. This contains the favorites.
         /// </summary>
         /// <returns></returns>
-        public static async Task<ChannelList> GetChannelList()
+        public static async Task<ChannelList> GetChannelListAsync()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             if (dvbApi != null)
@@ -72,6 +72,15 @@ namespace DVBViewerServerApiWrapper.Model
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Gibt die komplette Senderliste des DMS zurück. Darin sind die Favoriten enthalten. Returns the complete station list of the DMS. This contains the favorites.
+        /// </summary>
+        /// <returns></returns>
+        public static ChannelList GetChannelList()
+        {
+            return GetChannelListAsync().Result;
         }
     }
 }

@@ -430,7 +430,7 @@ namespace DVBViewerServerApiWrapper
         {
             get
             {
-                return Model.ChannelList.GetChannelList();
+                return Model.ChannelList.GetChannelListAsync();
             }
         }
 

@@ -39,18 +39,19 @@ namespace DVBViewerServerApiWrapper.Model
         [XmlAttribute(AttributeName = "flags")]
         public int Flags
         {
-            get { return (int)ChannelServices; }
+            get { return (int)ChannelProperties; }
             set
             {
-                ChannelServices = (Enums.ChannelServices)value;
+                ChannelProperties = (Enums.ChannelProperties)value;
             }
         }
 
         /// <summary>
-        /// Die Flags des Kanals. Channel flags.
+        /// Die allgemeinen Eigenschaften des Kanals. Audio, Video, RDS etc.
+        /// The general Channel properties. Audio, Video, RDS etc.
         /// </summary>
         [XmlIgnore]
-        public Enums.ChannelServices ChannelServices;
+        public Enums.ChannelProperties ChannelProperties;
 
         /// <summary>
         /// Die ID des Kanals. Wird verwendet für den UPnP Stream. The ID of the channel. Is used for the UPnP stream. UPnPUrl + ID
