@@ -121,6 +121,36 @@ namespace DVBViewerServerApiWrapper.Model
         }
 
         /// <summary>
+        /// Gibt die Liste mit einem einzigen Kanal zurück, welcher der EPG ID entspricht.
+        /// Gives back a list with only one channel. This is the channel with the EPG ID.
+        /// </summary>
+        /// <param name="epgChannelID"></param>
+        /// <returns></returns>
+        public static async Task<ChannelList> GetChannelListAsync(string epgChannelID)
+        {
+            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
+            if (dvbApi != null)
+            {
+                var xmldata = await dvbApi.GetApiDataAsync("getchannelsxml", new List<Helper.UriParameter>
+                {
+                    new Helper.UriParameter("logo", "1"),
+                    new Helper.UriParameter("rtsp", "1"),
+                    new Helper.UriParameter("upnp", "1"),
+                    new Helper.UriParameter("subchannels", "1"),
+                    new Helper.UriParameter("fav", "1"),
+                    new Helper.UriParameter("tuner", "1"),
+                    new Helper.UriParameter("epgid", epgChannelID)
+                }).ConfigureAwait(false);
+
+                if (xmldata != null)
+                {
+                    return CreateChannelList(xmldata);
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Gibt die Liste mit einem einzigen Kanal zurück, welcher der ChannelID entspricht.
         /// Gives back a list with only one channel. This is the channel with the channelID.
         /// </summary>

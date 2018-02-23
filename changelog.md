@@ -2,7 +2,8 @@
 
 v0.3.6.1
   - add Channeltuner for details of a channel
-  - changed ID in the class channel to ChannelID
+  - renamed ID in the class Channel to ChannelID
+  - renamed EpgID to EpgChannelID
   - reworked Enum ChannelProperties
     - renamed Reserved to NoAutoUpdateOrIgnorePtsJumps
       - The transmitter data is protected during an AutoUpdate. TS channels ignore PTS jumps.

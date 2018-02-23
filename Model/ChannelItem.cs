@@ -31,7 +31,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// Die EPG ID des Kanals. The EPG ID of the channel.
         /// </summary>
         [XmlAttribute(AttributeName = "EPGID")]
-        public string EpgID { get; set; }
+        public string EpgChannelID { get; set; }
 
         /// <summary>
         /// Die Flags des Kanals. Channel flags.
