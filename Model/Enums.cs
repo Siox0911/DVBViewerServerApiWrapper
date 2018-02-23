@@ -1042,11 +1042,11 @@ namespace DVBViewerServerApiWrapper.Model
             [XmlEnum("1")]
             Enrypted = 0x1,
             /// <summary>
-            /// Reserviert, kein Wert
-            /// Reserved bit, no value
+            /// Die Senderdaten sind bei einem AutoUpdate geschützt. Bei TS Sendern werden PTS Sprünge ignoriert.
+            /// The transmitter data is protected during an AutoUpdate. TS channels ignore PTS jumps.
             /// </summary>
             [XmlEnum("2")]
-            Reserved = 0x2,
+            NoAutoUpdateOrIgnorePtsJumps = 0x2,
             /// <summary>
             /// Der Kanals sendet RDS Daten.
             /// Channel sends RDS data
@@ -1067,19 +1067,19 @@ namespace DVBViewerServerApiWrapper.Model
             AudioService = 0x10,
             /// <summary>
             /// Audio hat eine andere Samplerate als 48 Khz.
-            /// audio has a different samplerate than 48 KHz
+            /// Audio has a different samplerate than 48 KHz
             /// </summary>
             [XmlEnum("32")]
             Non48KhzSamplerate = 0x20,
             /// <summary>
-            /// Bandstacking, interne Polarisation wird immer auf H gesetzt.
-            /// bandstacking, internally polarisation is always set to H
+            /// Bandstacking, interne Polarisation wird immer auf H gesetzt. Bei TS Sendern wird der PCR entfernt.
+            /// Bandstacking, internally polarisation is always set to H. For TS transmitters, the PCR is removed.
             /// </summary>
             [XmlEnum("64")]
-            Bandstacking = 0x40,
+            BandstackingOrPcrRemoving = 0x40,
             /// <summary>
             /// Kaneleintrag ist ein zusätzlicher Audiokanal zum vorherigen.
-            /// channel entry is an additional audio track of the preceding 
+            /// Channel entry is an additional audio track of the preceding 
             /// </summary>
             [XmlEnum("128")]
             AdditionalAudioTrack = 0x80

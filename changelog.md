@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+v0.3.6.1
+  - add Channeltuner for details of a channel
+  - changed ID in the class channel to ChannelID
+  - reworked Enum ChannelProperties
+    - renamed Reserved to NoAutoUpdateOrIgnorePtsJumps
+      - The transmitter data is protected during an AutoUpdate. TS channels ignore PTS jumps.
+    - renamed Bandstacking to BandstackingOrPcrRemoving
+      - Bandstacking, internally polarisation is always set to H. For TS transmitters, the PCR is removed.
+  - ChannelList
+    - add some functions to filter the channellist
+
 v0.3.6.0
  - add ChannelList
    - add ChannelTopGroup, this a list of groups in the ChannelList which includes top-groups of the channel-list
@@ -9,7 +20,6 @@ v0.3.6.0
  - add DVBViewerClients can play a channel or his subchannels directly
  - add Server-Tasks to the recordings and videos directly
    - In objects RecordingList and VideoList Update-, Recreate- and Delete-Databasetasks from server can now be started
- - 
 
 v0.3.5.3
  - replaced WebRequest trough HttpClient for easier async handling
@@ -94,7 +104,6 @@ v0.0.2.0
 - updating Clients to play videos
 - renamed ETypes to Enums
 - renames SUriParam to UriParam
-- 
 
 v0.0.1.0
 - initial Version

@@ -22,8 +22,6 @@ namespace DVBViewerServerApiWrapper
     {
         private SecureString password;
 
-        private HttpClient client;
-
         /// <summary>
         /// aktive Instanz
         /// active instance
@@ -824,15 +822,16 @@ namespace DVBViewerServerApiWrapper
                 }
 
                 //initialize client
-                client = new HttpClient(handler);
-
-                //Abfrage durchführen
-                using (var stream = await client.GetStreamAsync(CreateApiUri(page, uriParameters)).ConfigureAwait(false))
+                using (var client = new HttpClient(handler))
                 {
-                    xmlData = XDocument.Load(stream, LoadOptions.SetLineInfo);
-                }
+                    //Abfrage durchführen
+                    using (var stream = await client.GetStreamAsync(CreateApiUri(page, uriParameters)).ConfigureAwait(false))
+                    {
+                        xmlData = XDocument.Load(stream, LoadOptions.SetLineInfo);
+                    }
 
-                return xmlData;
+                    return xmlData;
+                }
             }
             catch (Exception)
             {

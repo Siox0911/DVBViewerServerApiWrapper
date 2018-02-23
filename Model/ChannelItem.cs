@@ -57,7 +57,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// Die ID des Kanals. Wird verwendet für den UPnP Stream. The ID of the channel. Is used for the UPnP stream. UPnPUrl + ID
         /// </summary>
         [XmlAttribute(AttributeName = "ID")]
-        public long ID { get; set; }
+        public long ChannelID { get; set; }
 
         /// <summary>
         /// Das Logo zum Kanals als Teil einer URL. The logo to the channel as part of an url.
@@ -77,6 +77,9 @@ namespace DVBViewerServerApiWrapper.Model
         [XmlElement(ElementName = "subchannel", Type = typeof(ChannelSubItem))]
         public List<ChannelSubItem> SubChannels { get; set; }
 
+        [XmlElement(ElementName = "tuner", Type = typeof(ChannelTuner))]
+        public ChannelTuner Tuner { get; set; }
+
         internal ChannelItem() { }
 
         /// <summary>
@@ -86,7 +89,7 @@ namespace DVBViewerServerApiWrapper.Model
         public string GetUPnPUriString()
         {
             var chList = ChannelList.GetInstance();
-            return chList?.UpnpUrl + ID;
+            return chList?.UpnpUrl + ChannelID;
         }
 
         /// <summary>
@@ -164,7 +167,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// </returns>
         public bool Equals(ChannelItem other)
         {
-            return other != null && ID == other.ID;
+            return other != null && ChannelID == other.ChannelID;
         }
 
         /// <summary>
@@ -177,7 +180,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// </returns>
         public override int GetHashCode()
         {
-            return 1213502048 + ID.GetHashCode();
+            return 1213502048 + ChannelID.GetHashCode();
         }
 
         public static bool operator ==(ChannelItem item1, ChannelItem item2)

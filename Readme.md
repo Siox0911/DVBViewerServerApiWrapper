@@ -10,7 +10,7 @@ www.dvbviewer.com
 
 ### Current state (Aktueller Status)
 
-Version 0.3.6.0
+Version 0.3.6.1
 
 [changelog.md](changelog.md) for more details
 
@@ -25,12 +25,9 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
 <br/><img src="images/ToDo_Ready_256.png" width="22"/> recordings.html
 <br/><img src="images/ToDo_Ready_256.png" width="22"/> recdelete.html
 <br/><img src="images/ToDo_Ready_256.png" width="22"/> mediafiles.html -> own implementation over the sql.html
-<br/><img src="images/ToDo_Current_256.png" width="22"/> dvbcommand.html
-<br/><img src="images/ToDo_Current_256.png" width="22"/> getchannelsxml.html
-<br/><img src="images/ToDo_Add_256.png" width="22"/> getconfigfile.html
-<br/><img src="images/ToDo_Add_256.png" width="22"/> setting.html -> maybe unnecessary (double support to status2.html)
-<br/><img src="images/ToDo_Add_256.png" width="22"/> epg.html
-<br/><img src="images/ToDo_Add_256.png" width="22"/> epgclear.html
+<br/><img src="images/ToDo_Ready_256.png" width="22"/> getchannelsxml.html
+<br/><img src="images/ToDo_Current_256.png" width="22"/> epg.html
+<br/><img src="images/ToDo_Current_256.png" width="22"/> epgclear.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> timerlist.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> timeradd.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> timeredit.html
@@ -42,6 +39,9 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
 <br/><img src="images/ToDo_Add_256.png" width="22"/> searchdelete.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> searchedit.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> searchadd.html
+<br/><img src="images/ToDo_Current_256.png" width="22"/> dvbcommand.html
+<br/><img src="images/ToDo_Abort_256.png" width="22"/> getconfigfile.html
+<br/><img src="images/ToDo_Abort_256.png" width="22"/> setting.html -> maybe unnecessary (double support to status2.html)
 <br/><img src="images/ToDo_Abort_256.png" width="22"/> sql.html - integration in all relevant classes
 
 ### Using the lib

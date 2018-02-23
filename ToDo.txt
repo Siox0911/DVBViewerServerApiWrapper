@@ -1,7 +1,13 @@
-﻿ - Die SQL Abfragen ändern, so dass nicht immer alle angefasst werden müssen: erledigt
- - found = 1 prüfen, weil die Videos doppelt vorkommen: erledigt
+﻿DEMO:
  - Serveraufgaben in die DEMO aufnehmen
- - Fernbedienung für den DVBViewer x Commands
- - Sender in den Wrapper holen
+ - Fernbedienung für den DVBViewer x Commands in die Demo
+
+Wrapper:
  - EPG abholen
+ - Suche hinzufügen für EPG.
  - Timer abholen und Aufgaben anbieten, wie Aufnahmedatenbank aktualisieren und Mediadatabase aktualisieren, direkt in den Menus
+
+Erledigt:
+ - Sender in den Wrapper holen: erledigt
+ - Die SQL Abfragen ändern, so dass nicht immer alle angefasst werden müssen: erledigt
+ - found = 1 prüfen, weil die Videos doppelt vorkommen: erledigt

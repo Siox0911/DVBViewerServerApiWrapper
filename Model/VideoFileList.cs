@@ -17,6 +17,8 @@ namespace DVBViewerServerApiWrapper.Model
     [XmlRoot(ElementName = "table")]
     public class VideoFileList : IDisposable
     {
+        private static VideoFileList videoFileList;
+
         /// <summary>
         /// Die Videos als Liste.
         /// The videos as a list
@@ -24,7 +26,9 @@ namespace DVBViewerServerApiWrapper.Model
         [XmlElement(ElementName = "row", Type = typeof(VideoFileItem))]
         public List<VideoFileItem> Items { get; set; }
 
-        internal VideoFileList() { }
+        internal VideoFileList() => videoFileList = this;
+
+        internal static VideoFileList GetInstance() => videoFileList;
 
         internal static VideoFileList CreateVideoFileList(XDocument xDocument)
         {
