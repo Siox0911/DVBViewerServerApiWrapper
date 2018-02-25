@@ -28,7 +28,6 @@ namespace DVBViewerServerApiWrapper.Model
         [XmlElement(ElementName = "task", Type = typeof(ServerTaskItem))]
         public List<ServerTaskItem> TaskItems { get; set; }
 
-
         internal ServerTaskGroup() { }
     }
 }

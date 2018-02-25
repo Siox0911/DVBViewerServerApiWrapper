@@ -24,28 +24,18 @@ namespace DVBViewerServerApiWrapper.Model
 
         internal ServerTaskList() { }
 
-        internal static ServerTaskList CreateServerTaskList(XDocument xDocument)
+        internal static Task<ServerTaskList> GetServerTaskListAsync(List<Helper.UriParameter> uriParameters)
         {
-            return Helper.Deserializer.Deserialize<ServerTaskList>(xDocument, new Type[] { typeof(ServerTaskGroup), typeof(ServerTaskItem) });
+            return Helper.Lists.GetListAsync<ServerTaskList>("tasks", uriParameters, new Type[] { typeof(ServerTaskGroup), typeof(ServerTaskItem) });
         }
 
         /// <summary>
         /// Gibt alle Aufgaben des Servers zurück. Returns all tasks run on the DMS.
         /// </summary>
         /// <returns></returns>
-        public static async Task<ServerTaskList> GetServerTaskListAsync()
+        public static Task<ServerTaskList> GetServerTaskListAsync()
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
-            {
-                var xmldata = await dvbApi.GetApiDataAsync("tasks").ConfigureAwait(false);
-
-                if (xmldata != null)
-                {
-                    return CreateServerTaskList(xmldata);
-                }
-            }
-            return null;
+            return GetServerTaskListAsync(null);
         }
 
         /// <summary>

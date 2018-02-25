@@ -444,6 +444,32 @@ namespace DVBViewerServerApiWrapper
             }
         }
 
+        /// <summary>
+        /// Gibt das komplette EPG vom Server zurück. Die Menge der Daten können enorm sein. 
+        /// Returns the complete EPG from the server. The amount of data can be enormous.
+        /// </summary>
+        /// <returns></returns>
+        public Task<Model.EpgList> EpgListAsync
+        {
+            get
+            {
+                return Model.EpgList.GetEpgListAsync();
+            }
+        }
+
+        /// <summary>
+        /// Gibt das komplette EPG vom Server zurück. Die Menge der Daten können enorm sein. 
+        /// Returns the complete EPG from the server. The amount of data can be enormous.
+        /// </summary>
+        /// <returns></returns>
+        public Model.EpgList EpgList
+        {
+            get
+            {
+                return EpgListAsync.Result;
+            }
+        }
+
         #endregion
 
         public DVBViewerServerApi()

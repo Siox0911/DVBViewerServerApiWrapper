@@ -41,9 +41,9 @@ namespace DVBViewerServerApiWrapper.Model
 
         internal static ChannelList GetInstance() => chList;
 
-        internal static ChannelList CreateChannelList(XDocument xDocument)
+        internal static Task<ChannelList> GetChannelListAsync(List<Helper.UriParameter> uriParameters)
         {
-            return Helper.Deserializer.Deserialize<ChannelList>(xDocument, new Type[] {
+            return Helper.Lists.GetListAsync<ChannelList>("getchannelsxml", uriParameters, new Type[] {
                 typeof(ChannelTopGroup),
                 typeof(ChannelGroup),
                 typeof(ChannelItem),
@@ -57,27 +57,17 @@ namespace DVBViewerServerApiWrapper.Model
         /// Returns the complete station list of the DMS. This contains the favorites.
         /// </summary>
         /// <returns></returns>
-        public static async Task<ChannelList> GetChannelListAsync()
+        public static Task<ChannelList> GetChannelListAsync()
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
+            return GetChannelListAsync(new List<Helper.UriParameter>
             {
-                var xmldata = await dvbApi.GetApiDataAsync("getchannelsxml", new List<Helper.UriParameter>
-                {
-                    new Helper.UriParameter("logo", "1"),
-                    new Helper.UriParameter("rtsp", "1"),
-                    new Helper.UriParameter("upnp", "1"),
-                    new Helper.UriParameter("subchannels", "1"),
-                    new Helper.UriParameter("fav", "1"),
-                    new Helper.UriParameter("tuner", "1")
-                }).ConfigureAwait(false);
-
-                if (xmldata != null)
-                {
-                    return CreateChannelList(xmldata);
-                }
-            }
-            return null;
+                new Helper.UriParameter("logo", "1"),
+                new Helper.UriParameter("rtsp", "1"),
+                new Helper.UriParameter("upnp", "1"),
+                new Helper.UriParameter("subchannels", "1"),
+                new Helper.UriParameter("fav", "1"),
+                new Helper.UriParameter("tuner", "1")
+            });
         }
 
         /// <summary>
@@ -96,28 +86,18 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="channelID"></param>
         /// <returns></returns>
-        public static async Task<ChannelList> GetChannelListAsync(long channelID)
+        public static Task<ChannelList> GetChannelListAsync(long channelID)
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
+            return GetChannelListAsync(new List<Helper.UriParameter>
             {
-                var xmldata = await dvbApi.GetApiDataAsync("getchannelsxml", new List<Helper.UriParameter>
-                {
-                    new Helper.UriParameter("logo", "1"),
-                    new Helper.UriParameter("rtsp", "1"),
-                    new Helper.UriParameter("upnp", "1"),
-                    new Helper.UriParameter("subchannels", "1"),
-                    new Helper.UriParameter("fav", "1"),
-                    new Helper.UriParameter("tuner", "1"),
-                    new Helper.UriParameter("id", channelID.ToString())
-                }).ConfigureAwait(false);
-
-                if (xmldata != null)
-                {
-                    return CreateChannelList(xmldata);
-                }
-            }
-            return null;
+                new Helper.UriParameter("logo", "1"),
+                new Helper.UriParameter("rtsp", "1"),
+                new Helper.UriParameter("upnp", "1"),
+                new Helper.UriParameter("subchannels", "1"),
+                new Helper.UriParameter("fav", "1"),
+                new Helper.UriParameter("tuner", "1"),
+                new Helper.UriParameter("id", channelID.ToString())
+            });
         }
 
         /// <summary>
@@ -126,28 +106,18 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="epgChannelID"></param>
         /// <returns></returns>
-        public static async Task<ChannelList> GetChannelListAsync(string epgChannelID)
+        public static Task<ChannelList> GetChannelListAsync(string epgChannelID)
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
+            return GetChannelListAsync(new List<Helper.UriParameter>
             {
-                var xmldata = await dvbApi.GetApiDataAsync("getchannelsxml", new List<Helper.UriParameter>
-                {
-                    new Helper.UriParameter("logo", "1"),
-                    new Helper.UriParameter("rtsp", "1"),
-                    new Helper.UriParameter("upnp", "1"),
-                    new Helper.UriParameter("subchannels", "1"),
-                    new Helper.UriParameter("fav", "1"),
-                    new Helper.UriParameter("tuner", "1"),
-                    new Helper.UriParameter("epgid", epgChannelID)
-                }).ConfigureAwait(false);
-
-                if (xmldata != null)
-                {
-                    return CreateChannelList(xmldata);
-                }
-            }
-            return null;
+                new Helper.UriParameter("logo", "1"),
+                new Helper.UriParameter("rtsp", "1"),
+                new Helper.UriParameter("upnp", "1"),
+                new Helper.UriParameter("subchannels", "1"),
+                new Helper.UriParameter("fav", "1"),
+                new Helper.UriParameter("tuner", "1"),
+                new Helper.UriParameter("epgid", epgChannelID)
+            });
         }
 
         /// <summary>
@@ -165,27 +135,18 @@ namespace DVBViewerServerApiWrapper.Model
         /// Gibt eine Liste reine Favouritenliste der Kanäle zurück.
         /// </summary>
         /// <returns></returns>
-        public static async Task<ChannelList> GetChannelListFavOnlyAsync()
+        public static Task<ChannelList> GetChannelListFavOnlyAsync()
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
+            return GetChannelListAsync(new List<Helper.UriParameter>
             {
-                var xmldata = await dvbApi.GetApiDataAsync("getchannelsxml", new List<Helper.UriParameter>
-                {
-                    new Helper.UriParameter("logo", "1"),
-                    new Helper.UriParameter("rtsp", "1"),
-                    new Helper.UriParameter("upnp", "1"),
-                    new Helper.UriParameter("subchannels", "1"),
-                    new Helper.UriParameter("tuner", "1"),
-                    new Helper.UriParameter("favonly", "1")
-                }).ConfigureAwait(false);
+                new Helper.UriParameter("logo", "1"),
+                new Helper.UriParameter("rtsp", "1"),
+                new Helper.UriParameter("upnp", "1"),
+                new Helper.UriParameter("subchannels", "1"),
+                new Helper.UriParameter("tuner", "1"),
+                new Helper.UriParameter("favonly", "1")
+            });
 
-                if (xmldata != null)
-                {
-                    return CreateChannelList(xmldata);
-                }
-            }
-            return null;
         }
 
         /// <summary>
@@ -201,28 +162,18 @@ namespace DVBViewerServerApiWrapper.Model
         /// Gibt nur TV Kanäle zurück.
         /// </summary>
         /// <returns></returns>
-        public static async Task<ChannelList> GetChannelTVOnlyAsync()
+        public static Task<ChannelList> GetChannelTVOnlyAsync()
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
+            return GetChannelListAsync(new List<Helper.UriParameter>
             {
-                var xmldata = await dvbApi.GetApiDataAsync("getchannelsxml", new List<Helper.UriParameter>
-                {
-                    new Helper.UriParameter("logo", "1"),
-                    new Helper.UriParameter("rtsp", "1"),
-                    new Helper.UriParameter("upnp", "1"),
-                    new Helper.UriParameter("subchannels", "1"),
-                    new Helper.UriParameter("tuner", "1"),
-                    new Helper.UriParameter("fav", "1"),
-                    new Helper.UriParameter("tvonly", "1")
-                }).ConfigureAwait(false);
-
-                if (xmldata != null)
-                {
-                    return CreateChannelList(xmldata);
-                }
-            }
-            return null;
+                new Helper.UriParameter("logo", "1"),
+                new Helper.UriParameter("rtsp", "1"),
+                new Helper.UriParameter("upnp", "1"),
+                new Helper.UriParameter("subchannels", "1"),
+                new Helper.UriParameter("tuner", "1"),
+                new Helper.UriParameter("fav", "1"),
+                new Helper.UriParameter("tvonly", "1")
+            });
         }
 
         /// <summary>
@@ -238,28 +189,18 @@ namespace DVBViewerServerApiWrapper.Model
         /// Gibt nur Radio Kanäle zurück.
         /// </summary>
         /// <returns></returns>
-        public static async Task<ChannelList> GetChannelRadioOnlyAsync()
+        public static Task<ChannelList> GetChannelRadioOnlyAsync()
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
+            return GetChannelListAsync(new List<Helper.UriParameter>
             {
-                var xmldata = await dvbApi.GetApiDataAsync("getchannelsxml", new List<Helper.UriParameter>
-                {
-                    new Helper.UriParameter("logo", "1"),
-                    new Helper.UriParameter("rtsp", "1"),
-                    new Helper.UriParameter("upnp", "1"),
-                    new Helper.UriParameter("subchannels", "1"),
-                    new Helper.UriParameter("tuner", "1"),
-                    new Helper.UriParameter("fav", "1"),
-                    new Helper.UriParameter("radioonly", "1")
-                }).ConfigureAwait(false);
-
-                if (xmldata != null)
-                {
-                    return CreateChannelList(xmldata);
-                }
-            }
-            return null;
+                new Helper.UriParameter("logo", "1"),
+                new Helper.UriParameter("rtsp", "1"),
+                new Helper.UriParameter("upnp", "1"),
+                new Helper.UriParameter("subchannels", "1"),
+                new Helper.UriParameter("tuner", "1"),
+                new Helper.UriParameter("fav", "1"),
+                new Helper.UriParameter("radioonly", "1")
+            });
         }
 
         /// <summary>

@@ -25,7 +25,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// Die ID des Unterkanals. The ID of the subchannel.
         /// </summary>
         [XmlAttribute(AttributeName = "ID")]
-        public string ID { get; set; }
+        public string ChannelID { get; set; }
 
         internal ChannelSubItem() { }
 

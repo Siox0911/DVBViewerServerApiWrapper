@@ -25,9 +25,9 @@ namespace DVBViewerServerApiWrapper.Model
 
         internal DVBViewerClients() { }
 
-        internal static DVBViewerClients CreateDvbViewerClients(XDocument xDocument)
+        internal static Task<DVBViewerClients> GetDVBViewerClientsAsync(List<Helper.UriParameter> uriParameters)
         {
-            return Helper.Deserializer.Deserialize<DVBViewerClients>(xDocument);
+            return Helper.Lists.GetListAsync<DVBViewerClients>("dvbcommand", uriParameters);
         }
 
         /// <summary>
@@ -35,19 +35,9 @@ namespace DVBViewerServerApiWrapper.Model
         /// Gives back all connected DVBViewer Clients
         /// </summary>
         /// <returns></returns>
-        public static async Task<DVBViewerClients> GetDVBViewerClientsAsync()
+        public static Task<DVBViewerClients> GetDVBViewerClientsAsync()
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
-            {
-                var xmldata = await dvbApi.GetApiDataAsync("dvbcommand").ConfigureAwait(false);
-
-                if (xmldata != null)
-                {
-                    return CreateDvbViewerClients(xmldata);
-                }
-            }
-            return null;
+            return GetDVBViewerClientsAsync(null);
         }
 
         /// <summary>

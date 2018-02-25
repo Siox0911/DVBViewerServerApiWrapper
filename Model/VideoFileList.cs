@@ -30,9 +30,9 @@ namespace DVBViewerServerApiWrapper.Model
 
         internal static VideoFileList GetInstance() => videoFileList;
 
-        internal static VideoFileList CreateVideoFileList(XDocument xDocument)
+        internal static Task<VideoFileList> GetVideoFileListAsync(List<Helper.UriParameter> uriParameters)
         {
-            return Helper.Deserializer.Deserialize<VideoFileList>(xDocument, new Type[] { typeof(VideoFileItem) });
+            return Helper.Lists.GetListAsync<VideoFileList>("sql", uriParameters, new Type[] { typeof(VideoFileItem) });
         }
 
         private static string baseSQL = "SELECT objects.Object_ID, objects.Enabled, " +
@@ -54,25 +54,16 @@ namespace DVBViewerServerApiWrapper.Model
         /// A list of videos that existed until the last time the database was updated.
         /// </summary>
         /// <returns></returns>
-        public static async Task<VideoFileList> GetVideoFileListAsync()
+        public static Task<VideoFileList> GetVideoFileListAsync()
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
+            string query = $"{baseSQL} AND Type = 3";
+
+            return GetVideoFileListAsync(new List<Helper.UriParameter>
             {
-                string query = $"{baseSQL} AND Type = 3";
+                Helper.UriParam.Video1,
+                Helper.UriParam.Query(query)
+            });
 
-                var xmldata = await dvbApi.GetApiDataAsync("sql", new List<Helper.UriParameter>
-                {
-                    Helper.UriParam.Video1,
-                    Helper.UriParam.Query(query)
-                }).ConfigureAwait(false);
-
-                if (xmldata != null)
-                {
-                    return CreateVideoFileList(xmldata);
-                }
-            }
-            return null;
         }
 
         /// <summary>
@@ -91,28 +82,18 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="partOfTitle"></param>
         /// <returns></returns>
-        public static async Task<VideoFileList> GetVideoFileListAsync(string partOfTitle)
+        public static Task<VideoFileList> GetVideoFileListAsync(string partOfTitle)
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
+            //very simple SQL-Injektion prevention. Not perfekt, but the database is readonly...
+            partOfTitle = partOfTitle.Replace("'", "''");
+
+            string query = $"{baseSQL} AND Type = 3 AND object_details.Titel like '%" + partOfTitle + "%'";
+
+            return GetVideoFileListAsync(new List<Helper.UriParameter>
             {
-                //very simple SQL-Injektion prevention. Not perfekt, but the database is readonly...
-                partOfTitle = partOfTitle.Replace("'", "''");
-
-                string query = $"{baseSQL} AND Type = 3 AND object_details.Titel like '%" + partOfTitle + "%'";
-
-                var xmldata = await dvbApi.GetApiDataAsync("sql", new List<Helper.UriParameter>
-                {
-                    Helper.UriParam.Video1,
-                    Helper.UriParam.Query(query)
-                }).ConfigureAwait(false);
-
-                if (xmldata != null)
-                {
-                    return CreateVideoFileList(xmldata);
-                }
-            }
-            return null;
+                Helper.UriParam.Video1,
+                Helper.UriParam.Query(query)
+            });
         }
 
         /// <summary>
@@ -132,28 +113,18 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="partOfPath"></param>
         /// <returns></returns>
-        public static async Task<VideoFileList> GetVideoFileListByPathAsync(string partOfPath)
+        public static Task<VideoFileList> GetVideoFileListByPathAsync(string partOfPath)
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
+            //very simple SQL-Injektion prevention. Not perfekt, but the database is readonly...
+            partOfPath = partOfPath.Replace("'", "''");
+
+            string query = $"{baseSQL} AND Type = 3 AND paths.Path like '%" + partOfPath + "%'";
+
+            return GetVideoFileListAsync(new List<Helper.UriParameter>
             {
-                //very simple SQL-Injektion prevention. Not perfekt, but the database is readonly...
-                partOfPath = partOfPath.Replace("'", "''");
-
-                string query = $"{baseSQL} AND Type = 3 AND paths.Path like '%" + partOfPath + "%'";
-
-                var xmldata = await dvbApi.GetApiDataAsync("sql", new List<Helper.UriParameter>
-                {
-                    Helper.UriParam.Video1,
-                    Helper.UriParam.Query(query)
-                }).ConfigureAwait(false);
-
-                if (xmldata != null)
-                {
-                    return CreateVideoFileList(xmldata);
-                }
-            }
-            return null;
+                Helper.UriParam.Video1,
+                Helper.UriParam.Query(query)
+            });
         }
 
         /// <summary>
@@ -217,25 +188,15 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="parentID"></param>
         /// <returns></returns>
-        internal static async Task<VideoFileList> GetVideoFileListFromFolderAsync(int parentID)
+        internal static Task<VideoFileList> GetVideoFileListFromFolderAsync(int parentID)
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
+            string query = $"{baseSQL} AND Type = 3 AND parent_ID = " + parentID;
+
+            return GetVideoFileListAsync(new List<Helper.UriParameter>
             {
-                string query = $"{baseSQL} AND Type = 3 AND parent_ID = " + parentID;
-
-                var xmldata = await dvbApi.GetApiDataAsync("sql", new List<Helper.UriParameter>
-                {
-                    Helper.UriParam.Video1,
-                    Helper.UriParam.Query(query)
-                }).ConfigureAwait(false);
-
-                if (xmldata != null)
-                {
-                    return CreateVideoFileList(xmldata);
-                }
-            }
-            return null;
+                Helper.UriParam.Video1,
+                Helper.UriParam.Query(query)
+            });
         }
 
         /// <summary>
@@ -365,7 +326,7 @@ namespace DVBViewerServerApiWrapper.Model
                 var tPath = Path.GetTempPath();
                 var fName = $"{Items[0].Title}.m3u";
                 var cPathName = tPath + fName;
-                using (var fStream = new FileStream(cPathName, FileMode.OpenOrCreate))
+                using (var fStream = new FileStream(cPathName, FileMode.Create))
                 {
                     using (var sw = new StreamWriter(fStream))
                     {
@@ -379,7 +340,6 @@ namespace DVBViewerServerApiWrapper.Model
                         }
                     }
                 }
-
                 return cPathName;
             }
             return null;

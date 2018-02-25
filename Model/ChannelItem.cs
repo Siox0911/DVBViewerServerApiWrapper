@@ -31,7 +31,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// Die EPG ID des Kanals. The EPG ID of the channel.
         /// </summary>
         [XmlAttribute(AttributeName = "EPGID")]
-        public string EpgChannelID { get; set; }
+        public long EpgChannelID { get; set; }
 
         /// <summary>
         /// Die Flags des Kanals. Channel flags.
@@ -103,6 +103,18 @@ namespace DVBViewerServerApiWrapper.Model
         }
 
         /// <summary>
+        /// Gibt den String zurück, der verwendet wird, bevor der UPnP String in die Datei m3u geschrieben wird.
+        /// Beginnend mit #EXTINF:
+        /// Returns the string used before the UPnP string is written to the m3u file.
+        /// Starting with #EXTINF:
+        /// </summary>
+        /// <returns></returns>
+        internal string GetM3uPrefString()
+        {
+            return $"#EXTINF:0,{Name} - {GetEpgListNow()?.Items?[0].Title}";
+        }
+
+        /// <summary>
         /// Gibt die komplette URL zum Logo des Kanals zurück. Gives back the complete URL to the channel logo.
         /// </summary>
         /// <returns></returns>
@@ -116,6 +128,67 @@ namespace DVBViewerServerApiWrapper.Model
 
             return null;
         }
+
+        /// <summary>
+        /// Erzeugt aus dem Kanal eine M3U Datei. Die Datei befindet sich normalerweise im Tempverzeichnis.
+        /// Generates an M3U file from this channel. The file is usually located in the Temp directory
+        /// </summary>
+        /// <returns>Ein Pfad zur m3u Datei. A path to the m3u file</returns>
+        public string CreateM3UFile()
+        {
+            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
+            //Create a playlist
+            var tPath = System.IO.Path.GetTempPath();
+            var fName = $"{ChannelID}.m3u";
+            var cPathName = tPath + fName;
+            using (var fStream = new System.IO.FileStream(cPathName, System.IO.FileMode.Create))
+            {
+                using (var sw = new System.IO.StreamWriter(fStream))
+                {
+                    sw.WriteLine(GetM3uPrefString());
+                    sw.WriteLine(GetUPnPUriString());
+                }
+            }
+            return cPathName;
+        }
+
+        /// <summary>
+        /// Returns the complete EPG List of this channel. Gibt die komplette EPG Liste des Senders zurück.
+        /// </summary>
+        /// <returns></returns>
+        public Task<EpgList> GetEpgListAsync()
+        {
+            return EpgList.GetEpgListAsync(EpgChannelID);
+        }
+
+        /// <summary>
+        /// Return the complete EPG List of this channel. Gibt die komplette EPG Liste des Senders zurück.
+        /// </summary>
+        /// <returns></returns>
+        public EpgList GetEpgList()
+        {
+            return GetEpgListAsync().Result;
+        }
+
+        /// <summary>
+        /// Gibt eine Liste mit dem aktuellen EPG Eintrag zurück.
+        /// </summary>
+        /// <returns></returns>
+        public Task<EpgList> GetEpgListNowAsync()
+        {
+            return EpgList.GetEpgListAsync(EpgChannelID, DateTime.Now, DateTime.Now + TimeSpan.FromMinutes(1.0));
+        }
+
+        /// <summary>
+        /// Gibt eine Liste mit dem aktuellen EPG Eintrag zurück.
+        /// </summary>
+        /// <returns></returns>
+        public EpgList GetEpgListNow()
+        {
+            return GetEpgListNowAsync().Result;
+        }
+
+
 
         /// <summary>
         /// Spiel den Kanal auf dem DVBViewer ab. Playback the Channel on the DVBViewer Client.

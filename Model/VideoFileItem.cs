@@ -103,7 +103,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// Die Abspieldauer als TimeSpan.
         /// The playing time as TimeSpan
         /// </summary>
-        public TimeSpan Duration2 { get { return TimeSpan.FromSeconds(Duration); } }
+        public TimeSpan Duration2 => TimeSpan.FromSeconds(Duration);
 
         /// <summary>
         /// Der Untertitel des Videos.
@@ -137,7 +137,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// Die Dateigröße des Videos
         /// The file size of the video
         /// </summary>
-        public Helper.FileSize FileSizeF { get { return Helper.FileSize.GetFileSize(FileSize); } }
+        public Helper.FileSize FileSizeF => Helper.FileSize.GetFileSize(FileSize);
 
         /// <summary>
         /// Das Video ist aktiviert und wird angezeigt.
@@ -224,7 +224,7 @@ namespace DVBViewerServerApiWrapper.Model
             var tPath = System.IO.Path.GetTempPath();
             var fName = $"{Title}.m3u";
             var cPathName = tPath + fName;
-            using (var fStream = new System.IO.FileStream(cPathName, System.IO.FileMode.OpenOrCreate))
+            using (var fStream = new System.IO.FileStream(cPathName, System.IO.FileMode.Create))
             {
                 using (var sw = new System.IO.StreamWriter(fStream))
                 {
@@ -232,7 +232,6 @@ namespace DVBViewerServerApiWrapper.Model
                     sw.WriteLine(GetUPnPUriString());
                 }
             }
-
             return cPathName;
         }
     }

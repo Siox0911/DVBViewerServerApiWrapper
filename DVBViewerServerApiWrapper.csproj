@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="DVBViewerServerApi.cs" />
     <Compile Include="Helper\Deserializer.cs" />
+    <Compile Include="Helper\Lists.cs" />
     <Compile Include="Helper\Security.cs" />
     <Compile Include="Helper\UriParam.cs" />
     <Compile Include="Model\ChannelGroup.cs" />
@@ -55,6 +56,8 @@
     <Compile Include="Model\DVBViewerClients.cs" />
     <Compile Include="Model\Enums.cs" />
     <Compile Include="Helper\FileSize.cs" />
+    <Compile Include="Model\EpgItem.cs" />
+    <Compile Include="Model\EpgList.cs" />
     <Compile Include="Model\RecordingChannel.cs" />
     <Compile Include="Model\RecordingSeries.cs" />
     <Compile Include="Model\ServerTaskGroup.cs" />

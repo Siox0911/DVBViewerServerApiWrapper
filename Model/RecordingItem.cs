@@ -45,16 +45,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// Die Start Zeit als Datum
         /// The start time as a date
         /// </summary>
-        public DateTime RecDate
-        {
-            get
-            {
-                if (StartDatum != 0)
-                    return DateTime.Parse(StartDatum.ToString("0000-00-00 00:00:00"));
-
-                return default(DateTime);
-            }
-        }
+        public DateTime RecDate => StartDatum != 0 ? DateTime.Parse(StartDatum.ToString("0000-00-00 00:00:00")) : default(DateTime);
         /// <summary>
         /// Die Länge der Aufnahme HHMMSS, verwende <seealso cref="Duration2"/>.
         /// The length of the recording HHMMSS, use <seealso cref = "Duration2" />.
@@ -65,13 +56,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// Die Länge der Aufnahme als TimeSpan.
         /// The length of the recording as TimeSpan.
         /// </summary>
-        public TimeSpan Duration2
-        {
-            get
-            {
-                return TimeSpan.Parse(Duration.ToString("00:00:00"));
-            }
-        }
+        public TimeSpan Duration2 => TimeSpan.Parse(Duration.ToString("00:00:00"));
         /// <summary>
         /// Die EventID der Aufnahme (EPG)
         /// The EventID of the recording (EPG)
@@ -235,7 +220,7 @@ namespace DVBViewerServerApiWrapper.Model
             var extension = System.IO.Path.GetExtension(File);
             var rList = RecordingList.GetInstance();
             //return $"http://{dvbApi.Hostname}:8090/upnp/recording/{ID}{extension}";
-            return $"{rList?.ServerURL}{ID}{extension}";
+            return $"{rList?.ServerURL}{ID}{extension}?d={Duration2.TotalSeconds}";
         }
 
         /// <summary>
@@ -255,7 +240,7 @@ namespace DVBViewerServerApiWrapper.Model
             var tPath = System.IO.Path.GetTempPath();
             var fName = $"{ID}.m3u";
             var cPathName = tPath + fName;
-            using (var fStream = new System.IO.FileStream(cPathName, System.IO.FileMode.OpenOrCreate))
+            using (var fStream = new System.IO.FileStream(cPathName, System.IO.FileMode.Create))
             {
                 using (var sw = new System.IO.StreamWriter(fStream))
                 {

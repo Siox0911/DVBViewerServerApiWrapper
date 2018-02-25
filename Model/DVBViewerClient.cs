@@ -135,7 +135,7 @@ namespace DVBViewerServerApiWrapper.Model
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             return dvbApi?.SendApiDataAsync("dvbcommand", new List<Helper.UriParameter> {
                 new Helper.UriParameter("target", Name),
-                new Helper.UriParameter("cmd", $"-c:{channelSubItem.ID}")
+                new Helper.UriParameter("cmd", $"-c:{channelSubItem.ChannelID}")
             });
         }
 

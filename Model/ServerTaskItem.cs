@@ -37,6 +37,8 @@ namespace DVBViewerServerApiWrapper.Model
         [XmlElement(ElementName = "action")]
         public string Action { get; set; }
 
+        internal ServerTaskItem() { }
+
         /// <summary>
         /// Startet den Task auf dem Server.
         /// Starts the task on the server

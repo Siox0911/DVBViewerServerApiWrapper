@@ -1084,5 +1084,37 @@ namespace DVBViewerServerApiWrapper.Model
             [XmlEnum("128")]
             AdditionalAudioTrack = 0x80
         }
+
+        /// <summary>
+        /// Enums thats represents EPG Search Options
+        /// </summary>
+        [Flags]
+        public enum EpgSearchOptions
+        {
+            /// <summary>
+            /// Nothing
+            /// </summary>
+            None = 0x0,
+            /// <summary>
+            /// Title search
+            /// </summary>
+            T = 0x1,
+            /// <summary>
+            /// Sub-Title search
+            /// </summary>
+            S = 0x2,
+            /// <summary>
+            /// Description search
+            /// </summary>
+            D = 0x4,
+            /// <summary>
+            /// Search is case sensitive
+            /// </summary>
+            C = 0x8,
+            /// <summary>
+            /// Regular expression search term
+            /// </summary>
+            R = 0x10
+        }
     }
 }

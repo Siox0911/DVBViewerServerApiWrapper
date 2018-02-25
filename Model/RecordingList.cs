@@ -53,15 +53,9 @@ namespace DVBViewerServerApiWrapper.Model
 
         internal static RecordingList GetInstance() => rList;
 
-        /// <summary>
-        /// Erzeugt ein Recording
-        /// Produces a recording
-        /// </summary>
-        /// <param name="xDocument"></param>
-        /// <returns></returns>
-        internal static RecordingList CreateRecording(XDocument xDocument)
+        internal static Task<RecordingList> GetRecordingsAsync(List<Helper.UriParameter> uriParameters)
         {
-            return Helper.Deserializer.Deserialize<RecordingList>(xDocument, new Type[] {
+            return Helper.Lists.GetListAsync<RecordingList>("recordings", uriParameters, new Type[] {
                 typeof(RecordingItem),
                 typeof(RecordingSeries),
                 typeof(RecordingChannel)
@@ -74,24 +68,14 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="recordID"></param>
         /// <returns></returns>
-        public static async Task<RecordingList> GetRecordingsAsync()
+        public static Task<RecordingList> GetRecordingsAsync()
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
+            return GetRecordingsAsync(new List<Helper.UriParameter>
             {
-                var xmldata = await dvbApi.GetApiDataAsync("recordings", new List<Helper.UriParameter>
-                {
-                    Helper.UriParam.Utf81,
-                    Helper.UriParam.EventID1,
-                    Helper.UriParam.Images1
-                }).ConfigureAwait(false);
-
-                if (xmldata != null)
-                {
-                    return CreateRecording(xmldata);
-                }
-            }
-            return null;
+                Helper.UriParam.Utf81,
+                Helper.UriParam.EventID1,
+                Helper.UriParam.Images1
+            });
         }
 
         /// <summary>
@@ -110,26 +94,16 @@ namespace DVBViewerServerApiWrapper.Model
         /// Returns all recordings of the service. It lacks file names and the long description.
         /// </summary>
         /// <returns></returns>
-        public static async Task<RecordingList> GetRecordingsShortAsync()
+        public static Task<RecordingList> GetRecordingsShortAsync()
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
+            return GetRecordingsAsync(new List<Helper.UriParameter>
             {
-                var xmldata = await dvbApi.GetApiDataAsync("recordings", new List<Helper.UriParameter>
-                {
-                    Helper.UriParam.Utf81 ,
-                    Helper.UriParam.Images1,
-                    Helper.UriParam.NoDesc1,
-                    Helper.UriParam.NoFileName1,
-                    Helper.UriParam.EventID1
-                }).ConfigureAwait(false);
-
-                if (xmldata != null)
-                {
-                    return CreateRecording(xmldata);
-                }
-            }
-            return null;
+                Helper.UriParam.Utf81 ,
+                Helper.UriParam.Images1,
+                Helper.UriParam.NoDesc1,
+                Helper.UriParam.NoFileName1,
+                Helper.UriParam.EventID1
+            });
         }
 
         /// <summary>
@@ -148,25 +122,15 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="recordID"></param>
         /// <returns></returns>
-        public async static Task<RecordingList> GetRecordingAsync(int recordID)
+        public static Task<RecordingList> GetRecordingAsync(int recordID)
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
+            return GetRecordingsAsync(new List<Helper.UriParameter>
             {
-                var xmldata = await dvbApi.GetApiDataAsync("recordings", new List<Helper.UriParameter>
-                {
-                    Helper.UriParam.Utf81,
-                    Helper.UriParam.Images1,
-                    Helper.UriParam.EventID1,
-                    new Helper.UriParameter("id", recordID.ToString())
-                }).ConfigureAwait(false);
-
-                if (xmldata != null)
-                {
-                    return CreateRecording(xmldata);
-                }
-            }
-            return null;
+                Helper.UriParam.Utf81,
+                Helper.UriParam.Images1,
+                Helper.UriParam.EventID1,
+                new Helper.UriParameter("id", recordID.ToString())
+            });
         }
 
         /// <summary>
@@ -393,7 +357,7 @@ namespace DVBViewerServerApiWrapper.Model
                 var tPath = System.IO.Path.GetTempPath();
                 var fName = $"{Items[0].ID}.m3u";
                 var cPathName = tPath + fName;
-                using (var fStream = new System.IO.FileStream(cPathName, System.IO.FileMode.OpenOrCreate))
+                using (var fStream = new System.IO.FileStream(cPathName, System.IO.FileMode.Create))
                 {
                     using (var sw = new System.IO.StreamWriter(fStream))
                     {
@@ -407,7 +371,6 @@ namespace DVBViewerServerApiWrapper.Model
                         }
                     }
                 }
-
                 return cPathName;
             }
             return null;

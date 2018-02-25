@@ -24,9 +24,9 @@ namespace DVBViewerServerApiWrapper.Model
 
         internal VideoFilePath() { }
 
-        internal static VideoFilePath CreateVideoFilePath(XDocument xDocument)
+        internal static Task<VideoFilePath> GetVideoFilePathAsync(List<Helper.UriParameter> uriParameters)
         {
-            return Helper.Deserializer.Deserialize<VideoFilePath>(xDocument, new Type[] { typeof(VideoFilePath), typeof(VideoFilePathItem) });
+            return Helper.Lists.GetListAsync<VideoFilePath>("sql", uriParameters, new Type[] { typeof(VideoFilePath), typeof(VideoFilePathItem) });
         }
 
         private static string baseSQL = "Select paths.idPath, paths.Folder, paths.Path, objects.Object_ID, objects.Parent_ID from objects inner join paths on objects.PathID = paths.idPath where objects.Type < 3";
@@ -36,25 +36,15 @@ namespace DVBViewerServerApiWrapper.Model
         /// A List with paths
         /// </summary>
         /// <returns></returns>
-        public static async Task<VideoFilePath> GetVideoFilePathAsync()
+        public static Task<VideoFilePath> GetVideoFilePathAsync()
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
+            string query = $"{baseSQL} Order by paths.Path";
+
+            return GetVideoFilePathAsync(new List<Helper.UriParameter>
             {
-                string query = $"{baseSQL} Order by paths.Path";
-
-                var xmldata = await dvbApi.GetApiDataAsync("sql", new List<Helper.UriParameter>
-                {
-                    Helper.UriParam.Video1,
-                    Helper.UriParam.Query(query)
-                }).ConfigureAwait(false);
-
-                if (xmldata != null)
-                {
-                    return CreateVideoFilePath(xmldata);
-                }
-            }
-            return null;
+                Helper.UriParam.Video1,
+                Helper.UriParam.Query(query)
+            });
         }
 
         /// <summary>
@@ -63,25 +53,15 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="objectID"></param>
         /// <returns></returns>
-        internal static async Task<VideoFilePath> GetVideoFilePathChildsAsync(int objectID)
+        internal static Task<VideoFilePath> GetVideoFilePathChildsAsync(int objectID)
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
+            string query = $"{baseSQL} and Parent_ID = {objectID} Order by paths.Path";
+
+            return GetVideoFilePathAsync(new List<Helper.UriParameter>
             {
-                string query = $"{baseSQL} and Parent_ID = {objectID} Order by paths.Path";
-
-                var xmldata = await dvbApi.GetApiDataAsync("sql", new List<Helper.UriParameter>
-                {
-                    Helper.UriParam.Video1,
-                    Helper.UriParam.Query(query)
-                }).ConfigureAwait(false);
-
-                if (xmldata != null)
-                {
-                    return CreateVideoFilePath(xmldata);
-                }
-            }
-            return null;
+                Helper.UriParam.Video1,
+                Helper.UriParam.Query(query)
+            });
         }
 
         /// <summary>
@@ -97,31 +77,21 @@ namespace DVBViewerServerApiWrapper.Model
 
         /// <summary>
         /// Gibt das Elternverzeichnis zurück, oder wenn man die objectID nimmt das aktuelle Verzeichnis.
-        /// Returns the parent directory, or if the objectID takes the current directory
+        /// Returns the parent directory, or if the objectID the current directory
         /// </summary>
         /// <param name="parentID"></param>
         /// <returns></returns>
-        internal static async Task<VideoFilePath> GetVideoFilePathParentsAsync(int parentID)
+        internal static Task<VideoFilePath> GetVideoFilePathParentsAsync(int parentID)
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
+            string query = $"{baseSQL} and Object_ID = {parentID} Order by paths.Path";
+
+            return GetVideoFilePathAsync(new List<Helper.UriParameter>
             {
-                string query = $"{baseSQL} and Object_ID = {parentID} Order by paths.Path";
-
-                var xmldata = await dvbApi.GetApiDataAsync("sql", new List<Helper.UriParameter>
-                {
-                    Helper.UriParam.Video1,
-                    Helper.UriParam.Query(query)
-                }).ConfigureAwait(false);
-
-                if (xmldata != null)
-                {
-                    return CreateVideoFilePath(xmldata);
-                }
-            }
-            return null;
+                Helper.UriParam.Video1,
+                Helper.UriParam.Query(query)
+            });
         }
-        
+
         /// <summary>
         /// Gibt das Elternverzeichnis zurück, oder wenn man die objectID nimmt das aktuelle Verzeichnis.
         /// Returns the parent directory, or if the objectID takes the current directory

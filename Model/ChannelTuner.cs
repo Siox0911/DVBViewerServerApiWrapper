@@ -120,5 +120,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         [XmlAttribute(AttributeName = "alang")]
         public string Language { get; set; }
+
+        internal ChannelTuner() { }
     }
 }

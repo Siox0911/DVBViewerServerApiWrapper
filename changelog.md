@@ -1,7 +1,18 @@
 ﻿# Changelog
 
+v0.4.0.0
+  - changed Datatype of EpgChannelID from string to long
+  - renamed ID to ChannelID in class ChannelSubItem
+  - added classes EpgList, EpgItem for EPG support
+  - added Enum EpgSearchOptions for EPG Search
+  - added class Lists to Helper, for removing double codeinstructions
+  - rewritten base features of each List to get the data from the server
+  - added CreateM3UFile to ChannelItem, to get a UPnPStream for playback that channel on a player of your choice
+  - added GetEpgListNow to ChannelItem to get the current EPGList entry
+  - added GetEpgList to ChannelItem to get the complete EPGList from this channel
+
 v0.3.6.1
-  - add Channeltuner for details of a channel
+  - added Channeltuner for details of a channel
   - renamed ID in the class Channel to ChannelID
   - renamed EpgID to EpgChannelID
   - reworked Enum ChannelProperties
@@ -10,16 +21,16 @@ v0.3.6.1
     - renamed Bandstacking to BandstackingOrPcrRemoving
       - Bandstacking, internally polarisation is always set to H. For TS transmitters, the PCR is removed.
   - ChannelList
-    - add some functions to filter the channellist
+    - added some functions to filter the channellist
 
 v0.3.6.0
- - add ChannelList
-   - add ChannelTopGroup, this a list of groups in the ChannelList which includes top-groups of the channel-list
-   - add ChannelGroup, this is a list of sub groups in the top-groups 
-   - add ChannelItem, this is a list of channels in a sub group
-   - add ChannelSubItem, this is a list of subchannel in a channel.
- - add DVBViewerClients can play a channel or his subchannels directly
- - add Server-Tasks to the recordings and videos directly
+ - added ChannelList
+   - added ChannelTopGroup, this is a list of groups in the ChannelList which includes top-groups of the channel-list
+   - added ChannelGroup, this is a list of sub groups in the top-groups 
+   - added ChannelItem, this is a list of channels in a sub group
+   - added ChannelSubItem, this is a list of subchannel in a channel.
+ - added DVBViewerClients can play a channel or his subchannels directly
+ - added Server-Tasks to the recordings and videos directly
    - In objects RecordingList and VideoList Update-, Recreate- and Delete-Databasetasks from server can now be started
 
 v0.3.5.3
