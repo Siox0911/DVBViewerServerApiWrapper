@@ -1,5 +1,10 @@
 ﻿# Changelog
 
+v0.4.0.1
+  - added Image to VideoFileItem
+  - added MediaFileList and MediaFileItem to parse mediafiles.html for VideoFiles
+    - used only to get the mediafile thumb in the VideoFileItem
+
 v0.4.0.0
   - changed Datatype of EpgChannelID from string to long
   - renamed ID to ChannelID in class ChannelSubItem

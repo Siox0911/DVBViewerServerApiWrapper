@@ -58,6 +58,8 @@
     <Compile Include="Helper\FileSize.cs" />
     <Compile Include="Model\EpgItem.cs" />
     <Compile Include="Model\EpgList.cs" />
+    <Compile Include="Model\MediaFileItem.cs" />
+    <Compile Include="Model\MediaFileList.cs" />
     <Compile Include="Model\RecordingChannel.cs" />
     <Compile Include="Model\RecordingSeries.cs" />
     <Compile Include="Model\ServerTaskGroup.cs" />
@@ -84,6 +86,7 @@
   <ItemGroup>
     <Content Include="ApiXml\files.txt" />
     <Content Include="ApiXml\mediafile1.xml" />
+    <Content Include="ApiXml\mediafiles.html.xml" />
     <Content Include="ApiXml\recordings.xml" />
     <Content Include="ApiXml\recordingsAll.xml" />
     <Content Include="ApiXml\recordings_swe.xml" />

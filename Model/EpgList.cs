@@ -317,5 +317,27 @@ namespace DVBViewerServerApiWrapper.Model
         {
             return GetEpgListNowAsync().Result;
         }
+
+        /// <summary>
+        /// Gibt eine EPGListe zurück, welche der Sender zur aktuellen Zeit aussendet. Dies beinhaltet nur 1 EPG Item.
+        /// Returns an EPG list, which send the channel at the current time. This inherits 1 EPG Item.
+        /// </summary>
+        /// <param name="epgChannelID"></param>
+        /// <returns></returns>
+        public static Task<EpgList> GetEpgListNowAsync(long epgChannelID)
+        {
+            return GetEpgListAsync(epgChannelID, DateTime.Now, DateTime.Now + TimeSpan.FromMinutes(1.0));
+        }
+
+        /// <summary>
+        /// Gibt eine EPGListe zurück, welche der Sender zur aktuellen Zeit aussendet. Dies beinhaltet nur 1 EPG Item.
+        /// Returns an EPG list, which send the channel at the current time. This inherits 1 EPG Item.
+        /// </summary>
+        /// <param name="epgChannelID"></param>
+        /// <returns></returns>
+        public static EpgList GetEpgListNow(long epgChannelID)
+        {
+            return GetEpgListNowAsync(epgChannelID).Result;
+        }
     }
 }

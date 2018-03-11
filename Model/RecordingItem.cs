@@ -169,7 +169,7 @@ namespace DVBViewerServerApiWrapper.Model
         }
 
         /// <summary>
-        /// Löscht diese Aufnahme, gibt den Code 423 zurück, wenn eine Löschnung nicht funktioniert hat.
+        /// Löscht diese Aufnahme, gibt den Code 423 zurück, wenn eine Löschung nicht funktioniert hat.
         /// Deletes this recording, returns the code 423, if a deletion did not work.
         /// </summary>
         /// <returns></returns>
@@ -188,7 +188,7 @@ namespace DVBViewerServerApiWrapper.Model
         }
 
         /// <summary>
-        /// Löscht diese Aufnahme, gibt den Code 423 zurück, wenn eine Löschnung nicht funktioniert hat.
+        /// Löscht diese Aufnahme, gibt den Code 423 zurück, wenn eine Löschung nicht funktioniert hat.
         /// Deletes this recording, returns the code 423, if a deletion did not work.
         /// </summary>
         /// <returns></returns>

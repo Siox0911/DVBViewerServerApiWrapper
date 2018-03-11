@@ -160,6 +160,18 @@ namespace DVBViewerServerApiWrapper.Model
         [XmlElement(ElementName = "EXT")]
         public string FileExtension { get; set; }
 
+        /// <summary>
+        /// Gibt das Vorschaubild des Videos zurück. Wenn es existiert.
+        /// Returns the preview image of the video, if exist.
+        /// </summary>
+        public string Image
+        {
+            get
+            {
+                return MediaFileList.GetMediaFileListAsync(PathID, FileName).Result.Items[0]?.Image;
+            }
+        }
+
         internal VideoFileItem() { }
 
         /// <summary>

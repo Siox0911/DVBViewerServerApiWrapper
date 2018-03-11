@@ -21,6 +21,16 @@ namespace DVBViewerServerApiWrapper.Model
         public string Name { get; set; }
 
         /// <summary>
+        /// <para>
+        /// Die Serie kann ein Freitext sein. Dafür muss der Konstruktor public sein, damit eine neue Serie erstellt werden, die noch nicht existiert.
+        /// </para>
+        /// <para>
+        /// The series can be a free text. To do this, the constructor must be public to create a new series that does not yet exist.
+        /// </para>
+        /// </summary>
+        public RecordingSeries() { }
+
+        /// <summary>
         /// Vergleicht beide Serien und gibt True zurück, wenn beide gleich sind.
         /// Compare both series and return true if both are the same
         /// </summary>

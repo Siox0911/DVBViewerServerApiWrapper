@@ -1,16 +1,16 @@
 ﻿# DVBViewerServerApiWrapper
 
-Der DVBViewerServerApiWrapper ist eine Bibliothek, welche die webbasierte API in die .Net Welt holt.
+Der DVBViewerServerApiWrapper ist eine Bibliothek, welche die webbasierte API des DVBViewer Media Servers in die .Net Welt holt.
 Sie wird unter der Verwendung des MediaServers von DVBViewer entwickelt.
 
-DVBViewerServerApiWrapper is a lib that brings the web-based API into the .Net world. 
+The DVBViewerServerApiWrapper is a library that brings the web-based API of the DVBViewer Media Server into the .Net world.
 It is developed using DVBViewer's MediaServer.
 
 www.dvbviewer.com
 
 ### Current state (Aktueller Status)
 
-Version 0.4.0.0
+Version 0.4.0.1
 
 [changelog.md](changelog.md) for more details
 

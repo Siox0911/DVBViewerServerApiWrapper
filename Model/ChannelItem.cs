@@ -176,7 +176,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// <returns></returns>
         public Task<EpgList> GetEpgListNowAsync()
         {
-            return EpgList.GetEpgListAsync(EpgChannelID, DateTime.Now, DateTime.Now + TimeSpan.FromMinutes(1.0));
+            return EpgList.GetEpgListNowAsync(EpgChannelID);
         }
 
         /// <summary>

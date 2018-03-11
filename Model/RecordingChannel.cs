@@ -21,6 +21,18 @@ namespace DVBViewerServerApiWrapper.Model
         public string Name { get; set; }
 
         /// <summary>
+        /// <para>
+        /// Der Konstruktor wird als public benötigt.
+        /// Der Sender kann als Freitext belegt werden. Damit dies möglich ist kann ein Sender erstellt werden.
+        /// </para>
+        /// <para>
+        /// The constructor is needed as public.
+        /// The channel name can be a free text. To make this possible, a channel can be created.
+        /// </para>
+        /// </summary>
+        public RecordingChannel() { }
+
+        /// <summary>
         /// Vergleicht beide Sender und gibt True zurück, wenn beide gleich sind
         /// Compare both channels and return true if both are the same
         /// </summary>

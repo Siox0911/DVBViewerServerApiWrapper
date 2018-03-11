@@ -43,7 +43,8 @@ namespace DVBViewerServerApiWrapper.Model
 
         internal static Task<ChannelList> GetChannelListAsync(List<Helper.UriParameter> uriParameters)
         {
-            return Helper.Lists.GetListAsync<ChannelList>("getchannelsxml", uriParameters, new Type[] {
+            return Helper.Lists.GetListAsync<ChannelList>("getchannelsxml", uriParameters, new Type[]
+            {
                 typeof(ChannelTopGroup),
                 typeof(ChannelGroup),
                 typeof(ChannelItem),
