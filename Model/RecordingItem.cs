@@ -173,18 +173,14 @@ namespace DVBViewerServerApiWrapper.Model
         /// Deletes this recording, returns the code 423, if a deletion did not work.
         /// </summary>
         /// <returns></returns>
-        public async Task<HttpStatusCode> DeleteAsync()
+        public Task<HttpStatusCode> DeleteAsync()
         {
             var dvbApi = DVBViewerServerApi.GetCurrentInstance();
-            if (dvbApi != null)
+            return dvbApi?.SendApiDataAsync("recdelete", new List<Helper.UriParameter>
             {
-                return await dvbApi.SendApiDataAsync("recdelete", new List<Helper.UriParameter>
-                {
-                    new Helper.UriParameter("recid", ID.ToString()),
-                    new Helper.UriParameter("delfile", 1.ToString())
-                }).ConfigureAwait(false);
-            }
-            return 0;
+                new Helper.UriParameter("recid", ID.ToString()),
+                new Helper.UriParameter("delfile", 1.ToString())
+            });
         }
 
         /// <summary>

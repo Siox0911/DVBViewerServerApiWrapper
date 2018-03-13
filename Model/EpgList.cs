@@ -71,11 +71,11 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="epgChannelID"></param>
         /// <returns></returns>
-        public static Task<EpgList> GetEpgListAsync(long epgChannelID)
+        public static Task<EpgList> GetEpgListAsync(ChannelItem channelItem)
         {
             return GetEpgListAsync(new List<Helper.UriParameter>
             {
-                new Helper.UriParameter("channel", $"{epgChannelID}")
+                new Helper.UriParameter("channel", $"{channelItem.EpgChannelID}")
             });
         }
 
@@ -85,9 +85,25 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="epgChannelID"></param>
         /// <returns></returns>
-        public static EpgList GetEpgList(long epgChannelID)
+        public static EpgList GetEpgList(ChannelItem channelItem)
         {
-            return GetEpgListAsync(epgChannelID).Result;
+            return GetEpgListAsync(channelItem).Result;
+        }
+
+        /// <summary>
+        /// Gibt einen einzigen EPG Eintrag zurück, welcher der EPGEventID entspricht. Dies funktioniert nur, wenn die EPGEventID nicht geändert wurde.
+        /// Returns a single EPG entry corresponding to the EPGEventID. This only works if the EPGEventID has not been changed.
+        /// </summary>
+        /// <param name="channelItem"></param>
+        /// <param name="epgEventID"></param>
+        /// <returns></returns>
+        public static Task<EpgList> GetEpgListAsync(ChannelItem channelItem, int epgEventID)
+        {
+            return GetEpgListAsync(new List<Helper.UriParameter>
+            {
+                new Helper.UriParameter("channel", channelItem.EpgChannelID.ToString()),
+                new Helper.UriParameter("eventid", epgEventID.ToString())
+            });
         }
 
         /// <summary>
@@ -122,11 +138,11 @@ namespace DVBViewerServerApiWrapper.Model
         /// <param name="epgChannelID"></param>
         /// <param name="currentTime"></param>
         /// <returns></returns>
-        public static Task<EpgList> GetEpgListAsync(long epgChannelID, DateTime currentTime)
+        public static Task<EpgList> GetEpgListAsync(ChannelItem channelItem, DateTime currentTime)
         {
             return GetEpgListAsync(new List<Helper.UriParameter>
             {
-                new Helper.UriParameter("channel", $"{epgChannelID}"),
+                new Helper.UriParameter("channel", $"{channelItem.EpgChannelID}"),
                 new Helper.UriParameter("start", currentTime.ToOADate().ToString())
             });
         }
@@ -138,9 +154,9 @@ namespace DVBViewerServerApiWrapper.Model
         /// <param name="epgChannelID"></param>
         /// <param name="currentTime"></param>
         /// <returns></returns>
-        public static EpgList GetEpgList(long epgChannelID, DateTime currentTime)
+        public static EpgList GetEpgList(ChannelItem channelItem, DateTime currentTime)
         {
-            return GetEpgListAsync(epgChannelID, currentTime).Result;
+            return GetEpgListAsync(channelItem, currentTime).Result;
         }
 
         /// <summary>
@@ -179,11 +195,11 @@ namespace DVBViewerServerApiWrapper.Model
         /// <param name="fromDate"></param>
         /// <param name="toDate"></param>
         /// <returns></returns>
-        public static Task<EpgList> GetEpgListAsync(long epgChannelID, DateTime fromDate, DateTime toDate)
+        public static Task<EpgList> GetEpgListAsync(ChannelItem channelItem, DateTime fromDate, DateTime toDate)
         {
             return GetEpgListAsync(new List<Helper.UriParameter>
             {
-                new Helper.UriParameter("channel", $"{epgChannelID}"),
+                new Helper.UriParameter("channel", $"{channelItem.EpgChannelID}"),
                 new Helper.UriParameter("start", fromDate.ToOADate().ToString()),
                 new Helper.UriParameter("end", toDate.ToOADate().ToString())
             });
@@ -197,9 +213,9 @@ namespace DVBViewerServerApiWrapper.Model
         /// <param name="fromDate"></param>
         /// <param name="toDate"></param>
         /// <returns></returns>
-        public static EpgList GetEpgList(long epgChannelID, DateTime fromDate, DateTime toDate)
+        public static EpgList GetEpgList(ChannelItem channelItem, DateTime fromDate, DateTime toDate)
         {
-            return GetEpgListAsync(epgChannelID, fromDate, toDate).Result;
+            return GetEpgListAsync(channelItem, fromDate, toDate).Result;
         }
 
         /// <summary>
@@ -238,11 +254,11 @@ namespace DVBViewerServerApiWrapper.Model
         /// <param name="epgChannelID"></param>
         /// <param name="searchOptions">Optional: Default is T (Title) and S (Subtitle)</param>
         /// <returns></returns>
-        public static Task<EpgList> GetEpgListAsync(string searchText, long epgChannelID, Enums.EpgSearchOptions searchOptions = Enums.EpgSearchOptions.T | Enums.EpgSearchOptions.S)
+        public static Task<EpgList> GetEpgListAsync(string searchText, ChannelItem channelItem, Enums.EpgSearchOptions searchOptions = Enums.EpgSearchOptions.T | Enums.EpgSearchOptions.S)
         {
             return GetEpgListAsync(new List<Helper.UriParameter>
             {
-                new Helper.UriParameter("channel", $"{epgChannelID}"),
+                new Helper.UriParameter("channel", $"{channelItem.EpgChannelID}"),
                 new Helper.UriParameter("search", searchText),
                 new Helper.UriParameter("options", searchOptions.ToString("F").Replace(",", "").Replace(" ", "").Trim())
             });
@@ -256,9 +272,9 @@ namespace DVBViewerServerApiWrapper.Model
         /// <param name="epgChannelID"></param>
         /// <param name="searchOptions">Optional: Default is T (Title) and S (Subtitle)</param>
         /// <returns></returns>
-        public static EpgList GetEpgList(string searchText, long epgChannelID, Enums.EpgSearchOptions searchOptions = Enums.EpgSearchOptions.T | Enums.EpgSearchOptions.S)
+        public static EpgList GetEpgList(string searchText, ChannelItem channelItem, Enums.EpgSearchOptions searchOptions = Enums.EpgSearchOptions.T | Enums.EpgSearchOptions.S)
         {
-            return GetEpgListAsync(searchText, epgChannelID, searchOptions).Result;
+            return GetEpgListAsync(searchText, channelItem, searchOptions).Result;
         }
 
         /// <summary>
@@ -271,11 +287,11 @@ namespace DVBViewerServerApiWrapper.Model
         /// <param name="toDate"></param>
         /// <param name="searchOptions">Optional: Default is T (Title) and S (Subtitle)</param>
         /// <returns></returns>
-        public static Task<EpgList> GetEpgListAsync(string searchText, long epgChannelID, DateTime fromDate, DateTime toDate, Enums.EpgSearchOptions searchOptions = Enums.EpgSearchOptions.T | Enums.EpgSearchOptions.S)
+        public static Task<EpgList> GetEpgListAsync(string searchText, ChannelItem channelItem, DateTime fromDate, DateTime toDate, Enums.EpgSearchOptions searchOptions = Enums.EpgSearchOptions.T | Enums.EpgSearchOptions.S)
         {
             return GetEpgListAsync(new List<Helper.UriParameter>
             {
-                new Helper.UriParameter("channel", $"{epgChannelID}"),
+                new Helper.UriParameter("channel", $"{channelItem.EpgChannelID}"),
                 new Helper.UriParameter("start", fromDate.ToOADate().ToString()),
                 new Helper.UriParameter("end", toDate.ToOADate().ToString()),
                 new Helper.UriParameter("search", searchText),
@@ -293,9 +309,9 @@ namespace DVBViewerServerApiWrapper.Model
         /// <param name="toDate"></param>
         /// <param name="searchOptions">Optional: Default is T (Title) and S (Subtitle)</param>
         /// <returns></returns>
-        public static EpgList GetEpgList(string searchText, long epgChannelID, DateTime fromDate, DateTime toDate, Enums.EpgSearchOptions searchOptions = Enums.EpgSearchOptions.T | Enums.EpgSearchOptions.S)
+        public static EpgList GetEpgList(string searchText, ChannelItem channelItem, DateTime fromDate, DateTime toDate, Enums.EpgSearchOptions searchOptions = Enums.EpgSearchOptions.T | Enums.EpgSearchOptions.S)
         {
-            return GetEpgListAsync(searchText, epgChannelID, fromDate, toDate, searchOptions).Result;
+            return GetEpgListAsync(searchText, channelItem, fromDate, toDate, searchOptions).Result;
         }
 
         /// <summary>
@@ -324,9 +340,9 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="epgChannelID"></param>
         /// <returns></returns>
-        public static Task<EpgList> GetEpgListNowAsync(long epgChannelID)
+        public static Task<EpgList> GetEpgListNowAsync(ChannelItem channelItem)
         {
-            return GetEpgListAsync(epgChannelID, DateTime.Now, DateTime.Now + TimeSpan.FromMinutes(1.0));
+            return GetEpgListAsync(channelItem, DateTime.Now, DateTime.Now + TimeSpan.FromMinutes(1.0));
         }
 
         /// <summary>
@@ -335,9 +351,24 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="epgChannelID"></param>
         /// <returns></returns>
-        public static EpgList GetEpgListNow(long epgChannelID)
+        public static EpgList GetEpgListNow(ChannelItem channelItem)
         {
-            return GetEpgListNowAsync(epgChannelID).Result;
+            return GetEpgListNowAsync(channelItem).Result;
+        }
+
+        /// <summary>
+        /// Löscht das EPG. 
+        /// Clears the EPG.
+        /// </summary>
+        /// <param name="epgClear">If is not specified the default is all EPG data (currently 7)</param>
+        /// <returns></returns>
+        public static Task<HttpStatusCode> DeleteEpgAsync(Enums.EpgClearSources epgClear = Enums.EpgClearSources.DVB | Enums.EpgClearSources.MHW | Enums.EpgClearSources.External)
+        {
+            var api = DVBViewerServerApi.GetCurrentInstance();
+            return api?.SendApiDataAsync("egpclear", new List<Helper.UriParameter>
+            {
+                new Helper.UriParameter("source", $"{(int)epgClear}")
+            });
         }
     }
 }

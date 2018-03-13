@@ -10,7 +10,7 @@ www.dvbviewer.com
 
 ### Current state (Aktueller Status)
 
-Version 0.4.0.1
+Version 0.4.1.0
 
 [changelog.md](changelog.md) for more details
 
@@ -26,12 +26,12 @@ Symbols: <img src="images/ToDo_Ready_256.png" width="22"/>Ready,
 <br/><img src="images/ToDo_Ready_256.png" width="22"/> recdelete.html
 <br/><img src="images/ToDo_Ready_256.png" width="22"/> mediafiles.html -> own implementation over the sql.html
 <br/><img src="images/ToDo_Ready_256.png" width="22"/> getchannelsxml.html
-<br/><img src="images/ToDo_Current_256.png" width="22"/> epg.html
-<br/><img src="images/ToDo_Current_256.png" width="22"/> epgclear.html
-<br/><img src="images/ToDo_Add_256.png" width="22"/> timerlist.html
-<br/><img src="images/ToDo_Add_256.png" width="22"/> timeradd.html
-<br/><img src="images/ToDo_Add_256.png" width="22"/> timeredit.html
-<br/><img src="images/ToDo_Add_256.png" width="22"/> timerdelete.html
+<br/><img src="images/ToDo_Ready_256.png" width="22"/> epg.html
+<br/><img src="images/ToDo_Ready_256.png" width="22"/> epgclear.html
+<br/><img src="images/ToDo_Ready_256.png" width="22"/> timerlist.html
+<br/><img src="images/ToDo_Current_256.png" width="22"/> timeradd.html
+<br/><img src="images/ToDo_Current_256.png" width="22"/> timeredit.html
+<br/><img src="images/ToDo_Current_256.png" width="22"/> timerdelete.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> sideload.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> startts.html
 <br/><img src="images/ToDo_Add_256.png" width="22"/> stopts.html

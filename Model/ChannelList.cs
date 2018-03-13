@@ -87,7 +87,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="channelID"></param>
         /// <returns></returns>
-        public static Task<ChannelList> GetChannelListAsync(long channelID)
+        public static Task<ChannelList> GetChannelListByChannelIDAsync(long channelID)
         {
             return GetChannelListAsync(new List<Helper.UriParameter>
             {
@@ -107,7 +107,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="epgChannelID"></param>
         /// <returns></returns>
-        public static Task<ChannelList> GetChannelListAsync(string epgChannelID)
+        public static Task<ChannelList> GetChannelListByEpgChannelIDAsync(long epgChannelID)
         {
             return GetChannelListAsync(new List<Helper.UriParameter>
             {
@@ -117,7 +117,7 @@ namespace DVBViewerServerApiWrapper.Model
                 new Helper.UriParameter("subchannels", "1"),
                 new Helper.UriParameter("fav", "1"),
                 new Helper.UriParameter("tuner", "1"),
-                new Helper.UriParameter("epgid", epgChannelID)
+                new Helper.UriParameter("epgid", epgChannelID.ToString())
             });
         }
 
@@ -127,10 +127,22 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         /// <param name="channelID"></param>
         /// <returns></returns>
-        public static ChannelList GetChannelList(long channelID)
+        public static ChannelList GetChannelListByChannelID(long channelID)
         {
-            return GetChannelListAsync(channelID).Result;
+            return GetChannelListByChannelIDAsync(channelID).Result;
         }
+
+        /// <summary>
+        /// Gibt die Liste mit einem einzigen Kanal zurück, welcher der EPG ID entspricht.
+        /// Gives back a list with only one channel. This is the channel with the EPG ID.
+        /// </summary>
+        /// <param name="epgChannelID"></param>
+        /// <returns></returns>
+        public static ChannelList GetChannelListByEpgChannelID(long epgChannelID)
+        {
+            return GetChannelListByEpgChannelIDAsync(epgChannelID).Result;
+        }
+
 
         /// <summary>
         /// Gibt eine Liste reine Favouritenliste der Kanäle zurück.
@@ -210,7 +222,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// <returns></returns>
         public static ChannelList GetChannelRadioOnly()
         {
-            return GetChannelTVOnlyAsync().Result;
+            return GetChannelRadioOnlyAsync().Result;
         }
     }
 }

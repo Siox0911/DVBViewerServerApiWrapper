@@ -1116,5 +1116,29 @@ namespace DVBViewerServerApiWrapper.Model
             /// </summary>
             R = 0x10
         }
+
+        /// <summary>
+        /// Represents a EGP Source to Delete
+        /// </summary>
+        [Flags]
+        public enum EpgClearSources
+        {
+            /// <summary>
+            /// Nothing
+            /// </summary>
+            None = 0x0,
+            /// <summary>
+            /// DVB EGG
+            /// </summary>
+            DVB = 0x1,
+            /// <summary>
+            /// Media Highway EPG
+            /// </summary>
+            MHW = 0x2,
+            /// <summary>
+            /// External EPG Source
+            /// </summary>
+            External = 0x4
+        }
     }
 }

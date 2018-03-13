@@ -158,7 +158,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// <returns></returns>
         public Task<EpgList> GetEpgListAsync()
         {
-            return EpgList.GetEpgListAsync(EpgChannelID);
+            return EpgList.GetEpgListAsync(this);
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// <returns></returns>
         public Task<EpgList> GetEpgListNowAsync()
         {
-            return EpgList.GetEpgListNowAsync(EpgChannelID);
+            return EpgList.GetEpgListNowAsync(this);
         }
 
         /// <summary>

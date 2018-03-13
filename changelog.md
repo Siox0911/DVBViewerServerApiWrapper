@@ -1,5 +1,12 @@
 ﻿# Changelog
 
+v0.4.1.0
+  - added EPG Clear to EPGList
+  - added classes TimerList, TimerItem and TimerOptions to represent the timers of the DMS
+  - changed: class EpgList - the epgChannelID has been replaced by ChannelItem
+  - renamed function GetChannelListAsync(long channelID) to GetChannelListByChannelIDAsync(long channelID)
+  - renamed function GetChannelListAsync(string epgChannelID) to GetChannelListByEpgChannelIDAsync(long epgChannelID)
+
 v0.4.0.1
   - added Image to VideoFileItem
   - added MediaFileList and MediaFileItem to parse mediafiles.html for VideoFiles

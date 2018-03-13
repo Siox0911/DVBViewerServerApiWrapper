@@ -5,13 +5,13 @@
 
 Wrapper:
  - EPG Löschen und eigene Quelle zum Importieren der Daten hinzufügen
- - timerlist.html
  - Eine Wiki anlegen, damit ein Anwender so einfach wie möglich auf den Code zugreigen kann.
    - Darin das/den SecureString erläutern.
    - Einfache erste Schritte zeigen.
    - Komplizierte Schritte zeigen, wie die Channels mit ihren TopGroups, Groups und Item bzw. SubItems.
 
 Erledigt:
+ - timerlist.html
  - Sender in den Wrapper holen
  - Die SQL Abfragen ändern, so dass nicht immer alle angefasst werden müssen
  - found = 1 prüfen, weil die Videos doppelt vorkommen

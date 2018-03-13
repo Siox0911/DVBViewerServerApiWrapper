@@ -65,6 +65,9 @@
     <Compile Include="Model\ServerTaskGroup.cs" />
     <Compile Include="Model\ServerTaskItem.cs" />
     <Compile Include="Model\ServerTaskList.cs" />
+    <Compile Include="Model\TimerItem.cs" />
+    <Compile Include="Model\TimerList.cs" />
+    <Compile Include="Model\TimerOptions.cs" />
     <Compile Include="Model\VideoFilePathItem.cs" />
     <Compile Include="Model\VideoFileItem.cs" />
     <Compile Include="Model\VideoFileList.cs" />
