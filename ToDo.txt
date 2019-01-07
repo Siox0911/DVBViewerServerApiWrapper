@@ -1,0 +1,20 @@
+﻿DEMO:
+ - Serveraufgaben in die DEMO aufnehmen
+ - Fernbedienung für den DVBViewer x Commands in die Demo
+ - Timer abholen und Aufgaben anbieten, wie Aufnahmedatenbank aktualisieren und Mediadatabase aktualisieren, direkt in den Menus
+
+Wrapper:
+ - EPG Löschen und eigene Quelle zum Importieren der Daten hinzufügen
+ - Eine Wiki anlegen, damit ein Anwender so einfach wie möglich auf den Code zugreifen kann.
+   - Darin das/den SecureString erläutern.
+   - Einfache erste Schritte zeigen.
+   - Komplizierte Schritte zeigen, wie die Channels mit ihren TopGroups, Groups und Item bzw. SubItems.
+
+Erledigt:
+ - timerlist.html
+ - Sender in den Wrapper holen
+ - Die SQL Abfragen ändern, so dass nicht immer alle angefasst werden müssen
+ - found = 1 prüfen, weil die Videos doppelt vorkommen
+ - EPG abholen
+ - Suche hinzufügen für EPG.
+ - Die VideoThumbs in VideoFileItem direkt aus der mediafiles.html beziehen.

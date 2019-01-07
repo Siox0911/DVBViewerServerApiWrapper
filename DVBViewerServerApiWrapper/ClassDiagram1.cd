@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DVBViewerServerApiWrapper.Model.ChannelList">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAgAABAAAgAQAAAIDAACACAAAAAABAAAEQA=</HashCode>
+      <FileName>Model\ChannelList.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="TopGroups" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="DVBViewerServerApiWrapper.Model.ChannelTopGroup">
+    <Position X="3.25" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\ChannelTopGroup.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Groups" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="DVBViewerServerApiWrapper.Model.ChannelGroup">
+    <Position X="5.5" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\ChannelGroup.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Items" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="DVBViewerServerApiWrapper.Model.ChannelItem" BaseTypeListCollapsed="true">
+    <Position X="7.75" Y="0.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="EpgListNow" Type="DVBViewerServerApiWrapper.Model.EpgList">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.505" Y="0.425" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>ARABBAgASAAwIAAAgGQBIAQAAACEAIAUiAYAAAAAgiA=</HashCode>
+      <FileName>Model\ChannelItem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Tuner" />
+      <Property Name="EpgListNow" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="SubChannels" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.143" Collapsed="true" />
+  </Class>
+  <Class Name="DVBViewerServerApiWrapper.Model.ChannelSubItem">
+    <Position X="11" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAAAQAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Model\ChannelSubItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DVBViewerServerApiWrapper.Model.ChannelTuner">
+    <Position X="11" Y="2.25" Width="2" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAABJGAACAAECAAAAAAAAAAAAIAAAAAAAEAAABgAIAA=</HashCode>
+      <FileName>Model\ChannelTuner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DVBViewerServerApiWrapper.Model.EpgList">
+    <Position X="4" Y="3" Width="1.25" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>IBAAAAAABAAwCAAAAAAgAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Model\EpgList.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Items" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="DVBViewerServerApiWrapper.Model.EpgItem">
+    <Position X="6" Y="3" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAQAQAAAAiBgAEAAAAAAIAAAAgAAAAAAIAAAAEQAAAA=</HashCode>
+      <FileName>Model\EpgItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DVBViewerServerApiWrapper.Model.TimerList">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\TimerList.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Items" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="DVBViewerServerApiWrapper.Model.TimerItem">
+    <Position X="2.75" Y="4.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="ChannelList" Type="DVBViewerServerApiWrapper.Model.ChannelList">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.171" Y="-0.919" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>GBYAABAAAiAygIAEEYAAAwAAAAgIJAAhAQAARAYCBAU=</HashCode>
+      <FileName>Model\TimerItem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="EpgList" />
+      <Property Name="ChannelItem" />
+      <Property Name="TimerOptions" />
+      <Property Name="ChannelList" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DVBViewerServerApiWrapper.Model.TimerOptions">
+    <Position X="4.75" Y="7" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAEAAAAAIAAQAAAAAAAAAAAAAAAABAgAAAIAA=</HashCode>
+      <FileName>Model\TimerOptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
