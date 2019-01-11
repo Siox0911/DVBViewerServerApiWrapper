@@ -19,9 +19,12 @@
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="changelog.md" />
+    <Compile Remove="images\**" />
+    <EmbeddedResource Remove="images\**" />
+    <None Remove="images\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="ClassDiagram1.cd" />
-    <None Include="Readme.md" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ApiXml\files.txt" />
@@ -36,12 +39,6 @@
     <Content Include="ApiXml\status2.xml" />
     <Content Include="ApiXml\Tasks.xml" />
     <Content Include="ApiXml\TextFile1.txt" />
-    <Content Include="images\screenshotCLI.png" />
-    <Content Include="images\ToDo_Abort_256.png" />
-    <Content Include="images\ToDo_Add_256.png" />
-    <Content Include="images\ToDo_Current_256.png" />
-    <Content Include="images\ToDo_Ready_256.png" />
-    <Content Include="ToDo.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
