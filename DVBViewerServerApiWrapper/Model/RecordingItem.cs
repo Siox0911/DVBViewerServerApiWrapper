@@ -71,6 +71,7 @@ namespace DVBViewerServerApiWrapper.Model
         /// </summary>
         //[XmlAttribute(AttributeName = "eventid")]
         //public string EventID { get; set; }
+
         /// <summary>
         /// Der Aufnahmekanal als Channel
         /// The recording channel as channel
@@ -79,7 +80,7 @@ namespace DVBViewerServerApiWrapper.Model
         public RecordingChannel Channel { get; set; }
 
         /// <summary>
-        /// Der Dateinahme als Pfad wie er im Service festgelegt wurde.
+        /// Der Dateiname als Pfad wie er im Service festgelegt wurde.
         /// The filename as the path as set in the service.
         /// </summary>
         [XmlElement(ElementName = "file")]
@@ -233,7 +234,6 @@ namespace DVBViewerServerApiWrapper.Model
         /// <returns></returns>
         public string GetUPnPUriString()
         {
-            var dvbApi = DVBViewerServerApi.GetCurrentInstance();
             var extension = System.IO.Path.GetExtension(File);
             var rList = RecordingList.GetInstance();
             //return $"http://{dvbApi.Hostname}:8090/upnp/recording/{ID}{extension}";

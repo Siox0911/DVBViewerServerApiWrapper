@@ -17,6 +17,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
+    <DocumentationFile>bin\Release\DVBViewerServerApiWrapper.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="images\**" />

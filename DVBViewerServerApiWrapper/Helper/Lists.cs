@@ -36,7 +36,7 @@ namespace DVBViewerServerApiWrapper.Helper
                     return Deserializer.Deserialize<T>(xmldata, others);
                 }
             }
-            return default(T);
+            return default;
         }
     }
 }

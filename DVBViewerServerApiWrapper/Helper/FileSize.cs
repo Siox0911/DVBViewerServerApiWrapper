@@ -24,14 +24,14 @@ namespace DVBViewerServerApiWrapper.Helper
         /// <summary>
         /// Die Größe in Bytes
         /// </summary>
-        public Int64 ByteSize { get; set; }
+        public long ByteSize { get; set; }
 
         /// <summary>
         /// Berechnet die Dateigröße gibt ein FileSize Objekt zurück.
         /// </summary>
         /// <param name="Bytes"></param>
         /// <returns></returns>
-        public static FileSize GetFileSize(Int64 Bytes)
+        public static FileSize GetFileSize(long Bytes)
         {
             var t = new FileSize
             {

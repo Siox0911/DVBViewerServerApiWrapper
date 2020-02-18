@@ -70,7 +70,6 @@ namespace DVBViewerServerApiWrapper.Model
         /// Gibt alle Aufnahmen zurück.
         /// Returns all recordings.
         /// </summary>
-        /// <param name="recordID"></param>
         /// <returns></returns>
         public static Task<RecordingList> GetRecordingsAsync()
         {
@@ -86,7 +85,6 @@ namespace DVBViewerServerApiWrapper.Model
         /// Gibt alle Aufnahmen zurück.
         /// Returns all recordings.
         /// </summary>
-        /// <param name="recordID"></param>
         /// <returns></returns>
         public static RecordingList GetRecordings()
         {

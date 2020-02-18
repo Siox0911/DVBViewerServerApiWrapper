@@ -35,13 +35,13 @@ namespace DVBViewerServerApiWrapper.Model
         /// Die Startzeit als DateTime.
         /// The start time as DateTime.
         /// </summary>
-        public DateTime StartDate => Start != 0 ? DateTime.Parse(Start.ToString("0000-00-00 00:00:00")) : default(DateTime);
+        public DateTime StartDate => Start != 0 ? DateTime.Parse(Start.ToString("0000-00-00 00:00:00")) : default;
 
         /// <summary>
         /// Die Zeit des Endes als DateTime.
         /// The time of the end as DateTime.
         /// </summary>
-        public DateTime StopDate => Stop != 0 ? DateTime.Parse(Stop.ToString("0000-00-00 00:00:00")) : default(DateTime);
+        public DateTime StopDate => Stop != 0 ? DateTime.Parse(Stop.ToString("0000-00-00 00:00:00")) : default;
 
         /// <summary>
         /// Die EPG-Kanal ID.

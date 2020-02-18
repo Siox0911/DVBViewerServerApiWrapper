@@ -16,7 +16,8 @@ namespace DVBViewerServerApiWrapper.Helper
         //TODO: Ich bin noch nicht zufrieden damit. Es wäre schön wenn die Verschlüsselung des Serverpassworts schon automatisch auf den Benutzer zugeschnitten ist.
 
         /// <summary>
-        /// Verschlüsselt ein Password als AES Verschlüsselung. Zurückgegeben wird ein Base64 encodiertes und AES verschlüsseltes Passwort. Sowie der geheime Schlüssel <paramref name="IV"/> und der öffentliche Schlüssel <paramref name="Key"/>.
+        /// Verschlüsselt ein Password als AES Verschlüsselung. Zurückgegeben wird ein Base64 encodiertes und AES verschlüsseltes Passwort.
+        /// Sowie der geheime Schlüssel <paramref name="IV"/> und der öffentliche Schlüssel <paramref name="Key"/>.
         /// </summary>
         /// <param name="plainText">Das Passwort als Klartext</param>
         /// <param name="Key">Der öffentliche Schlüssel für die Verschlüsselung und Entschlüsselung</param>
@@ -52,11 +53,11 @@ namespace DVBViewerServerApiWrapper.Helper
         private static byte[] EncryptStringToBytesAes(string plainText, byte[] Key, byte[] IV)
         {
             // Check arguments.
-            if (plainText == null || plainText.Length <= 0)
+            if (plainText == null || plainText.Length == 0)
                 throw new ArgumentNullException(nameof(plainText));
-            if (Key == null || Key.Length <= 0)
+            if (Key == null || Key.Length == 0)
                 throw new ArgumentNullException(nameof(Key));
-            if (IV == null || IV.Length <= 0)
+            if (IV == null || IV.Length == 0)
                 throw new ArgumentNullException(nameof(IV));
             byte[] encrypted;
 
@@ -99,11 +100,11 @@ namespace DVBViewerServerApiWrapper.Helper
         private static string DecryptStringFromBytesAes(byte[] cipherText, byte[] Key, byte[] IV)
         {
             // Check arguments.
-            if (cipherText == null || cipherText.Length <= 0)
+            if (cipherText == null || cipherText.Length == 0)
                 throw new ArgumentNullException(nameof(cipherText));
-            if (Key == null || Key.Length <= 0)
+            if (Key == null || Key.Length == 0)
                 throw new ArgumentNullException(nameof(Key));
-            if (IV == null || IV.Length <= 0)
+            if (IV == null || IV.Length == 0)
                 throw new ArgumentNullException(nameof(IV));
 
             // Declare the string used to hold
