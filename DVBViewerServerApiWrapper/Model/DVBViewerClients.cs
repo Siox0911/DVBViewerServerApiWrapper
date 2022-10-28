@@ -14,7 +14,7 @@ namespace DVBViewerServerApiWrapper.Model
     /// Returns a list of service DVBViewer clients.
     /// </summary>
     [XmlRoot(ElementName = "targets")]
-    public class DVBViewerClients
+    public class DVBViewerClients : IDVBViewerClients
     {
         /// <summary>
         /// Liste mit den Namen der Clienten als Netbios PC-Name

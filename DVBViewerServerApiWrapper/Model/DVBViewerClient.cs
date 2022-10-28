@@ -13,7 +13,7 @@ namespace DVBViewerServerApiWrapper.Model
     /// A client which was connected since the start of the Media Server.
     /// </summary>
     [XmlRoot(ElementName = "target")]
-    public class DVBViewerClient
+    public class DVBViewerClient : IDVBViewerClient
     {
         /// <summary>
         /// Der Name des Clients

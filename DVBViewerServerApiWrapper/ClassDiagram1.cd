@@ -133,10 +133,10 @@
       <FileName>Model\TimerItem.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="EpgList" />
-      <Property Name="ChannelItem" />
       <Property Name="TimerOptions" />
+      <Property Name="ChannelItem" />
       <Property Name="ChannelList" />
+      <Property Name="EpgList" />
     </ShowAsAssociation>
   </Class>
   <Class Name="DVBViewerServerApiWrapper.Model.TimerOptions">
